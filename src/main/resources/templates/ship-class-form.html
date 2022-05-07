@@ -1,0 +1,58 @@
+<html>
+<div th:replace="fragments/header :: header (title='Add New Ship Class')"></div>
+<body>
+
+<div class="container">
+  <div th:replace="fragments/menu :: menu (current='create')"></div>
+  <form action="#" th:action="${create} == true ? @{/ship_class_mvc/create} : @{/ship_class_mvc/update/{id}(id=${gun.id})}" th:object="${shipClass}" method="post" novalidate>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" th:field="*{name}">
+      <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    </div>
+    <div class="form-group">
+      <label for="displacementInTons">Displacement in tons</label>
+      <input type="text" class="form-control" id="displacementInTons" th:field="*{displacementInTons}">
+      <span class="validationError" th:if="${#fields.hasErrors('displacementInTons')}" th:errors="*{displacementInTons}"></span>
+    </div>
+    <div class="form-group">
+      <label for="armorBeltInCms">Belt armor in centimeters</label>
+      <input type="text" class="form-control" id="armorBeltInCms" th:field="*{armorBeltInCms}">
+      <span class="validationError" th:if="${#fields.hasErrors('armorBeltInCms')}" th:errors="*{armorBeltInCms}"></span>
+    </div>
+    <div class="form-group">
+      <label for="armorTurretInCms">Turret armor in centimeters</label>
+      <input type="text" class="form-control" id="armorTurretInCms" th:field="*{armorTurretInCms}">
+      <span class="validationError" th:if="${#fields.hasErrors('armorTurretInCms')}" th:errors="*{armorTurretInCms}"></span>
+    </div>
+    <div class="form-group">
+      <label for="armorDeckInCms">Deck armor in centimeters</label>
+      <input type="text" class="form-control" id="armorDeckInCms" th:field="*{armorDeckInCms}">
+      <span class="validationError" th:if="${#fields.hasErrors('armorDeckInCms')}" th:errors="*{armorDeckInCms}"></span>
+    </div>
+    <div class="form-group">
+      <label for="speedInKmh">Speed in km/h</label>
+      <input type="text" class="form-control" id="speedInKmh" th:field="*{speedInKmh}">
+      <span class="validationError" th:if="${#fields.hasErrors('speedInKmh')}" th:errors="*{speedInKmh}"></span>
+    </div>
+    <div class="form-group">
+      <label for="countryId">Country</label>
+      <input type="text" class="form-control" id="countryId" th:field="*{countryId}">
+      <span class="validationError" th:if="${#fields.hasErrors('countryId')}" th:errors="*{countryId}"></span>
+    </div>
+    <!--<div th:if="${create} == false" class="form-group">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option th:each="statusOpt : ${valid_status_values}"
+                th:value="${statusOpt}" th:text="${statusOpt}"
+                th:selected="${userStory.status == statusOpt}"></option>
+      </select>
+      <span class="validationError" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
+      <div class="validationError" th:if="${#fields.detailedErrors('statusValid') != null}" th:each="err : ${#fields.detailedErrors('statusValid')}" th:text="${err.getMessage()}"></div>
+    </div>-->
+    <button type="submit" class="btn btn-primary" th:text="${create == false ? 'Update' : 'Submit'}">Submit</button>
+  </form>
+</div>
+
+</body>
+</html>

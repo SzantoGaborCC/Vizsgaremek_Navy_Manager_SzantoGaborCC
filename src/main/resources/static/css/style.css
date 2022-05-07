@@ -1,0 +1,12 @@
+.logo {
+    width: 2rem;
+    height: 2rem;
+}
+
+nav{
+    margin-bottom: 2rem;
+}
+
+.validationError{
+    color: #ED4337;
+}

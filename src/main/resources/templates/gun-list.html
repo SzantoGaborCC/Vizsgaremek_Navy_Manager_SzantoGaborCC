@@ -1,0 +1,40 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Super Sprinter 2000')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (current='List')"></div>
+
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Story Title</th>
+            <th scope="col">User Story</th>
+            <th scope="col">Acceptance Criteria</th>
+            <th scope="col">Business Value</th>
+            <th scope="col">Estimation</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user_story, status: ${user_stories}" th:style="${status.odd} ? 'background-color: #f3f3f3;' ">
+            <td th:text="${user_story.userStoryId}"></td>
+            <td th:text="${user_story.storyTitle}"></td>
+            <td th:text="${user_story.theUserStory}"></td>
+            <td th:text="${user_story.acceptanceCriteria}"></td>
+            <td th:text="${user_story.businessValue}"></td>
+            <td th:text="${user_story.estimation}"></td>
+            <td th:text="${user_story.status}"></td>
+            <td class="text-center">
+                <a th:href="@{/user_story/delete/{id}(id=${user_story.userStoryId})}"><i class="fa fa-trash"></i></a>
+                <a th:href="@{/user_story/update/{id}(id=${user_story.userStoryId})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
