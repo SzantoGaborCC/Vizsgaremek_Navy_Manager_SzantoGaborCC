@@ -15,6 +15,7 @@ public class ShipClassMapper implements RowMapper<ShipClass> {
         ShipClass shipClass = new ShipClass();
         shipClass.setId(rs.getLong("id"));
         shipClass.setName(rs.getString("name"));
+        shipClass.setDisplacementInTons(rs.getInt("displacement_in_tons"));
         shipClass.setHullClassification(rs.getString("hull_classification"));
         shipClass.setArmorBeltInCms(rs.getInt("armor_belt_in_cms"));
         shipClass.setArmorTurretInCms(rs.getInt("armor_turret_in_cms"));

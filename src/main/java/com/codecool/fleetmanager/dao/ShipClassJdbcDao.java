@@ -42,7 +42,7 @@ public class ShipClassJdbcDao implements ShipClassDao {
                 "speed_in_kmh " +
                 ") VALUES (?,?,?,?,?,?,?)";
        jdbcTemplate.update(query,
-               shipClass.getName(), shipClass.getDisplacement_in_tons(), shipClass.getHullClassification(),
+               shipClass.getName(), shipClass.getDisplacementInTons(), shipClass.getHullClassification(),
                shipClass.getArmorBeltInCms(), shipClass.getArmorTurretInCms(), shipClass.getArmorDeckInCms(),
                shipClass.getSpeedInKmh());
     }
@@ -59,7 +59,7 @@ public class ShipClassJdbcDao implements ShipClassDao {
                 "speed_in_kmh = ?, " +
                 "WHERE id = ?";
         jdbcTemplate.update(query,
-                shipClass.getName(), shipClass.getDisplacement_in_tons(), shipClass.getHullClassification(),
+                shipClass.getName(), shipClass.getDisplacementInTons(), shipClass.getHullClassification(),
                 shipClass.getArmorBeltInCms(), shipClass.getArmorTurretInCms(), shipClass.getArmorDeckInCms(),
                 shipClass.getSpeedInKmh(), id);
     }

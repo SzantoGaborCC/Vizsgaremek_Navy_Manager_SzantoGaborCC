@@ -22,7 +22,7 @@ public class ShipClassRestController {
 
     @GetMapping("/{id}")
     public ShipClass findById(@PathVariable long id) {
-        return shipClassService.findById(id).orElseThrow();
+        return shipClassService.findById(id);
     }
 
     @PostMapping

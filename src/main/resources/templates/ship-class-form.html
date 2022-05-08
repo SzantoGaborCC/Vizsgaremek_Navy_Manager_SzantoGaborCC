@@ -1,10 +1,11 @@
 <html>
-<div th:replace="fragments/header :: header (title='Add New Ship Class')"></div>
+<div th:replace="fragments/header :: header (title='Navy Manager - Add New Ship Class')"></div>
 <body>
 
+<div th:replace="fragments/menu :: menu (entityName = 'Gun', listUrl = '/gun_mvc', createUrl='/gun_mvc/create')"></div>
+<h2 style="font-weight: bold;text-align:center;" th:text="${create == false ? 'Update Ship Class' : 'Create New Ship Class'}"></h2>
 <div class="container">
-  <div th:replace="fragments/menu :: menu (current='create')"></div>
-  <form action="#" th:action="${create} == true ? @{/ship_class_mvc/create} : @{/ship_class_mvc/update/{id}(id=${gun.id})}" th:object="${shipClass}" method="post" novalidate>
+  <form action="#" th:action="${create} == true ? @{/ship_class_mvc/create} : @{/ship_class_mvc/update/{id}(id=${shipClass.id})}" th:object="${shipClass}" method="post" novalidate>
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" class="form-control" id="name" th:field="*{name}">

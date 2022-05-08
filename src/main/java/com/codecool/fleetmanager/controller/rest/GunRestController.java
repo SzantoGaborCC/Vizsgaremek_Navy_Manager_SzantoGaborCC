@@ -23,7 +23,7 @@ public class GunRestController {
 
     @GetMapping("/{id}")
     public Gun findById(@PathVariable long id) {
-        return gunService.findById(id).orElseThrow();
+        return gunService.findById(id);
     }
 
     @PostMapping

@@ -39,7 +39,7 @@ public class ShipClassMvcController {
     @GetMapping("/create")
     public String showCreateForm(ShipClass shipClass, Model model){
         model.addAttribute("create", true);
-        return "ship-form";
+        return "ship-class-form";
     }
 
     @PostMapping("/create")

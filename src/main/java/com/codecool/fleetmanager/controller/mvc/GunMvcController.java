@@ -52,13 +52,13 @@ public class GunMvcController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Invalid gun data!", e);
         }
-        return "redirect:/gun-mvc";
+        return "redirect:/gun_mvc";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteById(@PathVariable Long id) {
         gunService.delete(id);
-        return "redirect:/gun-mvc";
+        return "redirect:/gun_mvc";
     }
 
     @GetMapping("/update/{id}")
@@ -81,7 +81,7 @@ public class GunMvcController {
             return "gun-form";
         }
         gunService.update(gun, id);
-        return "redirect:/gun-mvc";
+        return "redirect:/gun_mvc";
     }
 }
 

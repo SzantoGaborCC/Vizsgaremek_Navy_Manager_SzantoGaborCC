@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 public class ShipClass {
     private Long id;
     private String name;
-    private int displacement_in_tons;
+    private int displacementInTons;
     private String hullClassification;
     private int armorBeltInCms;
     private int armorTurretInCms;
@@ -16,11 +16,11 @@ public class ShipClass {
     private int speedInKmh;
     private long countryId;
 
-    public ShipClass(String name, int displacement_in_tons, String hullClassification,
+    public ShipClass(String name, int displacementInTons, String hullClassification,
                      int armorBeltInCms, int armorTurretInCms, int armorDeckInCms,
                      int speedInKmh, long countryId) {
         this.name = name;
-        this.displacement_in_tons = displacement_in_tons;
+        this.displacementInTons = displacementInTons;
         this.hullClassification = hullClassification;
         this.armorBeltInCms = armorBeltInCms;
         this.armorTurretInCms = armorTurretInCms;
