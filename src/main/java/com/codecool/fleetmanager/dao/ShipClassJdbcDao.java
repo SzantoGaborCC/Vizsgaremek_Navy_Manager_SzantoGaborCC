@@ -56,7 +56,7 @@ public class ShipClassJdbcDao implements ShipClassDao {
                 "armor_belt_in_cms = ?, " +
                 "armor_turret_in_cms = ?, " +
                 "armor_deck_in_cms = ?, " +
-                "speed_in_kmh = ?, " +
+                "speed_in_kmh = ? " +
                 "WHERE id = ?";
         jdbcTemplate.update(query,
                 shipClass.getName(), shipClass.getDisplacementInTons(), shipClass.getHullClassification(),

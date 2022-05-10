@@ -1,9 +1,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div th:replace="fragments/header :: header (title='Fleet Manager - List of Ship Classes')"></div>
+<div th:replace="fragments/header :: header (title='Navy Manager - Ship Classes')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (current='list', entityName = 'Ship Class', createUrl = '/ship_class_mvc/create', listUrl = '/ship_class_mvc')"></div>
+<div th:replace="fragments/menu :: menu (current='list', entityName = 'Ship Class', createUrl = '/ship-class-mvc/create', listUrl = '/ship-class-mvc')"></div>
 <h2 style="font-weight: bold;text-align:center;">List of Ship Classes</h2>
 <div class="container">
     <table class="table table-bordered table-striped">
@@ -12,7 +12,7 @@
             <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col">Displacement in tons</th>
-            <th scope="col">Hull classifications</th>
+            <th scope="col">Hull classification</th>
             <th scope="col">Belt armor in centimeters</th>
             <th scope="col">Turret armor in centimeters</th>
             <th scope="col">Deck armor in centimeters</th>
@@ -33,8 +33,8 @@
             <td th:text="${shipClass.speedInKmh}"></td>
             <td th:text="${shipClass.countryId}"></td>
             <td class="text-center">
-                <a th:href="@{/ship_class_mvc/delete/{id}(id=${shipClass.id})}"><i class="fa fa-trash"></i></a>
-                <a th:href="@{/ship_class_mvc/update/{id}(id=${shipClass.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <a th:href="@{/ship-class-mvc/delete/{id}(id=${shipClass.id})}"><i class="fa fa-trash"></i></a>
+                <a th:href="@{/ship-class-mvc/update/{id}(id=${shipClass.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
     </table>

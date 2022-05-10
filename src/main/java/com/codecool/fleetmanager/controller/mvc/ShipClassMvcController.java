@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/ship_class_mvc")
+@RequestMapping("/ship-class-mvc")
 public class ShipClassMvcController {
     private ShipClassService shipClassService;
 
@@ -54,13 +54,13 @@ public class ShipClassMvcController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Invalid ship class data!", e);
         }
-        return "redirect:/ship_class_mvc";
+        return "redirect:/ship-class-mvc";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteById(@PathVariable Long id) {
         shipClassService.delete(id);
-        return "redirect:/ship_class_mvc";
+        return "redirect:/ship-class-mvc";
     }
 
     @GetMapping("/update/{id}")
@@ -83,7 +83,7 @@ public class ShipClassMvcController {
             return "ship-class-form";
         }
         shipClassService.update(shipClass, id);
-        return "redirect:/ship_class_mvc";
+        return "redirect:/ship-class-mvc";
     }
 }
 

@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/gun_mvc")
+@RequestMapping("/gun-mvc")
 public class GunMvcController {
     private GunService gunService;
 

@@ -1,9 +1,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div th:replace="fragments/header :: header (title='Navy Manager - List of Guns')"></div>
+<div th:replace="fragments/header :: header (title='Navy Manager - Guns')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Gun', createUrl = '/gun_mvc/create', listUrl = '/gun_mvc')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Gun', createUrl = '/gun-mvc/create', listUrl = '/gun-mvc')"></div>
 <h2 style="font-weight: bold;text-align:center;">List of Guns</h2>
 <div class="container">
     <table class="table table-bordered table-striped">
@@ -29,8 +29,8 @@
             <td th:text="${gun.minimumShipDisplacementInTons}"></td>
             <td th:text="${gun.countryId}"></td>
             <td class="text-center">
-                <a th:href="@{/gun_mvc/delete/{id}(id=${gun.id})}"><i class="fa fa-trash"></i></a>
-                <a th:href="@{/gun_mvc/update/{id}(id=${gun.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <a th:href="@{/gun-mvc/delete/{id}(id=${gun.id})}"><i class="fa fa-trash"></i></a>
+                <a th:href="@{/gun-mvc/update/{id}(id=${gun.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
     </table>

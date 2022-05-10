@@ -1,0 +1,32 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Navy Manager - Hull Classifications')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', createUrl = '/hull-classification-mvc/create', listUrl = '/hull-classification-mvc')"></div>
+<h2 style="font-weight: bold;text-align:center;">List of Hull Classifications</h2>
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Abbreviation</th>
+            <th scope="col">Name</th>
+            <th scope="col">Minimum rank precedence</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="hullClassification: ${hullClassifications}">
+            <td th:text="${hullClassification.abbreviation}"></td>
+            <td th:text="${hullClassification.designation}"></td>
+            <td th:text="${hullClassification.minimumRankPrecedence}"></td>
+            <td class="text-center">
+                <a th:href="@{/hull-classification-mvc/delete/{abbreviation}(abbreviation=${hullClassification.abbreviation})}"><i class="fa fa-trash"></i></a>
+                <a th:href="@{/hull-classification-mvc/update/{abbreviation}(abbreviation=${hullClassification.abbreviation})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
