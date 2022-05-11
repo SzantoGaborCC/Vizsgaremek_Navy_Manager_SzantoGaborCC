@@ -4,6 +4,6 @@ CREATE TABLE gun (
 	caliber_in_mms INTEGER NOT NULL,
 	projectile_weight_in_kgs INTEGER NOT NULL,
 	range_in_meters INTEGER NOT NULL,
-	minimum_ship_displacement INTEGER NOT NULL,
+	minimum_ship_displacement_in_tons INTEGER NOT NULL,
 	country_id BIGINT NOT NULL
 );
