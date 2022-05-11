@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.codecool</groupId>
-    <artifactId>FleetManager</artifactId>
+    <artifactId>NavyManager</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>FleetManager</name>
-    <description>FleetManager</description>
+    <name>NavyManager</name>
+    <description>NavyManager</description>
     <properties>
         <java.version>17</java.version>
     </properties>
