@@ -27,13 +27,13 @@ public class GunRestController {
     }
 
     @PostMapping
-    public void add(@RequestBody Gun entity) {
-        gunService.add(entity);
+    public void add(@RequestBody Gun gun) {
+        gunService.add(gun);
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestBody Gun entity, @PathVariable long id) {
-        gunService.update(entity, id);
+    public void update(@RequestBody Gun gun, @PathVariable long id) {
+        gunService.update(gun, id);
     }
 
     @DeleteMapping("/{id}")

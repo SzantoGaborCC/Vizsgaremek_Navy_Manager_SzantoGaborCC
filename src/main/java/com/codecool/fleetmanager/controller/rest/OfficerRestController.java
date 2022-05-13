@@ -26,13 +26,13 @@ public class OfficerRestController {
     }
 
     @PostMapping
-    public void add(@RequestBody Officer entity) {
-        officerService.add(entity);
+    public void add(@RequestBody Officer officer) {
+        officerService.add(officer);
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestBody Officer entity, @PathVariable long id) {
-        officerService.update(entity, id);
+    public void update(@RequestBody Officer officer, @PathVariable long id) {
+        officerService.update(officer, id);
     }
 
     @DeleteMapping("/{id}")

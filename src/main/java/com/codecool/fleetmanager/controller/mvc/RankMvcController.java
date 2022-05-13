@@ -1,7 +1,7 @@
 package com.codecool.fleetmanager.controller.mvc;
 
-import com.codecool.fleetmanager.model.Gun;
-import com.codecool.fleetmanager.service.GunService;
+import com.codecool.fleetmanager.model.Rank;
+import com.codecool.fleetmanager.service.RankService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,73 +15,73 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/gun-mvc")
-public class GunMvcController {
-    private final GunService gunService;
+@RequestMapping("/rank-mvc")
+public class RankMvcController {
+    private final RankService rankService;
 
-    public GunMvcController(GunService gunService) {
-        this.gunService = gunService;
+    public RankMvcController(RankService rankService) {
+        this.rankService = rankService;
     }
 
     @GetMapping
-    public String listGuns(Model model) {
-        model.addAttribute("guns", gunService.findAll());
-        return "gun-list";
+    public String listRanks(Model model) {
+        model.addAttribute("ranks", rankService.findAll());
+        return "rank-list";
     }
 
     @GetMapping("/{id}")
-    public Gun findById(@PathVariable Long id) {
-        return gunService.findById(id);
+    public Rank findById(@PathVariable Long id) {
+        return rankService.findById(id);
     }
 
     @GetMapping("/create")
-    public String showCreateForm(Gun gun, Model model){
+    public String showCreateForm(Rank rank, Model model){
         model.addAttribute("create", true);
-        return "gun-form";
+        return "rank-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid Gun gun, BindingResult result, Model model) {
+    public String add(@Valid Rank rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
-            return "gun-form";
+            return "rank-form";
         }
         try {
-           gunService.add(gun);
+           rankService.add(rank);
         } catch (Exception e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Invalid gun data!", e);
+                    HttpStatus.BAD_REQUEST, "Invalid rank data!", e);
         }
-        return "redirect:/gun-mvc";
+        return "redirect:/rank-mvc";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteById(@PathVariable Long id) {
-        gunService.delete(id);
-        return "redirect:/gun-mvc";
+        rankService.delete(id);
+        return "redirect:/rank-mvc";
     }
 
     @GetMapping("/form/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-           Gun gun = gunService.findById(id);
+           Rank rank = rankService.findById(id);
             model.addAttribute("create", false);
-            model.addAttribute("gun", gun);
-            return "gun-form";
+            model.addAttribute("rank", rank);
+            return "rank-form";
         } catch (Exception e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Nonexistent gun!", e);
+                    HttpStatus.BAD_REQUEST, "Nonexistent rank!", e);
         }
     }
 
     @PostMapping("/form/{id}")
-    public String update(@PathVariable long id, @Valid Gun gun, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @Valid Rank rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
-            return "gun-form";
+            return "rank-form";
         }
-        gunService.update(gun, id);
-        return "redirect:/gun-mvc";
+        rankService.update(rank, id);
+        return "redirect:/rank-mvc";
     }
 }
 

@@ -26,13 +26,13 @@ public class ShipClassRestController {
     }
 
     @PostMapping
-    public void add(@RequestBody ShipClass entity) {
-        shipClassService.add(entity);
+    public void add(@RequestBody ShipClass shipClass) {
+        shipClassService.add(shipClass);
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestBody ShipClass entity, @PathVariable long id) {
-        shipClassService.update(entity, id);
+    public void update(@RequestBody ShipClass shipClass, @PathVariable long id) {
+        shipClassService.update(shipClass, id);
     }
 
     @DeleteMapping("/{id}")

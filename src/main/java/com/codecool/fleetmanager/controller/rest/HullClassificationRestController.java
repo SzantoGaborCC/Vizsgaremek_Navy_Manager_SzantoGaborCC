@@ -27,13 +27,13 @@ public class HullClassificationRestController {
     }
 
     @PostMapping
-    public void add(@RequestBody HullClassification entity) {
-        hullClassificationService.add(entity);
+    public void add(@RequestBody HullClassification hullClassification) {
+        hullClassificationService.add(hullClassification);
     }
 
     @PutMapping("/{abbreviation}")
-    public void update(@RequestBody HullClassification entity, @PathVariable String abbreviation) {
-        hullClassificationService.update(entity, abbreviation);
+    public void update(@RequestBody HullClassification hullClassification, @PathVariable String abbreviation) {
+        hullClassificationService.update(hullClassification, abbreviation);
     }
 
     @DeleteMapping("/{abbreviation}")
