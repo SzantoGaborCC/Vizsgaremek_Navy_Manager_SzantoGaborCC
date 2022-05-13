@@ -16,6 +16,7 @@ public class OfficerMapper implements RowMapper<Officer> {
     public Officer mapRow(ResultSet rs, int rowNum) throws SQLException {
         Officer officer = new Officer();
         officer.setId(rs.getLong("id"));
+        officer.setName(rs.getString("name"));
         officer.setDateOfBirth(rs.getDate("date_of_birth"));
         officer.setRankId(rs.getLong("rank_id"));
         officer.setCountryId(rs.getLong("country_id"));

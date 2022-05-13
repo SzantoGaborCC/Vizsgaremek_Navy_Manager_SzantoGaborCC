@@ -87,8 +87,8 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>8.5.10</version>
                 <configuration>
-                    <url>jdbc:postgresql://localhost:5432/fleet_manager_db</url>
-                    <user>fleet_manager_user</user>
+                    <url>jdbc:postgresql://localhost:5432/navy_manager_db</url>
+                    <user>navy_manager_user</user>
                     <password>fleetingimage</password>
                 </configuration>
                 <dependencies>

@@ -3,7 +3,7 @@ package com.codecool.fleetmanager.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor

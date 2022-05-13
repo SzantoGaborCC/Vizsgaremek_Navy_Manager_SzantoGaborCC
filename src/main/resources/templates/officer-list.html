@@ -22,6 +22,7 @@
             <td th:text="${officer.id}"></td>
             <td th:text="${officer.name}"></td>
             <td th:text="${officer.dateOfBirth}"></td>
+            <td th:text="${officer.rankId}"></td>
             <td th:text="${officer.countryId}"></td>
             <td class="text-center">
                 <a th:href="@{/officer-mvc/delete/{id}(id=${officer.id})}"><i class="fa fa-trash"></i></a>

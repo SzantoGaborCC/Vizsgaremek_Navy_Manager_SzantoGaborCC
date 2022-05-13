@@ -3,17 +3,18 @@ package com.codecool.fleetmanager.controller.mvc;
 
 import com.codecool.fleetmanager.model.Officer;
 import com.codecool.fleetmanager.service.OfficerService;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/officer-mvc")
@@ -83,6 +84,13 @@ public class OfficerMvcController {
         }
         officerService.update(officer, id);
         return "redirect:/officer-mvc";
+    }
+
+    @InitBinder
+    public void registerDateFormatter(WebDataBinder binder) {
+        binder.registerCustomEditor(
+                Date.class,
+                new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
     }
 }
 
