@@ -17,7 +17,6 @@ public class RankRestController {
 
     @GetMapping
     public List<Rank> findAll() {
-        System.out.println(rankService.findAll());
         return rankService.findAll();
     }
 

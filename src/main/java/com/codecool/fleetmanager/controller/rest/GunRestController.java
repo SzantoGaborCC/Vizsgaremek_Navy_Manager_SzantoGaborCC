@@ -17,7 +17,6 @@ public class GunRestController {
 
     @GetMapping
     public List<Gun> findAll() {
-        System.out.println(gunService.findAll());
         return gunService.findAll();
     }
 

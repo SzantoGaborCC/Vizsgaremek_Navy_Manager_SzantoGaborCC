@@ -17,7 +17,6 @@ public class HullClassificationRestController {
 
     @GetMapping
     public List<HullClassification> findAll() {
-        System.out.println(hullClassificationService.findAll());
         return hullClassificationService.findAll();
     }
 
