@@ -61,7 +61,7 @@ public class GunMvcController {
         return "redirect:/gun-mvc";
     }
 
-    @GetMapping("/form/{id}")
+    @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
            Gun gun = gunService.findById(id);
@@ -74,7 +74,7 @@ public class GunMvcController {
         }
     }
 
-    @PostMapping("/form/{id}")
+    @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @Valid Gun gun, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);

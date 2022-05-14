@@ -61,7 +61,7 @@ public class RankMvcController {
         return "redirect:/rank-mvc";
     }
 
-    @GetMapping("/form/{id}")
+    @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
            Rank rank = rankService.findById(id);
@@ -74,7 +74,7 @@ public class RankMvcController {
         }
     }
 
-    @PostMapping("/form/{id}")
+    @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @Valid Rank rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
