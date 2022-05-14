@@ -1,0 +1,36 @@
+<html lang="en">
+
+<div th:replace="fragments/header :: header (title='Navy Manager - Ships')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (current='list', entityName = 'Ship', createUrl = '/ship-mvc/create', listUrl = '/ship-mvc')"></div>
+<h2 style="font-weight: bold;text-align:center;">List of Ships</h2>
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Ship Class</th>
+            <th scope="col">Captain</th>
+            <th scope="col">Country</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ship: ${ships}">
+            <td th:text="${ship.id}"></td>
+            <td th:text="${ship.name}"></td>
+            <td th:text="${ship.shipClassId}"></td>
+            <td th:text="${ship.captainId}"></td>
+            <td th:text="${ship.countryId}"></td>
+            <td class="text-center">
+                <a th:href="@{/ship-mvc/delete/{id}(id=${ship.id})}"><i class="fa fa-trash"></i></a>
+                <a th:href="@{/ship-mvc/update/{id}(id=${ship.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
