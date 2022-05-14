@@ -1,0 +1,30 @@
+<html lang="en">
+<div th:replace="fragments/header :: header (title='Navy Manager - Countries')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (entityName = 'Country', listUrl = '/country-mvc', createUrl='/country-mvc/create')"></div>
+<h2 style="font-weight: bold;text-align:center;" th:text="${create == false ? 'Update Country' : 'Create New Country'}"></h2>
+<div class="container">
+
+  <form action="#" th:action="${create} == true ? @{/country-mvc/create} : @{/country-mvc/update/{id}(id=${country.id})}" th:object="${country}" method="post" novalidate>
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" th:field="*{name}">
+      <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    </div>
+    <!--<div th:if="${create} == false" class="form-group">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option th:each="statusOpt : ${valid_status_values}"
+                th:value="${statusOpt}" th:text="${statusOpt}"
+                th:selected="${userStory.status == statusOpt}"></option>
+      </select>
+      <span class="validationError" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
+      <div class="validationError" th:if="${#fields.detailedErrors('statusValid') != null}" th:each="err : ${#fields.detailedErrors('statusValid')}" th:text="${err.getMessage()}"></div>
+    </div>-->
+    <button type="submit" class="btn btn-primary" th:text="${create == false ? 'Update' : 'Submit'}">Submit</button>
+  </form>
+</div>
+
+</body>
+</html>

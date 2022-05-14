@@ -1,0 +1,29 @@
+<html lang="en">
+
+<div th:replace="fragments/header :: header (title='Navy Manager - Countries')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (current='list', entityName = 'Country', createUrl = '/country-mvc/create', listUrl = '/country-mvc')"></div>
+<h2 style="font-weight: bold;text-align:center;">List of Countries</h2>
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="country: ${countries}">
+            <td th:text="${country.id}"></td>
+            <td th:text="${country.name}"></td>
+            <td class="text-center">
+                <a th:href="@{/country-mvc/delete/{id}(id=${country.id})}"><i class="fa fa-trash"></i></a>
+                <a th:href="@{/country-mvc/update/{id}(id=${country.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
