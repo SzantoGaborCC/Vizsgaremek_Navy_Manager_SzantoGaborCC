@@ -1,6 +1,8 @@
 package com.codecool.fleetmanager.service;
 
+import com.codecool.fleetmanager.dao.GunDao;
 import com.codecool.fleetmanager.dao.ShipDao;
+import com.codecool.fleetmanager.dao.ShipsAndGunsDao;
 import com.codecool.fleetmanager.model.Ship;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,17 +13,28 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ShipService {
     private ShipDao shipDao;
+    private GunDao gunDao;
 
-    public ShipService(ShipDao shipDao) {
+    private ShipsAndGunsDao shipsAndGunsDao;
+
+    public ShipService(ShipDao shipDao, GunDao gunDao, ShipsAndGunsDao shipsAndGunsDao) {
         this.shipDao = shipDao;
+        this.gunDao = gunDao;
+        this.shipsAndGunsDao = shipsAndGunsDao;
     }
 
     public List<Ship> findAll() {
-        return shipDao.findAll();
+        List<Ship> ships = shipDao.findAll();
+        for (Ship ship : ships) {
+            ship.setGuns(shipsAndGunsDao.findGunsByShipId(ship.getId()));
+        }
+        return ships;
     }
 
     public Ship findById(long id) {
-        return shipDao.findById(id).orElseThrow();
+        Ship ship = shipDao.findById(id).orElseThrow();
+        ship.setGuns(shipsAndGunsDao.findGunsByShipId(ship.getId()));
+        return ship;
     }
 
     @Transactional
