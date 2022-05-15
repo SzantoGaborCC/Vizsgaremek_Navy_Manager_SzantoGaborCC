@@ -10,8 +10,8 @@ import java.util.Optional;
 
 @Repository
 public class FleetJdbcDao implements FleetDao {
-    private JdbcTemplate jdbcTemplate;
-    private FleetMapper fleetMapper;
+    private final JdbcTemplate jdbcTemplate;
+    private final FleetMapper fleetMapper;
 
     public FleetJdbcDao(JdbcTemplate jdbcTemplate, FleetMapper fleetMapper) {
         this.jdbcTemplate = jdbcTemplate;
