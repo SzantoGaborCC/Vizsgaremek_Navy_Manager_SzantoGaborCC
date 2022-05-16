@@ -1,7 +1,6 @@
 package com.codecool.fleetmanager.controller.mvc;
 
 import com.codecool.fleetmanager.DTO.GunDTO;
-import com.codecool.fleetmanager.model.Gun;
 import com.codecool.fleetmanager.service.GunService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -36,7 +35,7 @@ public class GunMvcController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(Gun gun, Model model){
+    public String showCreateForm(GunDTO gun, Model model){
         model.addAttribute("create", true);
         return "gun-form";
     }
@@ -76,7 +75,7 @@ public class GunMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid Gun gun, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @Valid GunDTO gun, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "gun-form";

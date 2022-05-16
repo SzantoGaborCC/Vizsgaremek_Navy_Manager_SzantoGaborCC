@@ -44,13 +44,13 @@ public class FleetService {
     }
 
     @Transactional
-    public void add(Fleet fleet) {
-        fleetDao.add(fleet);
+    public void add(FleetDTO fleetDTO) {
+        fleetDao.add(fleetDTO.convertToFleet());
     }
 
     @Transactional
-    public void update(Fleet fleet, long id) {
-        fleetDao.update(fleet, id);
+    public void update(FleetDTO fleetDTO, long id) {
+        fleetDao.update(fleetDTO.convertToFleet(), id);
     }
 
     @Transactional

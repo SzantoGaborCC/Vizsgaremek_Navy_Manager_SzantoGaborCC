@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class CountryService {
-    private CountryDao countryDao;
+    private final CountryDao countryDao;
 
     public CountryService(CountryDao countryDao) {
         this.countryDao = countryDao;
@@ -31,8 +31,8 @@ public class CountryService {
     }
 
     @Transactional
-    public void update(Country country, long id) {
-        countryDao.update(country, id);
+    public void update(CountryDTO countryDTO, long id) {
+        countryDao.update(countryDTO.convertToCountry(), id);
     }
 
     @Transactional

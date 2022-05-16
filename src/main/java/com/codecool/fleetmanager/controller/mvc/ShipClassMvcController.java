@@ -1,8 +1,7 @@
 package com.codecool.fleetmanager.controller.mvc;
 
 
-import com.codecool.fleetmanager.model.Gun;
-import com.codecool.fleetmanager.model.ShipClass;
+import com.codecool.fleetmanager.DTO.ShipClassDTO;
 import com.codecool.fleetmanager.service.ShipClassService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/ship-class-mvc")
 public class ShipClassMvcController {
-    private ShipClassService shipClassService;
+    private final ShipClassService shipClassService;
 
     public ShipClassMvcController(ShipClassService shipClassService) {
         this.shipClassService = shipClassService;
@@ -32,18 +31,18 @@ public class ShipClassMvcController {
     }
 
     @GetMapping("/{id}")
-    public ShipClass findById(@PathVariable Long id) {
+    public ShipClassDTO findById(@PathVariable Long id) {
         return shipClassService.findById(id);
     }
 
     @GetMapping("/create")
-    public String showCreateForm(ShipClass shipClass, Model model){
+    public String showCreateForm(ShipClassDTO shipClass, Model model){
         model.addAttribute("create", true);
         return "ship-class-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid ShipClass shipClass, BindingResult result, Model model) {
+    public String add(@Valid ShipClassDTO shipClass, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "ship-class-form";
@@ -66,7 +65,7 @@ public class ShipClassMvcController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-            ShipClass shipClass = shipClassService.findById(id);
+            ShipClassDTO shipClass = shipClassService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("shipClass", shipClass);
             return "ship-class-form";
@@ -77,7 +76,7 @@ public class ShipClassMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid ShipClass shipClass, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @Valid ShipClassDTO shipClass, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "ship-class-form";

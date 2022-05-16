@@ -1,6 +1,6 @@
 package com.codecool.fleetmanager.controller.mvc;
 
-import com.codecool.fleetmanager.model.HullClassification;
+import com.codecool.fleetmanager.DTO.HullClassificationDTO;
 import com.codecool.fleetmanager.service.HullClassificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/hull-classification-mvc")
 public class HullClassificationMvcController {
-    private HullClassificationService hullClassificationService;
+    private final HullClassificationService hullClassificationService;
 
     public HullClassificationMvcController(HullClassificationService hullClassificationService) {
         this.hullClassificationService = hullClassificationService;
@@ -30,18 +30,18 @@ public class HullClassificationMvcController {
     }
 
     @GetMapping("/{abbreviation}")
-    public HullClassification findByAbbreviation(@PathVariable String abbreviation) {
+    public HullClassificationDTO findByAbbreviation(@PathVariable String abbreviation) {
         return hullClassificationService.findByAbbreviation(abbreviation);
     }
 
     @GetMapping("/create")
-    public String showCreateForm(HullClassification hullClassification, Model model){
+    public String showCreateForm(HullClassificationDTO hullClassification, Model model){
         model.addAttribute("create", true);
         return "hull-classification-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid HullClassification hullClassification, BindingResult result, Model model) {
+    public String add(@Valid HullClassificationDTO hullClassification, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "hull-classification-form";
@@ -64,7 +64,7 @@ public class HullClassificationMvcController {
     @GetMapping("/update/{abbreviation}")
     public String showUpdateForm(@PathVariable String abbreviation, Model model) {
         try {
-            HullClassification hullClassification = hullClassificationService.findByAbbreviation(abbreviation);
+            HullClassificationDTO hullClassification = hullClassificationService.findByAbbreviation(abbreviation);
             System.out.println("found: " + hullClassification);
             model.addAttribute("create", false);
             model.addAttribute("hullClassification", hullClassification);
@@ -76,7 +76,7 @@ public class HullClassificationMvcController {
     }
 
     @PostMapping("/update/{abbreviation}")
-    public String update(@PathVariable String abbreviation, @Valid HullClassification hullClassification, BindingResult result, Model model) {
+    public String update(@PathVariable String abbreviation, @Valid HullClassificationDTO hullClassification, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "hull-classification-form";

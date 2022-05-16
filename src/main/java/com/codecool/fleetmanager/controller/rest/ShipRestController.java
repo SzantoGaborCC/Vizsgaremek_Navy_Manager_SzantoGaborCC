@@ -1,6 +1,6 @@
 package com.codecool.fleetmanager.controller.rest;
 
-import com.codecool.fleetmanager.model.Ship;
+import com.codecool.fleetmanager.DTO.ShipDTO;
 import com.codecool.fleetmanager.service.ShipService;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,29 +9,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/ship")
 public class ShipRestController {
-    private ShipService shipService;
+    private final ShipService shipService;
 
     public ShipRestController(ShipService shipService) {
         this.shipService = shipService;
     }
 
     @GetMapping
-    public List<Ship> findAll() {
+    public List<ShipDTO> findAll() {
         return shipService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Ship findById(@PathVariable long id) {
+    public ShipDTO findById(@PathVariable long id) {
         return shipService.findById(id);
     }
 
     @PostMapping
-    public void add(@RequestBody Ship ship) {
+    public void add(@RequestBody ShipDTO ship) {
         shipService.add(ship);
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestBody Ship ship, @PathVariable long id) {
+    public void update(@RequestBody ShipDTO ship, @PathVariable long id) {
         shipService.update(ship, id);
     }
 

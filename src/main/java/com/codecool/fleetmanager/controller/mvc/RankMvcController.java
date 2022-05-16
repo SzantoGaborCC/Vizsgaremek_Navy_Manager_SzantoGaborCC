@@ -1,6 +1,6 @@
 package com.codecool.fleetmanager.controller.mvc;
 
-import com.codecool.fleetmanager.model.Rank;
+import com.codecool.fleetmanager.DTO.RankDTO;
 import com.codecool.fleetmanager.service.RankService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -30,18 +30,18 @@ public class RankMvcController {
     }
 
     @GetMapping("/{id}")
-    public Rank findById(@PathVariable Long id) {
+    public RankDTO findById(@PathVariable Long id) {
         return rankService.findById(id);
     }
 
     @GetMapping("/create")
-    public String showCreateForm(Rank rank, Model model){
+    public String showCreateForm(RankDTO rank, Model model){
         model.addAttribute("create", true);
         return "rank-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid Rank rank, BindingResult result, Model model) {
+    public String add(@Valid RankDTO rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "rank-form";
@@ -64,7 +64,7 @@ public class RankMvcController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-           Rank rank = rankService.findById(id);
+           RankDTO rank = rankService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("rank", rank);
             return "rank-form";
@@ -75,7 +75,7 @@ public class RankMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid Rank rank, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @Valid RankDTO rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "rank-form";

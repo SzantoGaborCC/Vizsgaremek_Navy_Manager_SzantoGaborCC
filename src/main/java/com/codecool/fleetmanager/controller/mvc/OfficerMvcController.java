@@ -2,7 +2,6 @@ package com.codecool.fleetmanager.controller.mvc;
 
 
 import com.codecool.fleetmanager.DTO.OfficerDTO;
-import com.codecool.fleetmanager.model.Officer;
 import com.codecool.fleetmanager.service.OfficerService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ import java.util.Date;
 @Controller
 @RequestMapping("/officer-mvc")
 public class OfficerMvcController {
-    private OfficerService officerService;
+    private final OfficerService officerService;
 
     public OfficerMvcController(OfficerService officerService) {
         this.officerService = officerService;

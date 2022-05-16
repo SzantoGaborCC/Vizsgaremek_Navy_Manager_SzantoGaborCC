@@ -1,7 +1,7 @@
 package com.codecool.fleetmanager.controller.mvc;
 
 
-import com.codecool.fleetmanager.model.Ship;
+import com.codecool.fleetmanager.DTO.ShipDTO;
 import com.codecool.fleetmanager.service.ShipService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/ship-mvc")
 public class ShipMvcController {
-    private ShipService shipService;
+    private final ShipService shipService;
 
     public ShipMvcController(ShipService shipService) {
         this.shipService = shipService;
@@ -31,18 +31,18 @@ public class ShipMvcController {
     }
 
     @GetMapping("/{id}")
-    public Ship findById(@PathVariable Long id) {
+    public ShipDTO findById(@PathVariable Long id) {
         return shipService.findById(id);
     }
 
     @GetMapping("/create")
-    public String showCreateForm(Ship ship, Model model){
+    public String showCreateForm(ShipDTO ship, Model model){
         model.addAttribute("create", true);
         return "ship-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid Ship ship, BindingResult result, Model model) {
+    public String add(@Valid ShipDTO ship, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "ship-form";
@@ -65,7 +65,7 @@ public class ShipMvcController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-            Ship ship = shipService.findById(id);
+            ShipDTO ship = shipService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("ship", ship);
             return "ship-form";
@@ -76,10 +76,10 @@ public class ShipMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid Ship ship, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @Valid ShipDTO ship, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
-            return "ship--form";
+            return "ship-form";
         }
         shipService.update(ship, id);
         return "redirect:/ship-mvc";

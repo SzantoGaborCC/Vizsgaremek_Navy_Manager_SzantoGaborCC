@@ -44,8 +44,8 @@ public class GunService {
     }
 
     @Transactional
-    public void update(Gun gun, long id) {
-        gunDao.update(gun, id);
+    public void update(GunDTO gunDTO, long id) {
+        gunDao.update(gunDTO.convertToGun(), id);
     }
 
     @Transactional

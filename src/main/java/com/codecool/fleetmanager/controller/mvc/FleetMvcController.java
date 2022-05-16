@@ -1,6 +1,6 @@
 package com.codecool.fleetmanager.controller.mvc;
 
-import com.codecool.fleetmanager.model.Fleet;
+import com.codecool.fleetmanager.DTO.FleetDTO;
 import com.codecool.fleetmanager.service.FleetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -30,18 +30,18 @@ public class FleetMvcController {
     }
 
     @GetMapping("/{id}")
-    public Fleet findById(@PathVariable Long id) {
+    public FleetDTO findById(@PathVariable Long id) {
         return fleetService.findById(id);
     }
 
     @GetMapping("/create")
-    public String showCreateForm(Fleet fleet, Model model){
+    public String showCreateForm(FleetDTO fleet, Model model){
         model.addAttribute("create", true);
         return "fleet-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid Fleet fleet, BindingResult result, Model model) {
+    public String add(@Valid FleetDTO fleet, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "fleet-form";
@@ -64,7 +64,7 @@ public class FleetMvcController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-           Fleet fleet = fleetService.findById(id);
+           FleetDTO fleet = fleetService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("fleet", fleet);
             return "fleet-form";
@@ -75,7 +75,7 @@ public class FleetMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid Fleet fleet, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @Valid FleetDTO fleet, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "fleet-form";
