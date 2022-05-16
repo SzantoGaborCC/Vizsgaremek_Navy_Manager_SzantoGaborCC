@@ -1,5 +1,6 @@
 package com.codecool.fleetmanager.service;
 
+import com.codecool.fleetmanager.DTO.RankDTO;
 import com.codecool.fleetmanager.dao.RankDao;
 import com.codecool.fleetmanager.model.Rank;
 import org.springframework.stereotype.Service;
@@ -16,22 +17,22 @@ public class RankService {
         this.rankDao = rankDao;
     }
 
-    public List<Rank> findAll() {
-        return rankDao.findAll();
+    public List<RankDTO> findAll() {
+        return rankDao.findAll().stream().map(RankDTO::new).toList();
     }
 
-    public Rank findById(long id) {
-        return rankDao.findById(id).orElseThrow();
-    }
-
-    @Transactional
-    public void add(Rank rank) {
-        rankDao.add(rank);
+    public RankDTO findById(long id) {
+        return new RankDTO(rankDao.findById(id).orElseThrow());
     }
 
     @Transactional
-    public void update(Rank rank, long id) {
-        rankDao.update(rank, id);
+    public void add(RankDTO rankDTO) {
+        rankDao.add(rankDTO.convertToRank());
+    }
+
+    @Transactional
+    public void update(RankDTO rankDTO, long id) {
+        rankDao.update(rankDTO.convertToRank(), id);
     }
 
     @Transactional

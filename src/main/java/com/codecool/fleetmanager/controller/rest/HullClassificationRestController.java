@@ -20,9 +20,9 @@ public class HullClassificationRestController {
         return hullClassificationService.findAll();
     }
 
-    @GetMapping("/{abbreviation}")
-    public HullClassification findById(@PathVariable String abbreviation) {
-        return hullClassificationService.findByAbbreviation(abbreviation);
+    @GetMapping("/{abbr}")
+    public HullClassification findById(@PathVariable String abbr) {
+        return hullClassificationService.findByAbbreviation(abbr);
     }
 
     @PostMapping
@@ -30,13 +30,13 @@ public class HullClassificationRestController {
         hullClassificationService.add(hullClassification);
     }
 
-    @PutMapping("/{abbreviation}")
-    public void update(@RequestBody HullClassification hullClassification, @PathVariable String abbreviation) {
-        hullClassificationService.update(hullClassification, abbreviation);
+    @PutMapping("/{abbr}")
+    public void update(@RequestBody HullClassification hullClassification, @PathVariable String abbr) {
+        hullClassificationService.update(hullClassification, abbr);
     }
 
-    @DeleteMapping("/{abbreviation}")
-    public void delete(@PathVariable String abbreviation) {
-        hullClassificationService.delete(abbreviation);
+    @DeleteMapping("/{abbr}")
+    public void delete(@PathVariable String abbr) {
+        hullClassificationService.delete(abbr);
     }
 }

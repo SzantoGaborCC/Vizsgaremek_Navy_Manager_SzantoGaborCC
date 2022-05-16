@@ -1,6 +1,7 @@
 package com.codecool.fleetmanager.controller.mvc;
 
 
+import com.codecool.fleetmanager.DTO.CountryDTO;
 import com.codecool.fleetmanager.model.Country;
 import com.codecool.fleetmanager.service.CountryService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -32,7 +33,7 @@ public class CountryMvcController {
     }
 
     @GetMapping("/{id}")
-    public Country findById(@PathVariable Long id) {
+    public CountryDTO findById(@PathVariable Long id) {
         return countryService.findById(id);
     }
 
@@ -43,7 +44,7 @@ public class CountryMvcController {
     }
 
     @PostMapping("/create")
-    public String add(@Valid Country country, BindingResult result, Model model) {
+    public String add(@Valid CountryDTO country, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "country-form";
@@ -66,7 +67,7 @@ public class CountryMvcController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-            Country country = countryService.findById(id);
+            CountryDTO country = countryService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("country", country);
             return "country-form";

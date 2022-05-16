@@ -99,8 +99,8 @@ INSERT INTO ship
 ("name", ship_class_id, captain_id, country_id)
 VALUES('Szent István', 1, 1, 1);
 
-INSERT INTO ships_and_guns
-(ship_id, gun_id, gun_quantity)
+INSERT INTO ship_classes_and_guns
+(ship_class_id, gun_id, gun_quantity)
 VALUES(1, 1, 12);
 
 INSERT INTO fleet

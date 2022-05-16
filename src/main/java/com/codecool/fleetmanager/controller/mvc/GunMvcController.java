@@ -1,5 +1,6 @@
 package com.codecool.fleetmanager.controller.mvc;
 
+import com.codecool.fleetmanager.DTO.GunDTO;
 import com.codecool.fleetmanager.model.Gun;
 import com.codecool.fleetmanager.service.GunService;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class GunMvcController {
     }
 
     @GetMapping("/{id}")
-    public Gun findById(@PathVariable Long id) {
+    public GunDTO findById(@PathVariable Long id) {
         return gunService.findById(id);
     }
 
@@ -41,7 +42,7 @@ public class GunMvcController {
     }
 
     @PostMapping("/create")
-    public String add(@Valid Gun gun, BindingResult result, Model model) {
+    public String add(@Valid GunDTO gun, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "gun-form";
@@ -64,7 +65,7 @@ public class GunMvcController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-           Gun gun = gunService.findById(id);
+           GunDTO gun = gunService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("gun", gun);
             return "gun-form";

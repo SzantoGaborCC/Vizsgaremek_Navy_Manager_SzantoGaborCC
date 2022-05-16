@@ -1,6 +1,7 @@
 package com.codecool.fleetmanager.controller.mvc;
 
 
+import com.codecool.fleetmanager.DTO.OfficerDTO;
 import com.codecool.fleetmanager.model.Officer;
 import com.codecool.fleetmanager.service.OfficerService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -32,18 +33,18 @@ public class OfficerMvcController {
     }
 
     @GetMapping("/{id}")
-    public Officer findById(@PathVariable Long id) {
+    public OfficerDTO findById(@PathVariable Long id) {
         return officerService.findById(id);
     }
 
     @GetMapping("/create")
-    public String showCreateForm(Officer officer, Model model){
+    public String showCreateForm(OfficerDTO officer, Model model){
         model.addAttribute("create", true);
         return "officer-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid Officer officer, BindingResult result, Model model) {
+    public String add(@Valid OfficerDTO officer, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "officer-form";
@@ -66,7 +67,7 @@ public class OfficerMvcController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-            Officer officer = officerService.findById(id);
+            OfficerDTO officer = officerService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("officer", officer);
             return "officer-form";
@@ -77,7 +78,7 @@ public class OfficerMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid Officer officer, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @Valid OfficerDTO officer, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "officer-form";

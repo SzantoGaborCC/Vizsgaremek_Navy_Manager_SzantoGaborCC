@@ -1,9 +1,9 @@
 package com.codecool.fleetmanager.service;
 
+import com.codecool.fleetmanager.DTO.CountryDTO;
 import com.codecool.fleetmanager.dao.CountryDao;
 import com.codecool.fleetmanager.model.Country;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,17 +17,17 @@ public class CountryService {
         this.countryDao = countryDao;
     }
 
-    public List<Country> findAll() {
-        return countryDao.findAll();
+    public List<CountryDTO> findAll() {
+        return countryDao.findAll().stream().map(CountryDTO::new).toList();
     }
 
-    public Country findById(long id) {
-        return countryDao.findById(id).orElseThrow();
+    public CountryDTO findById(long id) {
+        return new CountryDTO(countryDao.findById(id).orElseThrow());
     }
 
     @Transactional
-    public void add(Country country) {
-        countryDao.add(country);
+    public void add(CountryDTO countryDTO) {
+        countryDao.add(countryDTO.convertToCountry());
     }
 
     @Transactional

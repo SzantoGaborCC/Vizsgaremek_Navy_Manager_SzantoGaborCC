@@ -1,5 +1,6 @@
 package com.codecool.fleetmanager.service;
 
+import com.codecool.fleetmanager.DTO.HullClassificationDTO;
 import com.codecool.fleetmanager.dao.HullClassificationDao;
 import com.codecool.fleetmanager.model.HullClassification;
 import org.springframework.stereotype.Service;
@@ -11,28 +12,28 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class HullClassificationService {
-    private HullClassificationDao hullClassificationDao;
+    private final HullClassificationDao hullClassificationDao;
 
     public HullClassificationService(HullClassificationDao hullClassificationDao) {
         this.hullClassificationDao = hullClassificationDao;
     }
 
-    public List<HullClassification> findAll() {
-        return hullClassificationDao.findAll();
+    public List<HullClassificationDTO> findAll() {
+        return hullClassificationDao.findAll().stream().map(HullClassificationDTO::new).toList();
     }
 
-    public HullClassification findByAbbreviation(String abbreviation) {
-        return hullClassificationDao.findByAbbreviation(abbreviation).orElseThrow();
-    }
-
-    @Transactional
-    public void add(HullClassification hullClassification) {
-        hullClassificationDao.add(hullClassification);
+    public HullClassificationDTO findByAbbreviation(String abbreviation) {
+        return new HullClassificationDTO(hullClassificationDao.findByAbbreviation(abbreviation).orElseThrow());
     }
 
     @Transactional
-    public void update(HullClassification hullClassification, String abbreviation) {
-        hullClassificationDao.update(hullClassification, abbreviation);
+    public void add(HullClassificationDTO hullClassificationDTO) {
+        hullClassificationDao.add(hullClassificationDTO.convertToHullClassification());
+    }
+
+    @Transactional
+    public void update(HullClassificationDTO hullClassificationDTO, String abbreviation) {
+        hullClassificationDao.update(hullClassificationDTO.convertToHullClassification(), abbreviation);
     }
 
     @Transactional

@@ -59,4 +59,22 @@ public class ShipJdbcDao implements ShipDao {
         String query = "DELETE FROM ship WHERE id = ?";
         this.jdbcTemplate.update(query, id);
     }
+
+    @Override
+    public List<Ship> findByCountryId(long countryId) {
+        String query = "SELECT * FROM ship WHERE country_id = ?";
+        return jdbcTemplate.query(query, shipMapper, countryId);
+    }
+
+    @Override
+    public List<Ship> findByShipClassId(long shipClassId) {
+        String query = "SELECT * FROM ship WHERE ship_class_id = ?";
+        return jdbcTemplate.query(query, shipMapper, shipClassId);
+    }
+
+    @Override
+    public List<Ship> findByShipClassIdAndCountryId(long shipClassId, long countryId) {
+        String query = "SELECT * FROM ship WHERE ship_class_id = ? AND country_id = ?";
+        return jdbcTemplate.query(query, shipMapper, shipClassId, countryId);
+    }
 }

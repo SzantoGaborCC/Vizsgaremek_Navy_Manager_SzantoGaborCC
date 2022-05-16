@@ -15,4 +15,10 @@ public interface ShipDao {
     void update(Ship ship, long id);
 
     void delete(long id);
+
+    List<Ship> findByCountryId(long countryId);
+
+    List<Ship> findByShipClassId(long shipClassId);
+
+    List<Ship> findByShipClassIdAndCountryId(long shipClassId, long countryId);
 }
