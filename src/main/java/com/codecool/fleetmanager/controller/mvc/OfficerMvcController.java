@@ -1,7 +1,9 @@
 package com.codecool.fleetmanager.controller.mvc;
 
 
+import com.codecool.fleetmanager.DTO.CountryDTO;
 import com.codecool.fleetmanager.DTO.OfficerDTO;
+import com.codecool.fleetmanager.DTO.RankDTO;
 import com.codecool.fleetmanager.service.OfficerService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/officer-mvc")
@@ -40,13 +44,19 @@ public class OfficerMvcController {
     public String showCreateForm(Model model){
         model.addAttribute("officer", new OfficerDTO());
         model.addAttribute("create", true);
+        model.addAttribute("validRankValues", officerService.getValidRankValues());
+        model.addAttribute("validCountryValues", officerService.getValidCountryValues());
         return "officer-form";
     }
 
     @PostMapping("/create")
     public String add(@Valid OfficerDTO officer, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
             model.addAttribute("create", true);
+            model.addAttribute("officer", officer);
+            model.addAttribute("validRankValues", officerService.getValidRankValues());
+            model.addAttribute("validCountryValues", officerService.getValidCountryValues());
             return "officer-form";
         }
         try {
@@ -70,6 +80,8 @@ public class OfficerMvcController {
             OfficerDTO officer = officerService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("officer", officer);
+            model.addAttribute("validRankValues", officerService.getValidRankValues());
+            model.addAttribute("validCountryValues", officerService.getValidCountryValues());
             return "officer-form";
         } catch (Exception e) {
             throw new ResponseStatusException(
@@ -80,7 +92,11 @@ public class OfficerMvcController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @Valid OfficerDTO officer, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
             model.addAttribute("create", false);
+            model.addAttribute("officer", officer);
+            model.addAttribute("validRankValues", officerService.getValidRankValues());
+            model.addAttribute("validCountryValues", officerService.getValidCountryValues());
             return "officer-form";
         }
         officerService.update(officer, id);
@@ -91,7 +107,37 @@ public class OfficerMvcController {
     public void registerDateFormatter(WebDataBinder binder) {
         binder.registerCustomEditor(
                 Date.class,
-                new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+                new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), false));
+    }
+
+    @InitBinder
+    public void registerRankDTOConverter(WebDataBinder binder) {
+        binder.registerCustomEditor(
+                RankDTO.class,
+                new PropertyEditorSupport() {
+                    @Override
+                    public void setAsText(String text) throws IllegalArgumentException {
+                        setValue(officerService.getValidRankValues().stream()
+                                .filter(rankDTO -> rankDTO.getDesignation().equals(text))
+                                .findAny().orElseThrow()
+                        );
+                    }
+                });
+    }
+
+    @InitBinder
+    public void registerCountryDTOConverter(WebDataBinder binder) {
+        binder.registerCustomEditor(
+                CountryDTO.class,
+                new PropertyEditorSupport() {
+                    @Override
+                    public void setAsText(String text) throws IllegalArgumentException {
+                        setValue(officerService.getValidCountryValues().stream()
+                                .filter(countryDTO -> countryDTO.getName().equals(text))
+                                .findAny().orElseThrow()
+                        );
+                    }
+                });
     }
 }
 

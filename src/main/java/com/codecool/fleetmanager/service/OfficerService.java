@@ -9,6 +9,7 @@ import com.codecool.fleetmanager.model.Officer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -54,5 +55,13 @@ public class OfficerService {
     @Transactional
     public void delete(long id) {
         officerDao.delete(id);
+    }
+
+    public List<RankDTO> getValidRankValues() {
+        return rankService.findAll();
+    }
+
+    public List<CountryDTO> getValidCountryValues() {
+        return countryService.findAll();
     }
 }
