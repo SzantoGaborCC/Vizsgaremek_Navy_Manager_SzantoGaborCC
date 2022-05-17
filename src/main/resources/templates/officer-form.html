@@ -21,9 +21,11 @@
     <div class="form-group">
       <label for="rank">Rank</label>
       <select id="rank" name="rank">
-        <option th:each="rankOpt : ${validRankValues}"
+        <option th:if="${officer.rank} != null" th:each="rankOpt : ${validRankValues}"
                 th:value="${rankOpt.designation}" th:text="${rankOpt.designation}"
                 th:selected="${officer.rank.designation == rankOpt.designation}"></option>
+        <option th:unless="${officer.rank} != null" th:each="rankOpt : ${validRankValues}"
+                th:value="${rankOpt.designation}" th:text="${rankOpt.designation}"></option>
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('rank')}" th:errors="*{rank}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
@@ -31,9 +33,11 @@
     <div class="form-group">
       <label for="country">Country</label>
       <select id="country" name="country">
-        <option th:each="countryOpt : ${validCountryValues}"
+        <option th:if="${officer.country} != null" th:each="countryOpt : ${validCountryValues}"
                 th:value="${countryOpt.name}" th:text="${countryOpt.name}"
                 th:selected="${officer.country.name == countryOpt.name}"></option>
+        <option th:unless="${officer.country} != null" th:each="countryOpt : ${validCountryValues}"
+                th:value="${countryOpt.name}" th:text="${countryOpt.name}"></option>
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
