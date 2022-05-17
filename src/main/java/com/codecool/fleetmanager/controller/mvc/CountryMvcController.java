@@ -37,7 +37,8 @@ public class CountryMvcController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(CountryDTO country, Model model){
+    public String showCreateForm(Model model){
+        model.addAttribute("country", new CountryDTO());
         model.addAttribute("create", true);
         return "country-form";
     }

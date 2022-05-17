@@ -30,7 +30,7 @@ public class GunService {
 
     private GunDTO createGunDTOWithDependencies(Gun gun) {
         GunDTO gunDTO = new GunDTO(gun);
-        gunDTO.setCountryDTO(countryService.findById(gun.getCountryId()));
+        gunDTO.setCountry(countryService.findById(gun.getCountryId()));
         return gunDTO;
     }
 

@@ -37,7 +37,8 @@ public class OfficerMvcController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(OfficerDTO officer, Model model){
+    public String showCreateForm(Model model){
+        model.addAttribute("officer", new OfficerDTO());
         model.addAttribute("create", true);
         return "officer-form";
     }

@@ -36,8 +36,8 @@ public class OfficerService {
 
     private OfficerDTO createOfficerDTOWithDependencies(Officer officer) {
         OfficerDTO officerDTO = new OfficerDTO(officer);
-        officerDTO.setRankDTO(rankService.findById(officer.getRankId()));
-        officerDTO.setCountryDTO(countryService.findById(officer.getCountryId()));
+        officerDTO.setRank(rankService.findById(officer.getRankId()));
+        officerDTO.setCountry(countryService.findById(officer.getCountryId()));
         return officerDTO;
     }
 

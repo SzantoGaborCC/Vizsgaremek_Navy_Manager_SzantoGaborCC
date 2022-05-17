@@ -18,7 +18,6 @@ public class ShipClassService {
     private final ShipClassDao shipClassDao;
     private final CountryService countryService;
     private final GunService gunService;
-
     private final ShipClassesAndGunsDao shipClassesAndGunsDao;
 
     public ShipClassService(ShipClassDao shipClassDao, CountryService countryService, GunService gunService, ShipClassesAndGunsDao shipClassesAndGunsDao) {

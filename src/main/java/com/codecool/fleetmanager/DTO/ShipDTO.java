@@ -1,11 +1,9 @@
 package com.codecool.fleetmanager.DTO;
 
-import com.codecool.fleetmanager.model.*;
+import com.codecool.fleetmanager.model.Ship;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 @Data
 @NoArgsConstructor

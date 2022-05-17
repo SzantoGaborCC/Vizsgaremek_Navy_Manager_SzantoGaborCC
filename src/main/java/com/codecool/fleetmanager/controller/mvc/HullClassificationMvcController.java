@@ -35,7 +35,8 @@ public class HullClassificationMvcController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(HullClassificationDTO hullClassification, Model model){
+    public String showCreateForm(Model model){
+        model.addAttribute("hullClassification", new HullClassificationDTO());
         model.addAttribute("create", true);
         return "hull-classification-form";
     }

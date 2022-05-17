@@ -14,8 +14,8 @@ public class OfficerDTO {
     private Long id;
     private String name;
     private Date dateOfBirth;
-    private RankDTO rankDTO;
-    private CountryDTO countryDTO;
+    private RankDTO rank;
+    private CountryDTO country;
 
     public OfficerDTO(Officer officer) {
         this.id = officer.getId();
@@ -26,7 +26,7 @@ public class OfficerDTO {
     public Officer convertToOfficer() {
         return new Officer(
                 getId(), getName(),
-                getDateOfBirth(), getRankDTO().getId(),
-                getCountryDTO().getId());
+                getDateOfBirth(), getRank().getId(),
+                getCountry().getId());
     }
 }

@@ -16,7 +16,7 @@ public class GunDTO {
     private int rangeInMeters;
     private int minimumShipDisplacementInTons;
 
-    private CountryDTO countryDTO;
+    private CountryDTO country;
 
     public GunDTO(Gun gun) {
         this.id = gun.getId();
@@ -31,6 +31,6 @@ public class GunDTO {
         return new Gun(
                 getDesignation(), getCaliberInMms(),
                 getProjectileWeightInKgs(), getRangeInMeters(),
-                getMinimumShipDisplacementInTons(), getCountryDTO().getId());
+                getMinimumShipDisplacementInTons(), getCountry().getId());
     }
 }

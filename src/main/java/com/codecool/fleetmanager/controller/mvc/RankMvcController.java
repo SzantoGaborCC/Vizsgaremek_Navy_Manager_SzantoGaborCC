@@ -35,7 +35,8 @@ public class RankMvcController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(RankDTO rank, Model model){
+    public String showCreateForm(Model model){
+        model.addAttribute("rank", new RankDTO());
         model.addAttribute("create", true);
         return "rank-form";
     }
