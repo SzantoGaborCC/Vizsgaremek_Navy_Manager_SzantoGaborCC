@@ -19,16 +19,16 @@ import java.util.List;
 public class ShipService {
     private final ShipDao shipDao;
 
-    private final ShipClassDao shipClassDao;
-    private final OfficerDao officerDao;
+    private final ShipClassService shipClassService;
+    private final OfficerService officerService;
 
-    private final CountryDao countryDao;
+    private final CountryService countryService;
 
-    public ShipService(ShipDao shipDao, ShipClassDao shipClassDao, OfficerDao officerDao, CountryDao countryDao) {
+    public ShipService(ShipDao shipDao, ShipClassService shipClassService, OfficerService officerService, CountryService countryService) {
         this.shipDao = shipDao;
-        this.shipClassDao = shipClassDao;
-        this.officerDao = officerDao;
-        this.countryDao = countryDao;
+        this.shipClassService = shipClassService;
+        this.officerService = officerService;
+        this.countryService = countryService;
     }
 
     public List<ShipDTO> findAll() {
@@ -42,9 +42,9 @@ public class ShipService {
 
     private ShipDTO createShipDTOWithDependencies(Ship ship) {
         ShipDTO shipDTO = new ShipDTO(ship);
-        shipDTO.setShipClass(new ShipClassDTO(shipClassDao.findById(ship.getShipClassId()).orElseThrow()));
-        shipDTO.setCaptain(new OfficerDTO(officerDao.findById(ship.getCaptainId()).orElseThrow()));
-        shipDTO.setCountry(new CountryDTO(countryDao.findById(ship.getCountryId()).orElseThrow()));
+        shipDTO.setShipClass(shipClassService.findById(ship.getShipClassId()));
+        shipDTO.setCaptain(officerService.findById(ship.getCaptainId()));
+        shipDTO.setCountry(countryService.findById(ship.getCountryId()));
         return shipDTO;
     }
 

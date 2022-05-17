@@ -1,30 +1,37 @@
 package com.codecool.fleetmanager.service;
 
-import com.codecool.fleetmanager.DTO.CountryDTO;
 import com.codecool.fleetmanager.DTO.FleetDTO;
-import com.codecool.fleetmanager.DTO.OfficerDTO;
-import com.codecool.fleetmanager.dao.CountryDao;
+import com.codecool.fleetmanager.DTO.ShipDTO;
 import com.codecool.fleetmanager.dao.FleetDao;
-import com.codecool.fleetmanager.dao.OfficerDao;
+import com.codecool.fleetmanager.dao.FleetsAndShipsDao;
 import com.codecool.fleetmanager.model.Fleet;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class FleetService {
     private final FleetDao fleetDao;
 
-    private final OfficerDao officerDao;
+    private final OfficerService officerService;
 
-    private final CountryDao countryDao;
+    private final CountryService countryService;
+    private final ShipService shipService;
 
-    public FleetService(FleetDao fleetDao, OfficerDao officerDao, CountryDao countryDao) {
+    private final FleetsAndShipsDao fleetsAndShipsDao;
+
+    public FleetService(FleetDao fleetDao, OfficerService officerService,
+                        CountryService countryService, ShipService shipService,
+                        FleetsAndShipsDao fleetsAndShipsDao) {
         this.fleetDao = fleetDao;
-        this.officerDao = officerDao;
-        this.countryDao = countryDao;
+        this.officerService = officerService;
+        this.countryService = countryService;
+        this.shipService = shipService;
+        this.fleetsAndShipsDao = fleetsAndShipsDao;
     }
 
     public List<FleetDTO> findAll() {
@@ -38,9 +45,15 @@ public class FleetService {
 
     private FleetDTO createFleetDTOWithDependencies(Fleet fleet) {
         FleetDTO fleetDTO = new FleetDTO(fleet);
-        fleetDTO.setCommander(new OfficerDTO(officerDao.findById(fleet.getCommanderId()).orElseThrow()));
-        fleetDTO.setCountry(new CountryDTO(countryDao.findById(fleet.getCountryId()).orElseThrow()));
+        fleetDTO.setCommander(officerService.findById(fleet.getCommanderId()));
+        fleetDTO.setCountry(countryService.findById(fleet.getCountryId()));
+        fleetDTO.setShips(getShipsFromIds(fleetDTO.getId()));
         return fleetDTO;
+    }
+
+    private Set<ShipDTO> getShipsFromIds(long fleetId) {
+        Set<Long> shipIds = fleetsAndShipsDao.findShipIdsByFleetId(fleetId);
+        return shipIds.stream().map(shipService::findById).collect(Collectors.toSet());
     }
 
     @Transactional

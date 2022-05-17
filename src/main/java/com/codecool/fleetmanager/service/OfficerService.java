@@ -4,6 +4,7 @@ import com.codecool.fleetmanager.DTO.*;
 import com.codecool.fleetmanager.dao.CountryDao;
 import com.codecool.fleetmanager.dao.OfficerDao;
 import com.codecool.fleetmanager.dao.RankDao;
+import com.codecool.fleetmanager.model.Country;
 import com.codecool.fleetmanager.model.Officer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,15 +14,15 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class OfficerService {
-    private OfficerDao officerDao;
-    private RankDao rankDao;
+    private final OfficerDao officerDao;
+    private final RankService rankService;
 
-    private CountryDao countryDao;
+   private final CountryService countryService;
 
-    public OfficerService(OfficerDao officerDao, RankDao rankDao, CountryDao countryDao) {
+    public OfficerService(OfficerDao officerDao, RankService rankService, CountryService countryService) {
         this.officerDao = officerDao;
-        this.rankDao = rankDao;
-        this.countryDao = countryDao;
+        this.rankService = rankService;
+        this.countryService = countryService;
     }
 
     public List<OfficerDTO> findAll() {
@@ -35,8 +36,8 @@ public class OfficerService {
 
     private OfficerDTO createOfficerDTOWithDependencies(Officer officer) {
         OfficerDTO officerDTO = new OfficerDTO(officer);
-        officerDTO.setRankDTO(new RankDTO(rankDao.findById(officer.getRankId()).orElseThrow()));
-        officerDTO.setCountryDTO(new CountryDTO(countryDao.findById(officer.getCountryId()).orElseThrow()));
+        officerDTO.setRankDTO(rankService.findById(officer.getRankId()));
+        officerDTO.setCountryDTO(countryService.findById(officer.getCountryId()));
         return officerDTO;
     }
 

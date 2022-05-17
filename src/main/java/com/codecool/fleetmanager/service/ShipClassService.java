@@ -1,10 +1,7 @@
 package com.codecool.fleetmanager.service;
 
-import com.codecool.fleetmanager.DTO.CountryDTO;
 import com.codecool.fleetmanager.DTO.GunDTO;
 import com.codecool.fleetmanager.DTO.ShipClassDTO;
-import com.codecool.fleetmanager.dao.CountryDao;
-import com.codecool.fleetmanager.dao.GunDao;
 import com.codecool.fleetmanager.dao.ShipClassDao;
 import com.codecool.fleetmanager.dao.ShipClassesAndGunsDao;
 import com.codecool.fleetmanager.model.ShipClass;
@@ -19,17 +16,15 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ShipClassService {
     private final ShipClassDao shipClassDao;
-    private final CountryDao countryDao;
-
-    private final GunDao gunDao;
+    private final CountryService countryService;
+    private final GunService gunService;
 
     private final ShipClassesAndGunsDao shipClassesAndGunsDao;
 
-    public ShipClassService(ShipClassDao shipClassDao, CountryDao countryDao,
-                            GunDao gunDao, ShipClassesAndGunsDao shipClassesAndGunsDao) {
+    public ShipClassService(ShipClassDao shipClassDao, CountryService countryService, GunService gunService, ShipClassesAndGunsDao shipClassesAndGunsDao) {
         this.shipClassDao = shipClassDao;
-        this.countryDao = countryDao;
-        this.gunDao = gunDao;
+        this.countryService = countryService;
+        this.gunService = gunService;
         this.shipClassesAndGunsDao = shipClassesAndGunsDao;
     }
 
@@ -44,7 +39,7 @@ public class ShipClassService {
 
     private ShipClassDTO createShipClassDTOWithDependencies(ShipClass shipClass) {
         ShipClassDTO shipClassDTO = new ShipClassDTO(shipClass);
-        shipClassDTO.setCountry(new CountryDTO(countryDao.findById(shipClass.getCountryId()).orElseThrow()));
+        shipClassDTO.setCountry(countryService.findById(shipClass.getCountryId()));
         shipClassDTO.setGuns(getShipGunsFromIds(shipClass.getId()));
         return shipClassDTO;
     }
@@ -53,7 +48,7 @@ public class ShipClassService {
         Map<Long, Integer> gunIdsAndQuantities = shipClassesAndGunsDao.findGunIdsByShipClassId(shipClassId);
         return gunIdsAndQuantities.entrySet().stream()
                 .collect(Collectors.toMap(
-                        entry -> new GunDTO(gunDao.findById(entry.getKey()).orElseThrow()),
+                        entry -> gunService.findById(entry.getKey()),
                         Map.Entry::getValue));
     }
 

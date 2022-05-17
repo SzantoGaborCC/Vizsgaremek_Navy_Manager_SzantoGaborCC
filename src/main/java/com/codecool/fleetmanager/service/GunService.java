@@ -1,8 +1,6 @@
 package com.codecool.fleetmanager.service;
 
-import com.codecool.fleetmanager.DTO.CountryDTO;
 import com.codecool.fleetmanager.DTO.GunDTO;
-import com.codecool.fleetmanager.dao.CountryDao;
 import com.codecool.fleetmanager.dao.GunDao;
 import com.codecool.fleetmanager.model.Gun;
 import org.springframework.stereotype.Service;
@@ -14,11 +12,11 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class GunService {
     private final GunDao gunDao;
-    private final CountryDao countryDao;
+    private final CountryService countryService;
 
-    public GunService(GunDao gunDao, CountryDao countryDao) {
+    public GunService(GunDao gunDao, CountryService countryService) {
         this.gunDao = gunDao;
-        this.countryDao = countryDao;
+        this.countryService = countryService;
     }
 
     public List<GunDTO> findAll() {
@@ -32,14 +30,13 @@ public class GunService {
 
     private GunDTO createGunDTOWithDependencies(Gun gun) {
         GunDTO gunDTO = new GunDTO(gun);
-        gunDTO.setCountryDTO(new CountryDTO(countryDao.findById(gun.getCountryId()).orElseThrow()));
+        gunDTO.setCountryDTO(countryService.findById(gun.getCountryId()));
         return gunDTO;
     }
 
     @Transactional
     public void add(GunDTO gunDTO) {
         Gun gun = gunDTO.convertToGun();
-
         gunDao.add(gun);
     }
 
