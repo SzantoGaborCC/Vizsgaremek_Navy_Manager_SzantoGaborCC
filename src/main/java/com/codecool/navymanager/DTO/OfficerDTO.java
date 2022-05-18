@@ -4,9 +4,7 @@ import com.codecool.navymanager.model.Officer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 
@@ -16,6 +14,7 @@ import java.util.Date;
 public class OfficerDTO {
     private Long id;
     private String name;
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")
     private Date dateOfBirth;
     private RankDTO rank;
     private CountryDTO country;

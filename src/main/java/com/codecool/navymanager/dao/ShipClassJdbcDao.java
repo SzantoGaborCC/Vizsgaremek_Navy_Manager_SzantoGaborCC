@@ -36,15 +36,16 @@ public class ShipClassJdbcDao implements ShipClassDao {
                 "(name, " +
                 "displacement_in_tons, " +
                 "hull_classification, " +
-                "armor_belt_in_cms " +
-                "armor_turret_in_cms " +
-                "armor_deck_in_cms " +
-                "speed_in_kmh " +
-                ") VALUES (?,?,?,?,?,?,?)";
+                "armor_belt_in_cms, " +
+                "armor_turret_in_cms, " +
+                "armor_deck_in_cms, " +
+                "speed_in_kmh, " +
+                "country_id " +
+                ") VALUES (?,?,?,?,?,?,?,?)";
        jdbcTemplate.update(query,
                shipClass.getName(), shipClass.getDisplacementInTons(), shipClass.getHullClassification(),
                shipClass.getArmorBeltInCms(), shipClass.getArmorTurretInCms(), shipClass.getArmorDeckInCms(),
-               shipClass.getSpeedInKmh());
+               shipClass.getSpeedInKmh(),shipClass.getCountryId());
     }
 
     @Override
@@ -56,12 +57,13 @@ public class ShipClassJdbcDao implements ShipClassDao {
                 "armor_belt_in_cms = ?, " +
                 "armor_turret_in_cms = ?, " +
                 "armor_deck_in_cms = ?, " +
-                "speed_in_kmh = ? " +
+                "speed_in_kmh = ?, " +
+                "country_id = ? " +
                 "WHERE id = ?";
         jdbcTemplate.update(query,
                 shipClass.getName(), shipClass.getDisplacementInTons(), shipClass.getHullClassification(),
                 shipClass.getArmorBeltInCms(), shipClass.getArmorTurretInCms(), shipClass.getArmorDeckInCms(),
-                shipClass.getSpeedInKmh(), id);
+                shipClass.getSpeedInKmh(), shipClass.getCountryId(), id);
     }
 
     @Override

@@ -52,12 +52,4 @@ public class OfficerService {
     public void delete(long id) {
         officerDao.delete(id);
     }
-
-    public List<RankDTO> getValidRankValues() {
-        return rankService.findAll();
-    }
-
-    public List<CountryDTO> getValidCountryValues() {
-        return countryService.findAll();
-    }
 }

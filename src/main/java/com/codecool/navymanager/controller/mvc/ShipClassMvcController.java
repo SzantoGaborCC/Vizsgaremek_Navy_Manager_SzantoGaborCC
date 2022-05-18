@@ -2,15 +2,14 @@ package com.codecool.navymanager.controller.mvc;
 
 
 import com.codecool.navymanager.DTO.ShipClassDTO;
+import com.codecool.navymanager.service.CountryService;
+import com.codecool.navymanager.service.HullClassificationService;
 import com.codecool.navymanager.service.ShipClassService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -20,8 +19,13 @@ import javax.validation.Valid;
 public class ShipClassMvcController {
     private final ShipClassService shipClassService;
 
-    public ShipClassMvcController(ShipClassService shipClassService) {
+    private final HullClassificationService hullClassificationService;
+    private final CountryService countryService;
+
+    public ShipClassMvcController(ShipClassService shipClassService, HullClassificationService hullClassificationService, CountryService countryService) {
         this.shipClassService = shipClassService;
+        this.hullClassificationService = hullClassificationService;
+        this.countryService = countryService;
     }
 
     @GetMapping
@@ -36,15 +40,20 @@ public class ShipClassMvcController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(ShipClassDTO shipClass, Model model){
+    public String showCreateForm(Model model){
         model.addAttribute("create", true);
+        model.addAttribute("shipClass", new ShipClassDTO());
+        model.addAttribute("validCountryValues", countryService.findAll());
+        model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
         return "ship-class-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid ShipClassDTO shipClass, BindingResult result, Model model) {
+    public String add(@ModelAttribute("shipClass") @Valid ShipClassDTO shipClass, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
+            model.addAttribute("validCountryValues", countryService.findAll());
+            model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
             return "ship-class-form";
         }
         try {
@@ -68,6 +77,8 @@ public class ShipClassMvcController {
             ShipClassDTO shipClass = shipClassService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("shipClass", shipClass);
+            model.addAttribute("validCountryValues", countryService.findAll());
+            model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
             return "ship-class-form";
         } catch (Exception e) {
             throw new ResponseStatusException(
@@ -76,9 +87,11 @@ public class ShipClassMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid ShipClassDTO shipClass, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @ModelAttribute("shipClass") @Valid ShipClassDTO shipClass, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
+            model.addAttribute("validCountryValues", countryService.findAll());
+            model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
             return "ship-class-form";
         }
         shipClassService.update(shipClass, id);

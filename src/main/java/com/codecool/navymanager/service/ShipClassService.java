@@ -17,12 +17,15 @@ import java.util.stream.Collectors;
 public class ShipClassService {
     private final ShipClassDao shipClassDao;
     private final CountryService countryService;
+
+    private final HullClassificationService hullClassificationService;
     private final GunService gunService;
     private final ShipClassesAndGunsDao shipClassesAndGunsDao;
 
-    public ShipClassService(ShipClassDao shipClassDao, CountryService countryService, GunService gunService, ShipClassesAndGunsDao shipClassesAndGunsDao) {
+    public ShipClassService(ShipClassDao shipClassDao, CountryService countryService, HullClassificationService hullClassificationService, GunService gunService, ShipClassesAndGunsDao shipClassesAndGunsDao) {
         this.shipClassDao = shipClassDao;
         this.countryService = countryService;
+        this.hullClassificationService = hullClassificationService;
         this.gunService = gunService;
         this.shipClassesAndGunsDao = shipClassesAndGunsDao;
     }
@@ -38,6 +41,7 @@ public class ShipClassService {
 
     private ShipClassDTO createShipClassDTOWithDependencies(ShipClass shipClass) {
         ShipClassDTO shipClassDTO = new ShipClassDTO(shipClass);
+        shipClassDTO.setHullClassification(hullClassificationService.findByAbbreviation(shipClass.getHullClassification()));
         shipClassDTO.setCountry(countryService.findById(shipClass.getCountryId()));
         shipClassDTO.setGuns(getShipGunsFromIds(shipClass.getId()));
         return shipClassDTO;

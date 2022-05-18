@@ -15,7 +15,7 @@ public class ShipClassDTO {
     private String name;
     private int displacementInTons;
 
-    private HullClassificationDTO hullClassificationDTO;
+    private HullClassificationDTO hullClassification;
     private int armorBeltInCms;
     private int armorTurretInCms;
     private int armorDeckInCms;
@@ -26,6 +26,7 @@ public class ShipClassDTO {
     public ShipClassDTO(ShipClass shipClass) {
         this.id = shipClass.getId();
         this.name = shipClass.getName();
+        this.displacementInTons = shipClass.getDisplacementInTons();
         this.armorBeltInCms = shipClass.getArmorBeltInCms();
         this.armorTurretInCms = shipClass.getArmorTurretInCms();
         this.armorDeckInCms = shipClass.getArmorDeckInCms();
@@ -35,7 +36,7 @@ public class ShipClassDTO {
     public ShipClass convertToShipClass() {
         return new ShipClass(
                 getId(), getName(),
-                getDisplacementInTons(), getHullClassificationDTO().getAbbreviation(),
+                getDisplacementInTons(), getHullClassification().getAbbreviation(),
                 getArmorBeltInCms(), getArmorTurretInCms(),
                 getArmorDeckInCms(), getSpeedInKmh(),
                 getCountry().getId());

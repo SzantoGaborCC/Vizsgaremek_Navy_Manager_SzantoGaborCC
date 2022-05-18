@@ -27,12 +27,12 @@
             <td th:text="${shipClass.id}"></td>
             <td th:text="${shipClass.name}"></td>
             <td th:text="${shipClass.displacementInTons}"></td>
-            <td th:text="${shipClass.hullClassification}"></td>
+            <td th:text="${shipClass.hullClassification.designation}"></td>
             <td th:text="${shipClass.armorBeltInCms}"></td>
             <td th:text="${shipClass.armorTurretInCms}"></td>
             <td th:text="${shipClass.armorDeckInCms}"></td>
             <td th:text="${shipClass.speedInKmh}"></td>
-            <td th:text="${shipClass.countryId}"></td>
+            <td th:text="${shipClass.country.name}"></td>
             <td class="text-center">
                 <a th:href="@{/ship-class-mvc/delete/{id}(id=${shipClass.id})}"><i class="fa fa-trash"></i></a>
                 <a th:href="@{/ship-class-mvc/update/{id}(id=${shipClass.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
