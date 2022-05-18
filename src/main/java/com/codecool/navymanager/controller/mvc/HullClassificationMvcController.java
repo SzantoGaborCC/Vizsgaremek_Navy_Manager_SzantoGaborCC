@@ -56,16 +56,16 @@ public class HullClassificationMvcController {
         return "redirect:/hull-classification-mvc";
     }
 
-    @GetMapping("/delete/{abbreviation}")
-    public String deleteByAbbreviation(@PathVariable String abbreviation) {
-        hullClassificationService.delete(abbreviation);
+    @GetMapping("/delete/{abbr}")
+    public String deleteByAbbr(@PathVariable String abbr) {
+        hullClassificationService.delete(abbr);
         return "redirect:/hull-classification-mvc";
     }
 
-    @GetMapping("/update/{abbreviation}")
-    public String showUpdateForm(@PathVariable String abbreviation, Model model) {
+    @GetMapping("/update/{abbr}")
+    public String showUpdateForm(@PathVariable String abbr, Model model) {
         try {
-            HullClassificationDTO hullClassification = hullClassificationService.findByAbbreviation(abbreviation);
+            HullClassificationDTO hullClassification = hullClassificationService.findByAbbreviation(abbr);
             System.out.println("found: " + hullClassification);
             model.addAttribute("create", false);
             model.addAttribute("hullClassification", hullClassification);
@@ -76,13 +76,13 @@ public class HullClassificationMvcController {
         }
     }
 
-    @PostMapping("/update/{abbreviation}")
-    public String update(@PathVariable String abbreviation, @Valid HullClassificationDTO hullClassification, BindingResult result, Model model) {
+    @PostMapping("/update/{abbr}")
+    public String update(@PathVariable String abbr, @Valid HullClassificationDTO hullClassification, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "hull-classification-form";
         }
-        hullClassificationService.update(hullClassification, abbreviation);
+        hullClassificationService.update(hullClassification, abbr);
         return "redirect:/hull-classification-mvc";
     }
 }

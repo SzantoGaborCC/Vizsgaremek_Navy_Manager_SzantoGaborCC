@@ -74,7 +74,7 @@ public class OfficerMvcController {
     }
 
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, OfficerDTO officerDTO ,Model model) {
         try {
             OfficerDTO officer = officerService.findById(id);
             model.addAttribute("create", false);
@@ -89,10 +89,11 @@ public class OfficerMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid OfficerDTO officer, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @ModelAttribute("officer") @Valid OfficerDTO officer, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            System.out.println(result.getAllErrors());
+            //System.out.println(result.getAllErrors());
             model.addAttribute("create", false);
+            System.out.println("is there an officer: " + model.getAttribute("officer"));
             model.addAttribute("officer", officer);
             model.addAttribute("validRankValues", officerService.getValidRankValues());
             model.addAttribute("validCountryValues", officerService.getValidCountryValues());
@@ -102,14 +103,14 @@ public class OfficerMvcController {
         return "redirect:/officer-mvc";
     }
 
-    @InitBinder
+  /* @InitBinder
     public void registerDateFormatter(WebDataBinder binder) {
         binder.registerCustomEditor(
                 Date.class,
                 new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), false));
-    }
+    }*/
 
-    @InitBinder
+    /*@InitBinder
     public void registerRankDTOConverter(WebDataBinder binder) {
         binder.registerCustomEditor(
                 RankDTO.class,
@@ -137,6 +138,6 @@ public class OfficerMvcController {
                         );
                     }
                 });
-    }
+    }*/
 }
 
