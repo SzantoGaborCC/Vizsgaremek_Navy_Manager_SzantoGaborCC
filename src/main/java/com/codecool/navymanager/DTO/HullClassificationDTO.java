@@ -1,6 +1,7 @@
 package com.codecool.navymanager.DTO;
 
 import com.codecool.navymanager.model.HullClassification;
+import com.codecool.navymanager.model.Rank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,17 +12,16 @@ import lombok.NoArgsConstructor;
 public class HullClassificationDTO {
     private String abbreviation;
     private String designation;
-    private int minimumRankPrecedence;
+    private RankDTO minimumRank;
 
     public HullClassificationDTO(HullClassification hullClassification) {
         this.abbreviation = hullClassification.getAbbreviation();
         this.designation = hullClassification.getDesignation();
-        this.minimumRankPrecedence = hullClassification.getMinimumRankPrecedence();
     }
 
     public HullClassification convertToHullClassification() {
         return new HullClassification(
-                getAbbreviation(), getDesignation(),getMinimumRankPrecedence()
+                getAbbreviation(), getDesignation(), getMinimumRank().getPrecedence()
         );
     }
 }

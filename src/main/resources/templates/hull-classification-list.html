@@ -12,7 +12,7 @@
         <tr>
             <th scope="col">Abbreviation</th>
             <th scope="col">Name</th>
-            <th scope="col">Minimum rank precedence</th>
+            <th scope="col">Minimum rank required</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -20,7 +20,7 @@
         <tr th:each="hullClassification: ${hullClassifications}">
             <td th:text="${hullClassification.abbreviation}"></td>
             <td th:text="${hullClassification.designation}"></td>
-            <td th:text="${hullClassification.minimumRankPrecedence}"></td>
+            <td th:text="${hullClassification.minimumRank.designation}"></td>
             <td class="text-center">
                 <a th:href="@{/hull-classification-mvc/delete/{abbreviation}(abbreviation=${hullClassification.abbreviation})}"><i class="fa fa-trash"></i></a>
                 <a th:href="@{/hull-classification-mvc/update/{abbreviation}(abbreviation=${hullClassification.abbreviation})}"><i class="fa-solid fa-pen-to-square"></i></a></td>

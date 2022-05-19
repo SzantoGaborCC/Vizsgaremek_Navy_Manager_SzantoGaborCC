@@ -10,6 +10,8 @@ public interface RankDao {
 
     Optional<Rank> findById(long id);
 
+    Optional<Rank> findByPrecedence(int minimumRankPrecedence);
+
     void add(Rank rank);
 
     void update(Rank rank, long id);

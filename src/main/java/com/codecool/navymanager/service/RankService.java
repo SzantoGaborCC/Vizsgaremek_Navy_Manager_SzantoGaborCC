@@ -2,6 +2,7 @@ package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.DTO.RankDTO;
 import com.codecool.navymanager.dao.RankDao;
+import com.codecool.navymanager.model.Rank;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class RankService {
-    private RankDao rankDao;
+    private final RankDao rankDao;
 
     public RankService(RankDao rankDao) {
         this.rankDao = rankDao;
@@ -22,6 +23,10 @@ public class RankService {
 
     public RankDTO findById(long id) {
         return new RankDTO(rankDao.findById(id).orElseThrow());
+    }
+
+    public RankDTO findByPrecedence(int minimumRankPrecedence) {
+        return new RankDTO(rankDao.findByPrecedence(minimumRankPrecedence).orElseThrow());
     }
 
     @Transactional

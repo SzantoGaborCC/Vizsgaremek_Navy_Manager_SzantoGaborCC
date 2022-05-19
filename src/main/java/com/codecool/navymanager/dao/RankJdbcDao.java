@@ -31,6 +31,12 @@ public class RankJdbcDao implements RankDao {
     }
 
     @Override
+    public Optional<Rank> findByPrecedence(int minimumRankPrecedence) {
+        String query = "SELECT * FROM rank WHERE precedence = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, rankMapper, minimumRankPrecedence));
+    }
+
+    @Override
     public void add(Rank rank) {
         String query = "INSERT INTO rank " +
                 "(designation, " +

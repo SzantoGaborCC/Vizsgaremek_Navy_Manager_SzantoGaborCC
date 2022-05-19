@@ -2,6 +2,7 @@ package com.codecool.navymanager.controller.mvc;
 
 import com.codecool.navymanager.DTO.HullClassificationDTO;
 import com.codecool.navymanager.service.HullClassificationService;
+import com.codecool.navymanager.service.RankService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +20,11 @@ import javax.validation.Valid;
 public class HullClassificationMvcController {
     private final HullClassificationService hullClassificationService;
 
-    public HullClassificationMvcController(HullClassificationService hullClassificationService) {
+    private final RankService rankService;
+
+    public HullClassificationMvcController(HullClassificationService hullClassificationService, RankService rankService) {
         this.hullClassificationService = hullClassificationService;
+        this.rankService = rankService;
     }
 
     @GetMapping
@@ -36,8 +40,9 @@ public class HullClassificationMvcController {
 
     @GetMapping("/create")
     public String showCreateForm(Model model){
-        model.addAttribute("hullClassification", new HullClassificationDTO());
         model.addAttribute("create", true);
+        model.addAttribute("hullClassification", new HullClassificationDTO());
+        model.addAttribute("validRankValues", rankService.findAll());
         return "hull-classification-form";
     }
 
@@ -45,6 +50,8 @@ public class HullClassificationMvcController {
     public String add(@Valid HullClassificationDTO hullClassification, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
+            model.addAttribute("validRankValues", rankService.findAll());
+
             return "hull-classification-form";
         }
         try {
@@ -69,6 +76,7 @@ public class HullClassificationMvcController {
             System.out.println("found: " + hullClassification);
             model.addAttribute("create", false);
             model.addAttribute("hullClassification", hullClassification);
+            model.addAttribute("validRankValues", rankService.findAll());
             return "hull-classification-form";
         } catch (Exception e) {
             throw new ResponseStatusException(
@@ -80,6 +88,7 @@ public class HullClassificationMvcController {
     public String update(@PathVariable String abbr, @Valid HullClassificationDTO hullClassification, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
+            model.addAttribute("validRankValues", rankService.findAll());
             return "hull-classification-form";
         }
         hullClassificationService.update(hullClassification, abbr);

@@ -4,7 +4,7 @@
 <body>
 
 <div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', listUrl = '/hull-classification-mvc', createUrl='/hull-classification-mvc/create')"></div>
-<h2 style="font-weight: bold;text-align:center;" th:text="${create == false ? 'Update Hull Classification' : 'Create Hull Classification'}"></h2>
+<h2 style="font-weight: bold;text-align:center;" th:text="${create == false ? 'Update Hull Classification' : 'Create New Hull Classification'}"></h2>
 <div class="container">
 
   <form action="#" th:action="${create} == true ? @{/hull-classification-mvc/create} : @{/hull-classification-mvc/update/{abbreviation}(abbreviation=${hullClassification.abbreviation})}" th:object="${hullClassification}" method="post" novalidate>
@@ -19,9 +19,15 @@
       <span class="validationError" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></span>
     </div>
     <div class="form-group">
-      <label for="minimumRankPrecedence">Minimum rank precedence</label>
-      <input type="text" class="form-control" id="minimumRankPrecedence" th:field="*{minimumRankPrecedence}">
-      <span class="validationError" th:if="${#fields.hasErrors('minimumRankPrecedence')}" th:errors="*{minimumRankPrecedence}"></span>
+      <label for="minimumRank">Minimum rank required</label>
+      <select id="minimumRank" name="minimumRank">
+        <option th:if="${hullClassification.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
+                th:value="${rankOpt.designation}" th:text="${rankOpt.designation}"
+                th:selected="${hullClassification.minimumRank.designation == rankOpt.designation}"></option>
+        <option th:unless="${hullClassification.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
+                th:value="${rankOpt.designation}" th:text="${rankOpt.designation}"></option>
+      </select>
+      <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}" th:errors="*{minimumRank}"></span>
     </div>
     <!--<div th:if="${create} == false" class="form-group">
       <label for="status">Status</label>

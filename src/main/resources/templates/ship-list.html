@@ -4,7 +4,7 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Ships')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (current='list', entityName = 'Ship', createUrl = '/ship-mvc/create', listUrl = '/ship-mvc')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Ship', createUrl = '/ship-mvc/create', listUrl = '/ship-mvc')"></div>
 <h2 style="font-weight: bold;text-align:center;">List of Ships</h2>
 <div class="container">
     <table class="table table-bordered table-striped">
