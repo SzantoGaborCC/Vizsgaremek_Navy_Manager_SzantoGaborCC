@@ -2,6 +2,8 @@ INSERT INTO public.country ("name")
 VALUES ('Austria-Hungary');
 INSERT INTO public.country ("name")
 VALUES ('Germany');
+INSERT INTO public.country ("name")
+VALUES ('United Kingdom');
 
 INSERT INTO gun
 (designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
@@ -58,10 +60,17 @@ VALUES('Admiral of the Navy', 10);
 
 INSERT INTO officer
 ("name", date_of_birth, rank_id, country_id)
-VALUES('Wilhelm Student', '1882-12-12', 8, 1);
+VALUES('Sigmund von Bülow', '1872-11-12', 9, 1);
 INSERT INTO officer
 ("name", date_of_birth, rank_id, country_id)
-VALUES('Sigmund von Bülow', '1877-11-11', 9, 1);
+VALUES('Wilhelm Student', '1875-03-11', 5, 2);
+INSERT INTO officer
+("name", date_of_birth, rank_id, country_id)
+VALUES('Erich Falkenstein', '1877-03-11', 10, 2);
+INSERT INTO officer
+("name", date_of_birth, rank_id, country_id)
+VALUES('Edmund Lighter', '1857-06-11', 4, 3);
+
 
 INSERT INTO hull_classification
 (abbreviation, designation, minimum_rank_precedence)
@@ -94,6 +103,9 @@ VALUES('CVE', 'Escort Aircraft Carrier', 5);
 INSERT INTO ship_class
 ("name", displacement_in_tons, hull_classification, armor_belt_in_cms, armor_turret_in_cms, armor_deck_in_cms, speed_in_kmh, country_id)
 VALUES('Viribus Unitis', 20000, 'BB', 28, 28, 5, 37, 1);
+INSERT INTO ship_class
+("name", displacement_in_tons, hull_classification, armor_belt_in_cms, armor_turret_in_cms, armor_deck_in_cms, speed_in_kmh, country_id)
+VALUES('Radetzky', 14500, 'BB', 23, 25, 5, 38, 1);
 
 INSERT INTO ship
 ("name", ship_class_id, captain_id, country_id)
