@@ -1,6 +1,7 @@
 package com.codecool.navymanager.DTO;
 
 import com.codecool.navymanager.model.Fleet;
+import com.codecool.navymanager.model.Rank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.Set;
 public class FleetDTO {
     private Long id;
     private String designation;
-    private int minimumRankPrecedence;
+    private RankDTO minimumRank;
     private OfficerDTO commander;
     private CountryDTO country;
     private Set<ShipDTO> ships;
@@ -21,12 +22,11 @@ public class FleetDTO {
     public FleetDTO(Fleet fleet) {
         this.id = fleet.getId();
         this.designation = fleet.getDesignation();
-        this.minimumRankPrecedence = fleet.getMinimumRankPrecedence();
     }
 
     public Fleet convertToFleet() {
         return new Fleet(
-                getId(),getDesignation(), getMinimumRankPrecedence(),
+                getId(),getDesignation(), getMinimumRank().getPrecedence(),
                 getCommander().getId(), getCountry().getId());
     }
 }

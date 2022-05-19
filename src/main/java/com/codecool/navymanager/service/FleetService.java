@@ -17,17 +17,18 @@ import java.util.stream.Collectors;
 public class FleetService {
     private final FleetDao fleetDao;
 
+    private  final RankService rankService;
     private final OfficerService officerService;
-
     private final CountryService countryService;
     private final ShipService shipService;
 
     private final FleetsAndShipsDao fleetsAndShipsDao;
 
-    public FleetService(FleetDao fleetDao, OfficerService officerService,
-                        CountryService countryService, ShipService shipService,
-                        FleetsAndShipsDao fleetsAndShipsDao) {
+    public FleetService(FleetDao fleetDao, RankService rankService,
+                        OfficerService officerService, CountryService countryService,
+                        ShipService shipService, FleetsAndShipsDao fleetsAndShipsDao) {
         this.fleetDao = fleetDao;
+        this.rankService = rankService;
         this.officerService = officerService;
         this.countryService = countryService;
         this.shipService = shipService;
@@ -45,6 +46,7 @@ public class FleetService {
 
     private FleetDTO createFleetDTOWithDependencies(Fleet fleet) {
         FleetDTO fleetDTO = new FleetDTO(fleet);
+        fleetDTO.setMinimumRank(rankService.findByPrecedence(fleet.getMinimumRankPrecedence()));
         fleetDTO.setCommander(officerService.findById(fleet.getCommanderId()));
         fleetDTO.setCountry(countryService.findById(fleet.getCountryId()));
         fleetDTO.setShips(getShipsFromIds(fleetDTO.getId()));

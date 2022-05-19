@@ -6,27 +6,48 @@
 <div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet-mvc', createUrl='/fleet-mvc/create')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${create == false ? 'Update Fleet' : 'Create New Fleet'}"></h2>
 <div class="container">
-
   <form action="#" th:action="${create} == true ? @{/fleet-mvc/create} : @{/fleet-mvc/update/{id}(id=${fleet.id})}" th:object="${fleet}" method="post" novalidate>
+    <input type="hidden" id="id" th:field="*{id}">
     <div class="form-group">
       <label for="designation">Designation</label>
       <input type="text" class="form-control" id="designation" th:field="*{designation}">
       <span class="validationError" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></span>
     </div>
     <div class="form-group">
-      <label for="minimumRankPrecedence">Minimum rank precedence</label>
-      <input type="text" class="form-control" id="minimumRankPrecedence" th:field="*{minimumRankPrecedence}">
-      <span class="validationError" th:if="${#fields.hasErrors('minimumRankPrecedence')}" th:errors="*{minimumRankPrecedence}"></span>
+      <label for="minimumRank">Minimum rank required</label>
+      <select id="minimumRank" name="minimumRank">
+        <option th:if="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
+                th:value="${rankOpt.designation}" th:text="${rankOpt.designation}"
+                th:selected="${fleet.minimumRank.designation == rankOpt.designation}"></option>
+        <option th:unless="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
+                th:value="${rankOpt.designation}" th:text="${rankOpt.designation}"></option>
+      </select>
+      <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}" th:errors="*{minimumRank}"></span>
+      <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
     <div class="form-group">
-      <label for="commanderId">Commander</label>
-      <input type="text" class="form-control" id="commanderId" th:field="*{commanderId}">
-      <span class="validationError" th:if="${#fields.hasErrors('commanderId')}" th:errors="*{commanderId}"></span>
+      <label for="commander">Commander</label>
+      <select id="commander" name="commander">
+        <option th:if="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
+                th:value="${commanderOpt.name}" th:text="${commanderOpt.name}"
+                th:selected="${fleet.commander.name == commanderOpt.name}"></option>
+        <option th:unless="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
+                th:value="${commanderOpt.name}" th:text="${commanderOpt.name}"></option>
+      </select>
+      <span class="validationError" th:if="${#fields.hasErrors('commander')}" th:errors="*{commander}"></span>
+      <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
     <div class="form-group">
-      <label for="countryId">Country</label>
-      <input type="text" class="form-control" id="countryId" th:field="*{countryId}">
-      <span class="validationError" th:if="${#fields.hasErrors('countryId')}" th:errors="*{countryId}"></span>
+      <label for="country">Country</label>
+      <select id="country" name="country">
+        <option th:if="${fleet.country} != null" th:each="countryOpt : ${validCountryValues}"
+                th:value="${countryOpt.name}" th:text="${countryOpt.name}"
+                th:selected="${fleet.country.name == countryOpt.name}"></option>
+        <option th:unless="${fleet.country} != null" th:each="countryOpt : ${validCountryValues}"
+                th:value="${countryOpt.name}" th:text="${countryOpt.name}"></option>
+      </select>
+      <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+      <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
     <!--<div th:if="${create} == false" class="form-group">
       <label for="status">Status</label>
