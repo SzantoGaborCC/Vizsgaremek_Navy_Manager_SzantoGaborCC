@@ -44,7 +44,7 @@ public class CountryMvcController {
     }
 
     @PostMapping("/create")
-    public String add(@Valid CountryDTO country, BindingResult result, Model model) {
+    public String add(@ModelAttribute("country") @Valid CountryDTO country, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "country-form";
@@ -78,7 +78,7 @@ public class CountryMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid CountryDTO country, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @ModelAttribute("country") @Valid CountryDTO country, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "country-form";

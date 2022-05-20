@@ -32,7 +32,6 @@ public class FleetMvcController {
     @GetMapping
     public String listFleets(Model model) {
         model.addAttribute("fleets", fleetService.findAll());
-        System.out.println(fleetService.findAll());
         return "fleet-list";
     }
 

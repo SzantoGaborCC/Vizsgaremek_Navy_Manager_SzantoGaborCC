@@ -1,15 +1,13 @@
 package com.codecool.navymanager.controller.mvc;
 
 import com.codecool.navymanager.DTO.GunDTO;
+import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.GunService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -18,9 +16,11 @@ import javax.validation.Valid;
 @RequestMapping("/gun-mvc")
 public class GunMvcController {
     private final GunService gunService;
+    private final CountryService countryService;
 
-    public GunMvcController(GunService gunService) {
+    public GunMvcController(GunService gunService, CountryService countryService) {
         this.gunService = gunService;
+        this.countryService = countryService;
     }
 
     @GetMapping
@@ -35,15 +35,18 @@ public class GunMvcController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(GunDTO gun, Model model){
+    public String showCreateForm(Model model){
         model.addAttribute("create", true);
+        model.addAttribute("gun", new GunDTO());
+        model.addAttribute("validCountryValues", countryService.findAll());
         return "gun-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid GunDTO gun, BindingResult result, Model model) {
+    public String add(@ModelAttribute("gun") @Valid GunDTO gun, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
+            model.addAttribute("validCountryValues", countryService.findAll());
             return "gun-form";
         }
         try {
@@ -67,6 +70,7 @@ public class GunMvcController {
            GunDTO gun = gunService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("gun", gun);
+            model.addAttribute("validCountryValues", countryService.findAll());
             return "gun-form";
         } catch (Exception e) {
             throw new ResponseStatusException(
@@ -75,9 +79,10 @@ public class GunMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid GunDTO gun, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @ModelAttribute("gun") @Valid GunDTO gun, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
+            model.addAttribute("validCountryValues", countryService.findAll());
             return "gun-form";
         }
         gunService.update(gun, id);

@@ -28,7 +28,7 @@
             <td th:text="${gun.projectileWeightInKgs}"></td>
             <td th:text="${gun.rangeInMeters}"></td>
             <td th:text="${gun.minimumShipDisplacementInTons}"></td>
-            <td th:text="${gun.countryId}"></td>
+            <td th:text="${gun.country.name}"></td>
             <td class="text-center">
                 <a th:href="@{/gun-mvc/delete/{id}(id=${gun.id})}"><i class="fa fa-trash"></i></a>
                 <a th:href="@{/gun-mvc/update/{id}(id=${gun.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>

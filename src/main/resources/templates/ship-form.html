@@ -13,19 +13,40 @@
       <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
     </div>
     <div class="form-group">
-      <label for="shipClassId">Ship Class</label>
-      <input type="text" class="form-control" id="shipClassId" th:field="*{shipClassId}">
-      <span class="validationError" th:if="${#fields.hasErrors('shipClassId')}" th:errors="*{shipClassId}"></span>
+      <label for="shipClass">Ship Class</label>
+      <select id="shipClass" name="shipClass">
+        <option th:if="${ship.shipClass} != null" th:each="shipClassOpt : ${validShipClassValues}"
+                th:value="${shipClassOpt.name}" th:text="${shipClassOpt.name}"
+                th:selected="${ship.shipClass.name == shipClassOpt.name}"></option>
+        <option th:unless="${ship.shipClass} != null" th:each="shipClassOpt : ${validShipClassValues}"
+                th:value="${shipClassOpt.name}" th:text="${shipClassOpt.name}"></option>
+      </select>
+      <span class="validationError" th:if="${#fields.hasErrors('shipClass')}" th:errors="*{shipClass}"></span>
+      <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
     <div class="form-group">
-      <label for="captainId">Captain</label>
-      <input type="text" class="form-control" id="captainId" th:field="*{captainId}">
-      <span class="validationError" th:if="${#fields.hasErrors('captainId')}" th:errors="*{captainId}"></span>
+      <label for="captain">Captain</label>
+      <select id="captain" name="captain">
+        <option th:if="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
+                th:value="${captainOpt.name}" th:text="${captainOpt.name}"
+                th:selected="${ship.captain.name == captainOpt.name}"></option>
+        <option th:unless="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
+                th:value="${captainOpt.name}" th:text="${captainOpt.name}"></option>
+      </select>
+      <span class="validationError" th:if="${#fields.hasErrors('captain')}" th:errors="*{captain}"></span>
+      <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
     <div class="form-group">
-      <label for="countryId">Country</label>
-      <input type="text" class="form-control" id="countryId" th:field="*{countryId}">
-      <span class="validationError" th:if="${#fields.hasErrors('countryId')}" th:errors="*{countryId}"></span>
+      <label for="country">Country</label>
+      <select id="country" name="country">
+        <option th:if="${ship.country} != null" th:each="countryOpt : ${validCountryValues}"
+                th:value="${countryOpt.name}" th:text="${countryOpt.name}"
+                th:selected="${ship.country.name == countryOpt.name}"></option>
+        <option th:unless="${ship.country} != null" th:each="countryOpt : ${validCountryValues}"
+                th:value="${countryOpt.name}" th:text="${countryOpt.name}"></option>
+      </select>
+      <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+      <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
     <!--<div th:if="${create} == false" class="form-group">
       <label for="status">Status</label>

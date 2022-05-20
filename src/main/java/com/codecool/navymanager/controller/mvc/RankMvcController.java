@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -36,13 +33,13 @@ public class RankMvcController {
 
     @GetMapping("/create")
     public String showCreateForm(Model model){
-        model.addAttribute("rank", new RankDTO());
         model.addAttribute("create", true);
+        model.addAttribute("rank", new RankDTO());
         return "rank-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid RankDTO rank, BindingResult result, Model model) {
+    public String add(@ModelAttribute("rank") @Valid RankDTO rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             return "rank-form";
@@ -65,7 +62,7 @@ public class RankMvcController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-           RankDTO rank = rankService.findById(id);
+            RankDTO rank = rankService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("rank", rank);
             return "rank-form";
@@ -76,7 +73,7 @@ public class RankMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid RankDTO rank, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @ModelAttribute("rank") @Valid RankDTO rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "rank-form";

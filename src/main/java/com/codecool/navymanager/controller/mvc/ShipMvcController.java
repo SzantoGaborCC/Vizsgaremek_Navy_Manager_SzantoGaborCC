@@ -1,16 +1,14 @@
 package com.codecool.navymanager.controller.mvc;
 
 
+import com.codecool.navymanager.DTO.ShipClassDTO;
 import com.codecool.navymanager.DTO.ShipDTO;
-import com.codecool.navymanager.service.ShipService;
+import com.codecool.navymanager.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -19,9 +17,16 @@ import javax.validation.Valid;
 @RequestMapping("/ship-mvc")
 public class ShipMvcController {
     private final ShipService shipService;
+    private final ShipClassService shipClassService;
+    private final OfficerService officerService;
+    private final CountryService countryService;
 
-    public ShipMvcController(ShipService shipService) {
+    public ShipMvcController(ShipService shipService, ShipClassService shipClassService,
+                             OfficerService officerService, CountryService countryService) {
         this.shipService = shipService;
+        this.shipClassService = shipClassService;
+        this.officerService = officerService;
+        this.countryService = countryService;
     }
 
     @GetMapping
@@ -36,15 +41,22 @@ public class ShipMvcController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(ShipDTO ship, Model model){
+    public String showCreateForm(Model model){
         model.addAttribute("create", true);
+        model.addAttribute("ship", new ShipDTO());
+        model.addAttribute("validCaptainValues", officerService.findAll());
+        model.addAttribute("validShipClassValues", shipClassService.findAll());
+        model.addAttribute("validCountryValues", countryService.findAll());
         return "ship-form";
     }
 
     @PostMapping("/create")
-    public String add(@Valid ShipDTO ship, BindingResult result, Model model) {
+    public String add(@ModelAttribute("ship") @Valid ShipDTO ship, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
+            model.addAttribute("validCaptainValues", officerService.findAll());
+            model.addAttribute("validShipClassValues", shipClassService.findAll());
+            model.addAttribute("validCountryValues", countryService.findAll());
             return "ship-form";
         }
         try {
@@ -68,6 +80,9 @@ public class ShipMvcController {
             ShipDTO ship = shipService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("ship", ship);
+            model.addAttribute("validCaptainValues", officerService.findAll());
+            model.addAttribute("validShipClassValues", shipClassService.findAll());
+            model.addAttribute("validCountryValues", countryService.findAll());
             return "ship-form";
         } catch (Exception e) {
             throw new ResponseStatusException(
@@ -76,9 +91,12 @@ public class ShipMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @Valid ShipDTO ship, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @ModelAttribute("ship") @Valid ShipDTO ship, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
+            model.addAttribute("validShipClassValues", shipClassService.findAll());
+            model.addAttribute("validCaptainValues", officerService.findAll());
+            model.addAttribute("validCountryValues", countryService.findAll());
             return "ship-form";
         }
         shipService.update(ship, id);

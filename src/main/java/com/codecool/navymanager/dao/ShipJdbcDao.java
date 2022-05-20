@@ -39,7 +39,7 @@ public class ShipJdbcDao implements ShipDao {
                 "country_id " +
                 ") VALUES (?,?,?,?)";
        jdbcTemplate.update(query,
-               ship.getName(), ship.getShipClassId(), ship.getShipClassId(),ship.getCaptainId());
+               ship.getName(), ship.getShipClassId(), ship.getCaptainId(), ship.getCountryId());
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ShipJdbcDao implements ShipDao {
                 "country_id = ? " +
                 "WHERE id = ?";
         jdbcTemplate.update(query,
-                ship.getName(), ship.getShipClassId(), ship.getShipClassId(),ship.getCaptainId(), id);
+                ship.getName(), ship.getShipClassId(),ship.getCaptainId(),ship.getCountryId(), id);
     }
 
     @Override

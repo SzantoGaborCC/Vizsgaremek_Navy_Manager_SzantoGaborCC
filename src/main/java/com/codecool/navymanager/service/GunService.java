@@ -42,6 +42,7 @@ public class GunService {
 
     @Transactional
     public void update(GunDTO gunDTO, long id) {
+        System.out.println(gunDTO);
         gunDao.update(gunDTO.convertToGun(), id);
     }
 

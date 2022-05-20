@@ -10,8 +10,8 @@ import java.util.Optional;
 
 @Repository
 public class GunJdbcDao implements GunDao {
-    private JdbcTemplate jdbcTemplate;
-    private GunMapper gunMapper;
+    private final JdbcTemplate jdbcTemplate;
+    private final GunMapper gunMapper;
 
     public GunJdbcDao(JdbcTemplate jdbcTemplate, GunMapper gunMapper) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,10 +36,13 @@ public class GunJdbcDao implements GunDao {
                 "(designation, " +
                 "caliber_in_mms, " +
                 "projectile_weight_in_kgs, " +
-                "range_in_meters) VALUES (?,?,?,?)";
+                "range_in_meters, " +
+                "minimum_ship_displacement_in_tons, " +
+                "country_id) VALUES (?,?,?,?,?,?)";
        jdbcTemplate.update(query,
                gun.getDesignation(), gun.getCaliberInMms(),
-               gun.getProjectileWeightInKgs(), gun.getRangeInMeters());
+               gun.getProjectileWeightInKgs(), gun.getRangeInMeters(),
+               gun.getMinimumShipDisplacementInTons(), gun.getCountryId());
     }
 
     @Override
@@ -48,11 +51,14 @@ public class GunJdbcDao implements GunDao {
                 "designation = ?, " +
                 "caliber_in_mms = ?, " +
                 "projectile_weight_in_kgs = ?, " +
-                "range_in_meters = ? " +
+                "range_in_meters = ?, " +
+                "minimum_ship_displacement_in_tons = ?, " +
+                "country_id = ? " +
                 "WHERE id = ?";
         jdbcTemplate.update(query,
                 gun.getDesignation(), gun.getCaliberInMms(),
-                gun.getProjectileWeightInKgs(), gun.getRangeInMeters(), id);
+                gun.getProjectileWeightInKgs(), gun.getRangeInMeters(),
+                gun.getMinimumShipDisplacementInTons(), gun.getCountryId(), id);
     }
 
     @Override

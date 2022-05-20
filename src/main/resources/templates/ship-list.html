@@ -22,9 +22,9 @@
         <tr th:each="ship: ${ships}">
             <td th:text="${ship.id}"></td>
             <td th:text="${ship.name}"></td>
-            <td th:text="${ship.shipClassId}"></td>
-            <td th:text="${ship.captainId}"></td>
-            <td th:text="${ship.countryId}"></td>
+            <td th:text="${ship.shipClass.name}"></td>
+            <td th:text="${ship.captain.name}"></td>
+            <td th:text="${ship.country.name}"></td>
             <td class="text-center">
                 <a th:href="@{/ship-mvc/delete/{id}(id=${ship.id})}"><i class="fa fa-trash"></i></a>
                 <a th:href="@{/ship-mvc/update/{id}(id=${ship.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
