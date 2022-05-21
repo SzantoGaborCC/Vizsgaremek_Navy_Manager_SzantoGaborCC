@@ -28,11 +28,16 @@ public class GunService {
         return createGunDTOWithDependencies(gun);
     }
 
+    public List<GunDTO> findByCountry(long countryId)  {
+        return gunDao.findByCountry(countryId).stream().map(this::createGunDTOWithDependencies).toList();
+    }
+
     private GunDTO createGunDTOWithDependencies(Gun gun) {
         GunDTO gunDTO = new GunDTO(gun);
         gunDTO.setCountry(countryService.findById(gun.getCountryId()));
         return gunDTO;
     }
+
 
     @Transactional
     public void add(GunDTO gunDTO) {

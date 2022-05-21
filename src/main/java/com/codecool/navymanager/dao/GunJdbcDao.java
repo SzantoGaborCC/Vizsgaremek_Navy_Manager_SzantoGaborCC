@@ -31,6 +31,12 @@ public class GunJdbcDao implements GunDao {
     }
 
     @Override
+    public List<Gun> findByCountry(long countryId) {
+        String query = "SELECT * FROM gun WHERE country_id = ?";
+        return jdbcTemplate.query(query, gunMapper, countryId);
+    }
+
+    @Override
     public void add(Gun gun) {
         String query = "INSERT INTO gun " +
                 "(designation, " +

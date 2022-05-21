@@ -10,6 +10,8 @@ public interface GunDao {
 
     Optional<Gun> findById(long id);
 
+    List<Gun> findByCountry(long countryId);
+
     void add(Gun gun);
 
     void update(Gun gun, long id);

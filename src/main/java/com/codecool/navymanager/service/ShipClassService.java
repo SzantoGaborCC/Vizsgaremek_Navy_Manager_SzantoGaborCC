@@ -69,4 +69,19 @@ public class ShipClassService {
     public void delete(long id) {
         shipClassDao.delete(id);
     }
+
+    @Transactional
+    public void addGunToShipClass(long shipClassId, long gunId, int gunQuantity) {
+        shipClassesAndGunsDao.addGunToShipClass(shipClassId, gunId, gunQuantity);
+    }
+
+    @Transactional
+    public void updateGunForAShipClass(long shipClassId, long oldGunId, long newGunId, int gunQuantity) {
+        shipClassesAndGunsDao.updateGunForAShipClass(shipClassId, oldGunId, newGunId, gunQuantity);
+    }
+
+    @Transactional
+    public void deleteGunFromShipClass(long shipClassId, long gunId) {
+        shipClassesAndGunsDao.deleteGunFromShipClass(shipClassId, gunId);
+    }
 }
