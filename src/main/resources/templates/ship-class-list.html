@@ -3,11 +3,10 @@
 
 <div th:replace="fragments/header :: header (title='Navy Manager - Ship Classes')"></div>
 <body>
-
 <div th:replace="fragments/menu :: menu (entityName = 'Ship Class', createUrl = '/ship-class-mvc/create', listUrl = '/ship-class-mvc')"></div>
 <h2 style="font-weight: bold;text-align:center;">List of Ship Classes</h2>
 <div class="container">
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped table-hover">
         <thead>
         <tr>
             <th scope="col">Id</th>
@@ -23,16 +22,17 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="shipClass: ${shipClasses}">
+        <tr class="clickable-row" th:data-href="@{/ship-class-mvc/details/{id}(id=${shipClass.id})}"  th:each="shipClass: ${shipClasses}">
+            <!--<td><a href="https://www.google.com" th:text="${shipClass.id}"/></td>-->
             <td th:text="${shipClass.id}"></td>
             <td th:text="${shipClass.name}"></td>
             <td th:text="${shipClass.displacementInTons}"></td>
-            <td th:text="${shipClass.hullClassification.designation}"></td>
+            <td><a th:href="@{/hull-classification-mvc/details/{abbreviation}(abbreviation=${shipClass.hullClassification.abbreviation})}" th:text="${shipClass.hullClassification.designation}"/></td>
             <td th:text="${shipClass.armorBeltInCms}"></td>
             <td th:text="${shipClass.armorTurretInCms}"></td>
             <td th:text="${shipClass.armorDeckInCms}"></td>
             <td th:text="${shipClass.speedInKmh}"></td>
-            <td th:text="${shipClass.country.name}"></td>
+            <td><a th:href="@{/country-mvc/details/{id}(id=${shipClass.country.id})}" th:text="${shipClass.country.name}"></a></td>
             <td class="text-center">
                 <a th:href="@{/ship-class-mvc/delete/{id}(id=${shipClass.id})}"><i class="fa fa-trash"></i></a>
                 <a th:href="@{/ship-class-mvc/update/{id}(id=${shipClass.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
@@ -42,5 +42,12 @@
 </div>
 
 <div th:insert="fragments/footer :: footer"></div>
+<script>
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+</script>
 </body>
 </html>
