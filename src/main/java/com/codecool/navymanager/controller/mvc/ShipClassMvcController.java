@@ -34,9 +34,11 @@ public class ShipClassMvcController {
         return "ship-class-list";
     }
 
-    @GetMapping("/{id}")
-    public ShipClassDTO findById(@PathVariable Long id) {
-        return shipClassService.findById(id);
+    @GetMapping("/details/{id}")
+    public String getDetailsById(@PathVariable Long id, Model model) {
+        ShipClassDTO shipClass = shipClassService.findById(id);
+        model.addAttribute("shipClass", shipClass);
+        return "ship-class-details";
     }
 
     @GetMapping("/create")

@@ -16,3 +16,7 @@ nav{
 }
 
 tr.clickable-row { cursor: pointer; }
+
+.table thead th {
+    border: 1px solid lightgrey; border-bottom: none;
+}
