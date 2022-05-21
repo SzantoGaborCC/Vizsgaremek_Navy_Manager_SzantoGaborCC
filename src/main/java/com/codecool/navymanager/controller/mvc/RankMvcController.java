@@ -26,9 +26,9 @@ public class RankMvcController {
         return "rank-list";
     }
 
-    @GetMapping("/{id}")
-    public RankDTO findById(@PathVariable Long id) {
-        return rankService.findById(id);
+    @GetMapping("/{precedence}")
+    public RankDTO findById(@PathVariable int precedence) {
+        return rankService.findByPrecedence(precedence);
     }
 
     @GetMapping("/create")
@@ -53,16 +53,16 @@ public class RankMvcController {
         return "redirect:/rank-mvc";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteById(@PathVariable Long id) {
-        rankService.delete(id);
+    @GetMapping("/delete/{precedence}")
+    public String deleteById(@PathVariable int precedence) {
+        rankService.delete(precedence);
         return "redirect:/rank-mvc";
     }
 
-    @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
+    @GetMapping("/update/{precedence}")
+    public String showUpdateForm(@PathVariable int precedence, Model model) {
         try {
-            RankDTO rank = rankService.findById(id);
+            RankDTO rank = rankService.findByPrecedence(precedence);
             model.addAttribute("create", false);
             model.addAttribute("rank", rank);
             return "rank-form";
@@ -72,13 +72,13 @@ public class RankMvcController {
         }
     }
 
-    @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @ModelAttribute("rank") @Valid RankDTO rank, BindingResult result, Model model) {
+    @PostMapping("/update/{precedence}")
+    public String update(@PathVariable int precedence, @ModelAttribute("rank") @Valid RankDTO rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "rank-form";
         }
-        rankService.update(rank, id);
+        rankService.update(rank, precedence);
         return "redirect:/rank-mvc";
     }
 }

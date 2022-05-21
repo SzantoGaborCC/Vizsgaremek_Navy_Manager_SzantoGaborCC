@@ -25,15 +25,9 @@ public class RankJdbcDao implements RankDao {
     }
 
     @Override
-    public Optional<Rank> findById(long id) {
-        String query = "SELECT * FROM rank WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, rankMapper, id));
-    }
-
-    @Override
-    public Optional<Rank> findByPrecedence(int minimumRankPrecedence) {
+    public Optional<Rank> findByPrecedence(int rankPrecedence) {
         String query = "SELECT * FROM rank WHERE precedence = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, rankMapper, minimumRankPrecedence));
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, rankMapper, rankPrecedence));
     }
 
     @Override

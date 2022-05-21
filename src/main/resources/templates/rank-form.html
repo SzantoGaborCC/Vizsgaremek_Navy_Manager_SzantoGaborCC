@@ -7,16 +7,16 @@
 <h2 style="font-weight: bold;text-align:center;" th:text="${create == false ? 'Update Rank' : 'Create New Rank'}"></h2>
 <div class="container">
 
-  <form action="#" th:action="${create} == true ? @{/rank-mvc/create} : @{/rank-mvc/update/{id}(id=${rank.id})}" th:object="${rank}" method="post" novalidate>
-    <div class="form-group">
-      <label for="designation">Designation</label>
-      <input type="text" class="form-control" id="designation" th:field="*{designation}">
-      <span class="validationError" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></span>
-    </div>
+  <form action="#" th:action="${create} == true ? @{/rank-mvc/create} : @{/rank-mvc/update/{precedence}(precedence=${rank.precedence})}" th:object="${rank}" method="post" novalidate>
     <div class="form-group">
       <label for="precedence">Precedence</label>
       <input type="text" class="form-control" id="precedence" th:field="*{precedence}">
       <span class="validationError" th:if="${#fields.hasErrors('precedence')}" th:errors="*{precedence}"></span>
+    </div>
+    <div class="form-group">
+      <label for="designation">Designation</label>
+      <input type="text" class="form-control" id="designation" th:field="*{designation}">
+      <span class="validationError" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></span>
     </div>
     <!--<div th:if="${create} == false" class="form-group">
       <label for="status">Status</label>

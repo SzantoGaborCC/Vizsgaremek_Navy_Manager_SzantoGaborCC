@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Rank {
-    private Long id;
-    private String designation;
     private int precedence;
+    private String designation;
 }

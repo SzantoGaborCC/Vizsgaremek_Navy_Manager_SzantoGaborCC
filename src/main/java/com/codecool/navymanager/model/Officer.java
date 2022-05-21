@@ -13,13 +13,13 @@ public class Officer {
     private Long id;
     private String name;
     private Date dateOfBirth;
-    private long rankId;
+    private int rank;
     private long countryId;
 
-    public Officer(String name, Date dateOfBirth, long rankId, long countryId) {
+    public Officer(String name, Date dateOfBirth, int rank, long countryId) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
-        this.rankId = rankId;
+        this.rank = rank;
         this.countryId = countryId;
     }
 }

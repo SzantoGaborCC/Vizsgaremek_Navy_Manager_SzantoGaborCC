@@ -28,7 +28,7 @@ public class OfficerDTO {
     public Officer convertToOfficer() {
         return new Officer(
                 getId(), getName(),
-                getDateOfBirth(), getRank().getId(),
+                getDateOfBirth(), getRank().getPrecedence(),
                 getCountry().getId());
     }
 }

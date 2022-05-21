@@ -20,12 +20,8 @@ public class RankService {
         return rankDao.findAll().stream().map(RankDTO::new).toList();
     }
 
-    public RankDTO findById(long id) {
-        return new RankDTO(rankDao.findById(id).orElseThrow());
-    }
-
-    public RankDTO findByPrecedence(int minimumRankPrecedence) {
-        return new RankDTO(rankDao.findByPrecedence(minimumRankPrecedence).orElseThrow());
+    public RankDTO findByPrecedence(int rankPrecedence) {
+        return new RankDTO(rankDao.findByPrecedence(rankPrecedence).orElseThrow());
     }
 
     @Transactional

@@ -9,17 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RankDTO {
-    private Long id;
-    private String designation;
     private int precedence;
+    private String designation;
 
     public RankDTO(Rank rank) {
-        this.id = rank.getId();
-        this.designation = rank.getDesignation();
         this.precedence = rank.getPrecedence();
+        this.designation = rank.getDesignation();
     }
 
     public Rank convertToRank() {
-        return new Rank(getId(), getDesignation(), getPrecedence());
+        return new Rank(getPrecedence(), getDesignation());
     }
 }

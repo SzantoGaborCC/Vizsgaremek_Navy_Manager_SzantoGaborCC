@@ -16,7 +16,7 @@ public class OfficerMapper implements RowMapper<Officer> {
         officer.setId(rs.getLong("id"));
         officer.setName(rs.getString("name"));
         officer.setDateOfBirth(rs.getDate("date_of_birth"));
-        officer.setRankId(rs.getLong("rank_id"));
+        officer.setRank(rs.getInt("rank"));
         officer.setCountryId(rs.getLong("country_id"));
         return officer;
     }

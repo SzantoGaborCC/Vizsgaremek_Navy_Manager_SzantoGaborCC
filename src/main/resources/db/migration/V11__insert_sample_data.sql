@@ -28,47 +28,47 @@ INSERT INTO gun
 VALUES('10 cm L47 Škoda', 100, 14, 11000, 1000, 1);
 
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Ensign', 1);
+(precedence, designation)
+VALUES(1, 'Ensign');
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Sublieutenant', 2);
+(precedence, designation)
+VALUES(2, 'Sublieutenant');
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Lieutenant Commander', 3);
+(precedence, designation)
+VALUES(3, 'Lieutenant Commander');
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Commander', 4);
+(precedence, designation)
+VALUES(4, 'Commander');
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Captain', 5);
+(precedence, designation)
+VALUES(5, 'Captain');
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Commodore', 6);
+(precedence, designation)
+VALUES(6, 'Commodore');
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Rear Admiral', 7);
+(precedence, designation)
+VALUES(7, 'Rear Admiral');
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Vice Admiral', 8);
+(precedence, designation)
+VALUES(8, 'Vice Admiral');
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Admiral', 9);
+(precedence, designation)
+VALUES(9, 'Admiral');
 INSERT INTO "rank"
-(designation, precedence)
-VALUES('Admiral of the Navy', 10);
+(precedence, designation)
+VALUES(10, 'Admiral of the Navy');
 
 INSERT INTO officer
-("name", date_of_birth, rank_id, country_id)
+("name", date_of_birth, rank, country_id)
 VALUES('Sigmund von Bülow', '1872-11-12', 9, 1);
 INSERT INTO officer
-("name", date_of_birth, rank_id, country_id)
+("name", date_of_birth, rank, country_id)
 VALUES('Wilhelm Student', '1875-03-11', 5, 2);
 INSERT INTO officer
-("name", date_of_birth, rank_id, country_id)
+("name", date_of_birth, rank, country_id)
 VALUES('Erich Falkenstein', '1877-03-11', 10, 2);
 INSERT INTO officer
-("name", date_of_birth, rank_id, country_id)
+("name", date_of_birth, rank, country_id)
 VALUES('Edmund Lighter', '1857-06-11', 4, 3);
 
 
@@ -109,12 +109,35 @@ VALUES('Radetzky', 14500, 'BB', 23, 25, 5, 38, 1);
 
 INSERT INTO ship
 ("name", ship_class_id, captain_id, country_id)
+VALUES('Viribus Unitis', 1, 4, 1);
+INSERT INTO ship
+("name", ship_class_id, captain_id, country_id)
+VALUES('Prinz Eugen', 1, 2, 1);
+INSERT INTO ship
+("name", ship_class_id, captain_id, country_id)
+VALUES('Tegethoff', 1, 3, 1);
+INSERT INTO ship
+("name", ship_class_id, captain_id, country_id)
 VALUES('Szent István', 1, 1, 1);
+
+INSERT INTO fleet
+(designation, commander_id, country_id, minimum_rank_precedence)
+VALUES('1st Battleship Fleet', 2, 1, 8);
 
 INSERT INTO ship_classes_and_guns
 (ship_class_id, gun_id, gun_quantity)
 VALUES(1, 1, 12);
 
-INSERT INTO fleet
-(designation, commander_id, country_id, minimum_rank_precedence)
-VALUES('1st Battleship Fleet', 2, 1, 8);
+INSERT INTO fleets_and_ships
+(fleet_id, ship_id)
+VALUES(1, 1);
+INSERT INTO fleets_and_ships
+(fleet_id, ship_id)
+VALUES(1, 2);
+INSERT INTO fleets_and_ships
+(fleet_id, ship_id)
+VALUES(1, 3);
+INSERT INTO fleets_and_ships
+(fleet_id, ship_id)
+VALUES(1, 4);
+

@@ -17,12 +17,11 @@
         </thead>
         <tbody>
         <tr th:each="rank: ${ranks}">
-            <td th:text="${rank.id}"></td>
-            <td th:text="${rank.designation}"></td>
             <td th:text="${rank.precedence}"></td>
+            <td th:text="${rank.designation}"></td>
             <td class="text-center">
-                <a th:href="@{/rank-mvc/delete/{id}(id=${rank.id})}"><i class="fa fa-trash"></i></a>
-                <a th:href="@{/rank-mvc/update/{id}(id=${rank.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <a th:href="@{/rank-mvc/delete/{precedence}(precedence=${rank.precedence})}"><i class="fa fa-trash"></i></a>
+                <a th:href="@{/rank-mvc/update/{precedence}(precedence=${rank.precedence})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
     </table>

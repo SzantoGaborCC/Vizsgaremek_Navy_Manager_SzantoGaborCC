@@ -35,11 +35,11 @@ public class OfficerJdbcDao implements OfficerDao {
         String query = "INSERT INTO officer " +
                 "(name, " +
                 "date_of_birth, " +
-                "rank_id, " +
+                "rank, " +
                 "country_id " +
                 ") VALUES (?,?,?,?)";
        jdbcTemplate.update(query,
-               officer.getName(), officer.getDateOfBirth(), officer.getRankId(), officer.getCountryId());
+               officer.getName(), officer.getDateOfBirth(), officer.getRank(), officer.getCountryId());
     }
 
     @Override
@@ -47,11 +47,11 @@ public class OfficerJdbcDao implements OfficerDao {
         String query = "UPDATE officer SET " +
                 "name = ?, " +
                 "date_of_birth = ?, " +
-                "rank_id = ?, " +
+                "rank = ?, " +
                 "country_id = ? " +
                 "WHERE id = ?";
         jdbcTemplate.update(query,
-                officer.getName(), officer.getDateOfBirth(), officer.getRankId(), officer.getCountryId(), id);
+                officer.getName(), officer.getDateOfBirth(), officer.getRank(), officer.getCountryId(), id);
     }
 
     @Override

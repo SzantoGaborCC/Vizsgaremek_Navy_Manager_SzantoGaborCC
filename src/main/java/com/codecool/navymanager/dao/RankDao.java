@@ -8,9 +8,7 @@ import java.util.Optional;
 public interface RankDao {
     List<Rank> findAll();
 
-    Optional<Rank> findById(long id);
-
-    Optional<Rank> findByPrecedence(int minimumRankPrecedence);
+    Optional<Rank> findByPrecedence(int rankPrecedence);
 
     void add(Rank rank);
 
