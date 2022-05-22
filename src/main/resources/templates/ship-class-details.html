@@ -38,9 +38,10 @@
         </tr>
         </tbody>
     </table>
-    <h3 style="font-weight: bold;text-align:center;">Guns</h3>
+    <h3 style="text-align:center;">Guns</h3>
+
     <table class="table table-bordered text-center">
-        <thead class="table-dark">
+        <thead class="table-light">
         <tr>
             <th scope="col">Id</th>
             <th scope="col">Designation</th>
@@ -65,7 +66,7 @@
         </tr>
         </tbody>
     </table>
-
+    <a class="btn btn-primary" th:href="@{/ship-class-mvc/add-gun/{id}(id=${shipClass.id})}" role="button"><i class="fa-solid fa-plus"></i> Add New Gun</a>
 </div>
 
 <div th:insert="fragments/footer :: footer"></div>
