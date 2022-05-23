@@ -1,6 +1,7 @@
 package com.codecool.navymanager.controller.mvc;
 
 
+import com.codecool.navymanager.DTO.GunDTO;
 import com.codecool.navymanager.DTO.GunWithQuantityDTO;
 import com.codecool.navymanager.DTO.ShipClassDTO;
 import com.codecool.navymanager.service.CountryService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/ship-class-mvc")
@@ -45,34 +47,6 @@ public class ShipClassMvcController {
         ShipClassDTO shipClass = shipClassService.findById(id);
         model.addAttribute("shipClass", shipClass);
         return "ship-class-details";
-    }
-
-    @GetMapping("/add-gun/{id}")
-    public String showAddGunForm(
-            @PathVariable Long id,
-            Model model) {
-        model.addAttribute("add", true);
-        ShipClassDTO shipClass = shipClassService.findById(id);
-        model.addAttribute("shipClass", shipClass);
-        model.addAttribute("gunWithQuantity", new GunWithQuantityDTO());
-        model.addAttribute("validGunValues", gunService.findByCountry(shipClass.getCountry().getId()));
-        return "ship-class-gun-form";
-    }
-
-    @PostMapping("/add-gun/{id}")
-    public String addGun(
-            @PathVariable Long id,
-            @ModelAttribute("gunWithQuantity") @Valid GunWithQuantityDTO gunWithQuantity,
-            Model model, BindingResult result) {
-        if (result.hasErrors()) {
-            model.addAttribute("add", true);
-            ShipClassDTO shipClass = shipClassService.findById(id);
-            model.addAttribute("shipClass", shipClass);
-            model.addAttribute("validGunValues", gunService.findByCountry(shipClass.getCountry().getId()));
-            return "ship-class-gun-form";
-        }
-        shipClassService.addGunToShipClass(id, gunWithQuantity.getGun().getId(), gunWithQuantity.getGunQuantity());
-        return "redirect:/ship-class-mvc/details/" + id;
     }
 
     @GetMapping("/create")
@@ -132,6 +106,72 @@ public class ShipClassMvcController {
         }
         shipClassService.update(shipClass, id);
         return "redirect:/ship-class-mvc";
+    }
+
+    @GetMapping("/add-gun/{id}")
+    public String showAddGunForm(
+            @PathVariable Long id,
+            Model model) {
+        model.addAttribute("add", true);
+        ShipClassDTO shipClass = shipClassService.findById(id);
+        model.addAttribute("shipClass", shipClass);
+        model.addAttribute("gunWithQuantity", new GunWithQuantityDTO());
+        model.addAttribute("validGunValues", gunService.findByCountry(shipClass.getCountry().getId()));
+        return "ship-class-gun-form";
+    }
+
+    @PostMapping("/add-gun/{id}")
+    public String addGun(
+            @PathVariable Long id,
+            @ModelAttribute("gunWithQuantity") @Valid GunWithQuantityDTO gunWithQuantity,
+            Model model, BindingResult result) {
+        if (result.hasErrors()) {
+            model.addAttribute("add", true);
+            ShipClassDTO shipClass = shipClassService.findById(id);
+            model.addAttribute("shipClass", shipClass);
+            model.addAttribute("validGunValues", gunService.findByCountry(shipClass.getCountry().getId()));
+            return "ship-class-gun-form";
+        }
+        shipClassService.addGunToShipClass(id, gunWithQuantity.getGun().getId(), gunWithQuantity.getGunQuantity());
+        return "redirect:/ship-class-mvc/details/" + id;
+    }
+
+    @GetMapping("/update-gun/{shipClassId}/gun/{gunId}")
+    public String showUpdateGunForm(
+            @PathVariable long shipClassId, @PathVariable long gunId,
+            Model model) {
+        model.addAttribute("add", false);
+        ShipClassDTO shipClass = shipClassService.findById(shipClassId);
+        GunWithQuantityDTO gunWithQuantity =
+                shipClassService.getShipGunWithQuantityByShipClassIdAndGunId(shipClassId, gunId);
+        model.addAttribute("shipClass", shipClass);
+        model.addAttribute("gunWithQuantity", gunWithQuantity);
+        model.addAttribute("validGunValues", gunService.findByCountry(shipClass.getCountry().getId()));
+        return "ship-class-gun-form";
+    }
+
+    @PostMapping("/update-gun/{shipClassId}/gun/{gunId}")
+    public String updateGun(
+            @PathVariable long shipClassId, @PathVariable long gunId,
+            @ModelAttribute("gunWithQuantity") @Valid GunWithQuantityDTO gunWithQuantity,
+            Model model, BindingResult result) {
+        if (result.hasErrors()) {
+            model.addAttribute("add", false);
+            ShipClassDTO shipClass = shipClassService.findById(shipClassId);
+            GunDTO gun = gunService.findById(gunId);
+            model.addAttribute("shipClass", shipClass);
+            model.addAttribute("gun", gun);
+            model.addAttribute("validGunValues", gunService.findByCountry(shipClass.getCountry().getId()));
+            return "ship-class-gun-form";
+        }
+        shipClassService.updateGunForAShipClass(shipClassId, gunId, gunWithQuantity.getGun().getId(), gunWithQuantity.getGunQuantity());
+        return "redirect:/ship-class-mvc/details/" + shipClassId;
+    }
+
+    @GetMapping("/delete-gun/{shipClassId}/gun/{gunId}")
+    public String deleteById(@PathVariable long shipClassId, @PathVariable long gunId) {
+        shipClassService.deleteGunFromShipClass(shipClassId, gunId);
+        return "redirect:/gun-mvc";
     }
 }
 

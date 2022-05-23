@@ -1,6 +1,7 @@
 package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.DTO.GunDTO;
+import com.codecool.navymanager.DTO.GunWithQuantityDTO;
 import com.codecool.navymanager.DTO.ShipClassDTO;
 import com.codecool.navymanager.dao.ShipClassDao;
 import com.codecool.navymanager.dao.ShipClassesAndGunsDao;
@@ -53,6 +54,13 @@ public class ShipClassService {
                 .collect(Collectors.toMap(
                         entry -> gunService.findById(entry.getKey()),
                         Map.Entry::getValue));
+    }
+
+    public GunWithQuantityDTO getShipGunWithQuantityByShipClassIdAndGunId(long shipClassId, long gunId) {
+        return getShipGunsFromIds(shipClassId).entrySet().stream()
+                .filter(entry -> entry.getKey().getId().equals(gunId))
+                .map(entry -> new GunWithQuantityDTO(entry.getKey(), entry.getValue()))
+                .findAny().orElseThrow();
     }
 
     @Transactional
