@@ -1,5 +1,6 @@
 package com.codecool.navymanager.service;
 
+import com.codecool.navymanager.DTO.GunDTO;
 import com.codecool.navymanager.DTO.ShipDTO;
 import com.codecool.navymanager.dao.ShipDao;
 import com.codecool.navymanager.model.Ship;
@@ -55,5 +56,9 @@ public class ShipService {
     @Transactional
     public void delete(long id) {
         shipDao.delete(id);
+    }
+
+    public List<ShipDTO> findByCountryId(long countryId)  {
+        return shipDao.findByCountryId(countryId).stream().map(this::createShipDTOWithDependencies).toList();
     }
 }
