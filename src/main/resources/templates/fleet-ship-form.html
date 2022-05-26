@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<div th:replace="fragments/header :: header (title='Navy Manager - Ships')"></div>
+<body>
+
+<div th:replace="fragments/menu :: menu (entityName = 'Ship', listUrl = '/ship-mvc', createUrl='/ship-mvc/create')"></div>
+<h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Ship for a Fleet' : 'Add New Ship to Fleet'}"></h2>
+<div class="container">
+  <form action="#" th:action="${add} == true ? @{/ship-mvc/add-ship/{id}(id=${fleet.id})} : @{/ship-mvc/update-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}" th:object="${ship}" method="post" novalidate>
+      <div class="form-group">
+          <label for="ship">Ship</label>
+          <select id="ship" name="ship">
+              <option th:if="${ship.id} != null" th:each="shipOpt : ${validShipValues}"
+                      th:value="${shipOpt.name}" th:text="${shipOpt.name}"
+                      th:selected="${ship.name == shipOpt.name}"></option>
+              <option th:unless="${ship.id} != null" th:each="shipOpt : ${validShipValues}"
+                      th:value="${shipOpt.name}" th:text="${shipOpt.name}"></option>
+          </select>
+          <span class="validationError" th:if="${#fields.hasErrors('ship')}" th:errors="*{ship}"></span>
+          <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
+      </div>
+      <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
+  </form>
+</div>
+
+<div th:insert="fragments/footer :: footer"></div>
+</body>
+</html>

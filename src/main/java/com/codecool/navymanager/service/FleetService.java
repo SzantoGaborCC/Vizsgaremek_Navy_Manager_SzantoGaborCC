@@ -76,4 +76,12 @@ public class FleetService {
     public void addShipToFleet(long fleetId, long shipId) {
         fleetsAndShipsDao.addShipToFleet(fleetId, shipId);
     }
+
+    public void updateShipForAFleet(long fleetId, long oldShipId, long newShipId) {
+        fleetsAndShipsDao.updateShipForAFleet(fleetId, oldShipId, newShipId);
+    }
+
+    public void deleteShipFromFleet(long fleetId, long shipId) {
+        fleetsAndShipsDao.deleteShipFromFleet(fleetId, shipId);
+    }
 }

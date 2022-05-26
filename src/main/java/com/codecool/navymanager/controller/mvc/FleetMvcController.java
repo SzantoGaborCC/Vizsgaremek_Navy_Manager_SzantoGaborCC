@@ -138,42 +138,40 @@ public class FleetMvcController {
     }
     //todo: next is updating ship for fleet, the the many webpages for fleet ships
 
-    @GetMapping("/update-gun/{shipClassId}/gun/{gunId}")
-    public String showUpdateGunForm(
-            @PathVariable long shipClassId, @PathVariable long gunId,
+    @GetMapping("/update-ship/{fleetId}/ship/{shipId}")
+    public String showUpdateShipForm(
+            @PathVariable long fleetId, @PathVariable long shipId,
             Model model) {
+
+        FleetDTO fleet = fleetService.findById(fleetId);
+        ShipDTO ship = shipService.findById(shipId);
         model.addAttribute("add", false);
-        ShipClassDTO shipClass = shipClassService.findById(shipClassId);
-        GunWithQuantityDTO gunWithQuantity =
-                shipClassService.getShipGunWithQuantityByShipClassIdAndGunId(shipClassId, gunId);
-        model.addAttribute("shipClass", shipClass);
-        model.addAttribute("gunWithQuantity", gunWithQuantity);
-        model.addAttribute("validGunValues", gunService.findByCountry(shipClass.getCountry().getId()));
-        return "ship-class-gun-form";
+        model.addAttribute("fleet", fleet);
+        model.addAttribute("ship", ship);
+        model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
+        return "fleet-ship-form";
     }
 
-    @PostMapping("/update-gun/{shipClassId}/gun/{gunId}")
+    @PostMapping("/update-ship/{fleetId}/ship/{shipId}")
     public String updateGun(
-            @PathVariable long shipClassId, @PathVariable long gunId,
-            @ModelAttribute("gunWithQuantity") @Valid GunWithQuantityDTO gunWithQuantity,
+            @PathVariable long fleetId, @PathVariable long shipId,
+            @ModelAttribute("ship") @Valid ShipDTO ship,
             Model model, BindingResult result) {
         if (result.hasErrors()) {
+            FleetDTO fleet = fleetService.findById(fleetId);
             model.addAttribute("add", false);
-            ShipClassDTO shipClass = shipClassService.findById(shipClassId);
-            GunDTO gun = gunService.findById(gunId);
-            model.addAttribute("shipClass", shipClass);
-            model.addAttribute("gun", gun);
-            model.addAttribute("validGunValues", gunService.findByCountry(shipClass.getCountry().getId()));
-            return "ship-class-gun-form";
+            model.addAttribute("fleet", fleet);
+            model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
+            return "fleet-ship-form";
         }
-        shipClassService.updateGunForAShipClass(shipClassId, gunId, gunWithQuantity.getGun().getId(), gunWithQuantity.getGunQuantity());
-        return "redirect:/ship-class-mvc/details/" + shipClassId;
+        fleetService.updateShipForAFleet(fleetId, shipId, ship.getId());
+        return "redirect:/fleet-mvc/details/" + fleetId;
     }
 
-    @GetMapping("/delete-gun/{shipClassId}/gun/{gunId}")
-    public String deleteById(@PathVariable long shipClassId, @PathVariable long gunId) {
-        shipClassService.deleteGunFromShipClass(shipClassId, gunId);
-        return "redirect:/gun-mvc";
+    @GetMapping("/delete-gun/{fleetId}/ship/{shipId}")
+    public String deleteById(@PathVariable long fleetId, @PathVariable long shipId) {
+        fleetService.deleteShipFromFleet(fleetId, shipId);
+        return "redirect:/fleet-mvc";
     }
 }
 
