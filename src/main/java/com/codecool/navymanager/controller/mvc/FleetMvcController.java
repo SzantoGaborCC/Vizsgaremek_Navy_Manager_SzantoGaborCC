@@ -136,7 +136,6 @@ public class FleetMvcController {
         fleetService.addShipToFleet(id, ship.getId());
         return "redirect:/fleet-mvc/details/" + id;
     }
-    //todo: next is updating ship for fleet, the the many webpages for fleet ships
 
     @GetMapping("/update-ship/{fleetId}/ship/{shipId}")
     public String showUpdateShipForm(
