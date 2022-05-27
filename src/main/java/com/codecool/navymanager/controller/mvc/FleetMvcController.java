@@ -138,8 +138,12 @@ public class FleetMvcController {
             model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
             return "fleet-ship-form";
         }
-        System.out.println("ship id: " + ship.getId());
-        fleetService.addShipToFleet(id, ship.getId());
+        //an orbital hack, both Converter and PropertyEditor failed somehow, id of the ShipDTO form the Model has its id
+        //reset to 1, all other information found by automatic conversion work, except for this.
+        ShipDTO shipFound = shipService.findAll().stream()
+                .filter(shipDTO -> shipDTO.getName().equals(ship.getName()))
+                .findAny().orElseThrow();
+        fleetService.addShipToFleet(id, shipFound.getId());
         return "redirect:/fleet-mvc/details/" + id;
     }
 
@@ -180,7 +184,7 @@ public class FleetMvcController {
         return "redirect:/fleet-mvc/details/" + fleetId;
     }
 
-    @InitBinder
+    //@InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(
                 ShipDTO.class,
