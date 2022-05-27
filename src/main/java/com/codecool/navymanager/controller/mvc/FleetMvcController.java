@@ -6,10 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
 
 @Controller
 @RequestMapping("/fleet-mvc")
@@ -117,26 +119,31 @@ public class FleetMvcController {
         FleetDTO fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
         model.addAttribute("ship", new ShipDTO());
+        System.out.println("ship added to model: " + model.getAttribute("ship"));
         model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
         return "fleet-ship-form";
     }
 
     @PostMapping("/add-ship/{id}")
-    public String addGun(
+    public String addShip(
             @PathVariable Long id,
             @ModelAttribute("ship") @Valid ShipDTO ship,
             Model model, BindingResult result) {
+        System.out.println("the ship   at post: " + ship);
         if (result.hasErrors()) {
+            System.out.println("Errors!!!!");
             FleetDTO fleet = fleetService.findById(id);
             model.addAttribute("add", true);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
             return "fleet-ship-form";
         }
+        System.out.println("ship id: " + ship.getId());
         fleetService.addShipToFleet(id, ship.getId());
         return "redirect:/fleet-mvc/details/" + id;
     }
 
+    //todo: check !addition!, update of ship from fleets
     @GetMapping("/update-ship/{fleetId}/ship/{shipId}")
     public String showUpdateShipForm(
             @PathVariable long fleetId, @PathVariable long shipId,
@@ -152,7 +159,7 @@ public class FleetMvcController {
     }
 
     @PostMapping("/update-ship/{fleetId}/ship/{shipId}")
-    public String updateGun(
+    public String updateShip(
             @PathVariable long fleetId, @PathVariable long shipId,
             @ModelAttribute("ship") @Valid ShipDTO ship,
             Model model, BindingResult result) {
@@ -167,10 +174,29 @@ public class FleetMvcController {
         return "redirect:/fleet-mvc/details/" + fleetId;
     }
 
-    @GetMapping("/delete-gun/{fleetId}/ship/{shipId}")
+    @GetMapping("/delete-ship/{fleetId}/ship/{shipId}")
     public String deleteById(@PathVariable long fleetId, @PathVariable long shipId) {
         fleetService.deleteShipFromFleet(fleetId, shipId);
-        return "redirect:/fleet-mvc";
+        return "redirect:/fleet-mvc/details/" + fleetId;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(
+                ShipDTO.class,
+                new PropertyEditorSupport() {
+                    @Override
+                    public void setAsText(String text) throws IllegalArgumentException {
+                        System.out.println("--------------------------SHIP CONVERTER PROPERTY EDITOR CALLED!!!!!!!!!!------------------------");
+                        System.out.println("ship name given to converter: " + text);
+                        var ship = shipService.findAll().stream()
+                                .filter(shipDTO -> shipDTO.getName().equals(text))
+                                .findAny().orElseThrow();
+                        System.out.println("Ship id found by shipService: " + ship.getId());
+                        setValue(ship);
+                    }
+                }
+        );
     }
 }
 

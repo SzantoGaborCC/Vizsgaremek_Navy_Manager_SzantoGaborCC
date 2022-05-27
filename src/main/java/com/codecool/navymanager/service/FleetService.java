@@ -72,15 +72,15 @@ public class FleetService {
     public void delete(long id) {
         fleetDao.delete(id);
     }
-
+    @Transactional
     public void addShipToFleet(long fleetId, long shipId) {
         fleetsAndShipsDao.addShipToFleet(fleetId, shipId);
     }
-
+    @Transactional
     public void updateShipForAFleet(long fleetId, long oldShipId, long newShipId) {
         fleetsAndShipsDao.updateShipForAFleet(fleetId, oldShipId, newShipId);
     }
-
+    @Transactional
     public void deleteShipFromFleet(long fleetId, long shipId) {
         fleetsAndShipsDao.deleteShipFromFleet(fleetId, shipId);
     }
