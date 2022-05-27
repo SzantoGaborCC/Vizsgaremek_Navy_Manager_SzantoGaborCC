@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
 
+
 @Controller
 @RequestMapping("/fleet-mvc")
 public class FleetMvcController {
@@ -118,8 +119,8 @@ public class FleetMvcController {
         model.addAttribute("add", true);
         FleetDTO fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
-        model.addAttribute("ship", new ShipDTO());
-        System.out.println("ship added to model: " + model.getAttribute("ship"));
+        //model.addAttribute("ship", new ShipDTO());
+        model.addAttribute("identity", new IdentityDTO());
         model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
         return "fleet-ship-form";
     }
@@ -127,9 +128,9 @@ public class FleetMvcController {
     @PostMapping("/add-ship/{id}")
     public String addShip(
             @PathVariable Long id,
-            @ModelAttribute("ship") @Valid ShipDTO ship,
+           // @ModelAttribute("ship") @Valid ShipDTO ship,
+            @ModelAttribute("identity") @Valid IdentityDTO identity,
             Model model, BindingResult result) {
-        System.out.println("the ship   at post: " + ship);
         if (result.hasErrors()) {
             System.out.println("Errors!!!!");
             FleetDTO fleet = fleetService.findById(id);
@@ -140,10 +141,11 @@ public class FleetMvcController {
         }
         //an orbital hack, both Converter and PropertyEditor failed somehow, id of the ShipDTO form the Model has its id
         //reset to 1, all other information found by automatic conversion work, except for this.
-        ShipDTO shipFound = shipService.findAll().stream()
+        /*ShipDTO shipFound = shipService.findAll().stream()
                 .filter(shipDTO -> shipDTO.getName().equals(ship.getName()))
-                .findAny().orElseThrow();
-        fleetService.addShipToFleet(id, shipFound.getId());
+                .findAny().orElseThrow();*/
+        //fleetService.addShipToFleet(id, shipFound.getId());
+        fleetService.addShipToFleet(id, identity.getIdentity());
         return "redirect:/fleet-mvc/details/" + id;
     }
 
