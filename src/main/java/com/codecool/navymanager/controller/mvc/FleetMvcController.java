@@ -120,7 +120,7 @@ public class FleetMvcController {
         FleetDTO fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
         //model.addAttribute("ship", new ShipDTO());
-        model.addAttribute("identity", new IdentityDTO());
+        model.addAttribute("shipId", new IdentityDTO());
         model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
         return "fleet-ship-form";
     }
@@ -128,28 +128,19 @@ public class FleetMvcController {
     @PostMapping("/add-ship/{id}")
     public String addShip(
             @PathVariable Long id,
-           // @ModelAttribute("ship") @Valid ShipDTO ship,
-            @ModelAttribute("identity") @Valid IdentityDTO identity,
+            @ModelAttribute("shipId") @Valid IdentityDTO shipId,
             Model model, BindingResult result) {
         if (result.hasErrors()) {
-            System.out.println("Errors!!!!");
             FleetDTO fleet = fleetService.findById(id);
             model.addAttribute("add", true);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
             return "fleet-ship-form";
         }
-        //an orbital hack, both Converter and PropertyEditor failed somehow, id of the ShipDTO form the Model has its id
-        //reset to 1, all other information found by automatic conversion work, except for this.
-        /*ShipDTO shipFound = shipService.findAll().stream()
-                .filter(shipDTO -> shipDTO.getName().equals(ship.getName()))
-                .findAny().orElseThrow();*/
-        //fleetService.addShipToFleet(id, shipFound.getId());
-        fleetService.addShipToFleet(id, identity.getIdentity());
+        fleetService.addShipToFleet(id, shipId.getValue());
         return "redirect:/fleet-mvc/details/" + id;
     }
 
-    //todo: check !addition!, update of ship from fleets
     @GetMapping("/update-ship/{fleetId}/ship/{shipId}")
     public String showUpdateShipForm(
             @PathVariable long fleetId, @PathVariable long shipId,
@@ -159,15 +150,15 @@ public class FleetMvcController {
         ShipDTO ship = shipService.findById(shipId);
         model.addAttribute("add", false);
         model.addAttribute("fleet", fleet);
-        model.addAttribute("ship", ship);
+        model.addAttribute("shipId", new IdentityDTO(ship.getId()));
         model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
         return "fleet-ship-form";
     }
 
-    @PostMapping("/update-ship/{fleetId}/ship/{shipId}")
+    @PostMapping("/update-ship/{fleetId}/ship/{oldShipId}")
     public String updateShip(
-            @PathVariable long fleetId, @PathVariable long shipId,
-            @ModelAttribute("ship") @Valid ShipDTO ship,
+            @PathVariable long fleetId, @PathVariable long oldShipId,
+            @ModelAttribute("shipId") @Valid IdentityDTO shipId,
             Model model, BindingResult result) {
         if (result.hasErrors()) {
             FleetDTO fleet = fleetService.findById(fleetId);
@@ -176,7 +167,7 @@ public class FleetMvcController {
             model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
             return "fleet-ship-form";
         }
-        fleetService.updateShipForAFleet(fleetId, shipId, ship.getId());
+        fleetService.updateShipForAFleet(fleetId, oldShipId, shipId.getValue());
         return "redirect:/fleet-mvc/details/" + fleetId;
     }
 

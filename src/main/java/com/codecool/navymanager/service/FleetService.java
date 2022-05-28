@@ -73,8 +73,12 @@ public class FleetService {
         fleetDao.delete(id);
     }
     @Transactional
-    public void addShipToFleet(long fleetId, long shipId) {
-        fleetsAndShipsDao.addShipToFleet(fleetId, shipId);
+    public void addShipToFleet(Long fleetId, Long shipId) {
+        try {
+            fleetsAndShipsDao.addShipToFleet(fleetId, shipId);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid Fleet or Ship Id!");
+        }
     }
     @Transactional
     public void updateShipForAFleet(long fleetId, long oldShipId, long newShipId) {

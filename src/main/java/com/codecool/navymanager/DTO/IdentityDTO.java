@@ -1,14 +1,12 @@
 package com.codecool.navymanager.DTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class IdentityDTO {
-    private Long identity;
-
-    public Long getIdentity() {
-        return identity;
-    }
-
-    public void setIdentity(Long identity) {
-        this.identity = identity;
-    }
+    private Long value;
 }
