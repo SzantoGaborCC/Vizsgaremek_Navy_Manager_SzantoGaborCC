@@ -14,10 +14,10 @@ public class Gun {
     private int projectileWeightInKgs;
     private int rangeInMeters;
     private int minimumShipDisplacementInTons;
-    private long countryId;
+    private Long countryId;
 
     public Gun(String designation, int caliberInMms, int projectileWeightInKgs,
-               int rangeInMeters, int minimumShipDisplacementInTons, long countryId) {
+               int rangeInMeters, int minimumShipDisplacementInTons, Long countryId) {
         this.designation = designation;
         this.caliberInMms = caliberInMms;
         this.projectileWeightInKgs = projectileWeightInKgs;

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RankDTO {
-    private int precedence;
+    private Integer precedence;
     private String designation;
 
     public RankDTO(Rank rank) {

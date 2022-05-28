@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Rank {
-    private int precedence;
+    private Integer precedence;
     private String designation;
 }

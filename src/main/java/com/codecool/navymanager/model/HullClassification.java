@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class HullClassification {
     private String abbreviation;
     private String designation;
-    private int minimumRankPrecedence;
+    private Integer minimumRankPrecedence;
 }

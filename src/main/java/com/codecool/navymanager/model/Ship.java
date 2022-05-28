@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 public class Ship {
     private Long id;
     private String name;
-    private long shipClassId;
-    private long captainId;
-    private long countryId;
+    private Long shipClassId;
+    private Long captainId;
+    private Long countryId;
 
-    public Ship(String name, long shipClassId, long captainId, long countryId) {
+    public Ship(String name, Long shipClassId, Long captainId, Long countryId) {
         this.name = name;
         this.shipClassId = shipClassId;
         this.captainId = captainId;

@@ -16,11 +16,11 @@ public class ShipClass {
     private int armorTurretInCms;
     private int armorDeckInCms;
     private int speedInKmh;
-    private long countryId;
+    private Long countryId;
 
     public ShipClass(String name, int displacementInTons, String hullClassification,
                      int armorBeltInCms, int armorTurretInCms, int armorDeckInCms,
-                     int speedInKmh, long countryId) {
+                     int speedInKmh, Long countryId) {
         this.name = name;
         this.displacementInTons = displacementInTons;
         this.hullClassification = hullClassification;

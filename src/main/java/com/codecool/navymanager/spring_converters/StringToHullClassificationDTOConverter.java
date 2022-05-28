@@ -1,9 +1,7 @@
-package com.codecool.navymanager.converters;
+package com.codecool.navymanager.spring_converters;
 
 import com.codecool.navymanager.DTO.HullClassificationDTO;
-import com.codecool.navymanager.DTO.RankDTO;
 import com.codecool.navymanager.service.HullClassificationService;
-import com.codecool.navymanager.service.RankService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

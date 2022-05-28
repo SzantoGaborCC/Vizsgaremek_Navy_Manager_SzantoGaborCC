@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 public class Fleet {
     private Long id;
     private String designation;
-    private int minimumRankPrecedence;
-    private long commanderId;
-    private long countryId;
+    private Integer minimumRankPrecedence;
+    private Long commanderId;
+    private Long countryId;
 
     public Fleet(String designation, int minimumRankPrecedence, long commanderId, long countryId) {
         this.designation = designation;

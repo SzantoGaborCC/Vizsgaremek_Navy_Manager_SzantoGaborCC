@@ -13,10 +13,10 @@ public class Officer {
     private Long id;
     private String name;
     private Date dateOfBirth;
-    private int rank;
-    private long countryId;
+    private Integer rank;
+    private Long countryId;
 
-    public Officer(String name, Date dateOfBirth, int rank, long countryId) {
+    public Officer(String name, Date dateOfBirth, Integer rank, Long countryId) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.rank = rank;

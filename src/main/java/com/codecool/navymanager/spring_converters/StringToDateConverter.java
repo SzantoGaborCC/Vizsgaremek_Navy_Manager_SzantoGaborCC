@@ -1,12 +1,10 @@
-package com.codecool.navymanager.converters;
+package com.codecool.navymanager.spring_converters;
 
-import com.codecool.navymanager.DTO.CountryDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Component

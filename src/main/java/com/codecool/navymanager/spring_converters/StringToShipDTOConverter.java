@@ -1,4 +1,4 @@
-package com.codecool.navymanager.converters;
+package com.codecool.navymanager.spring_converters;
 
 import com.codecool.navymanager.DTO.ShipDTO;
 import com.codecool.navymanager.service.ShipService;

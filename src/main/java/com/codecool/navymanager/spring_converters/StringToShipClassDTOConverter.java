@@ -1,8 +1,6 @@
-package com.codecool.navymanager.converters;
+package com.codecool.navymanager.spring_converters;
 
-import com.codecool.navymanager.DTO.OfficerDTO;
 import com.codecool.navymanager.DTO.ShipClassDTO;
-import com.codecool.navymanager.service.OfficerService;
 import com.codecool.navymanager.service.ShipClassService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
