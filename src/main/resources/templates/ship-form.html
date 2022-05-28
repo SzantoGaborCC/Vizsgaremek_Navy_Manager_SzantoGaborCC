@@ -14,36 +14,36 @@
     </div>
     <div class="form-group">
       <label for="shipClass">Ship Class</label>
-      <select id="shipClass" name="shipClass">
+      <select id="shipClass" th:field="*{shipClass}">
         <option th:if="${ship.shipClass} != null" th:each="shipClassOpt : ${validShipClassValues}"
-                th:value="${shipClassOpt.name}" th:text="${shipClassOpt.name}"
-                th:selected="${ship.shipClass.name == shipClassOpt.name}"></option>
-        <option th:unless="${ship.shipClass} != null" th:each="shipClassOpt : ${validShipClassValues}"
-                th:value="${shipClassOpt.name}" th:text="${shipClassOpt.name}"></option>
+                th:value="${shipClassOpt.id}" th:text="${shipClassOpt.name}"
+                th:selected="${ship.shipClass.id == shipClassOpt.id}"></option>
+        <option th:unless="${ship.id} != null" th:each="shipClassOpt : ${validShipClassValues}"
+                th:value="${shipClassOpt.id}" th:text="${shipClassOpt.name}"></option>
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('shipClass')}" th:errors="*{shipClass}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
     <div class="form-group">
       <label for="captain">Captain</label>
-      <select id="captain" name="captain">
+      <select id="captain" th:field="*{captain}">
         <option th:if="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
-                th:value="${captainOpt.name}" th:text="${captainOpt.name}"
-                th:selected="${ship.captain.name == captainOpt.name}"></option>
+                th:value="${captainOpt.id}" th:text="${captainOpt.name}"
+                th:selected="${ship.captain.id == captainOpt.id}"></option>
         <option th:unless="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
-                th:value="${captainOpt.name}" th:text="${captainOpt.name}"></option>
+                th:value="${captainOpt.id}" th:text="${captainOpt.name}"></option>
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('captain')}" th:errors="*{captain}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
     <div class="form-group">
       <label for="country">Country</label>
-      <select id="country" name="country">
+      <select id="country" th:field="*{country}">
         <option th:if="${ship.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.name}" th:text="${countryOpt.name}"
-                th:selected="${ship.country.name == countryOpt.name}"></option>
+                th:value="${countryOpt.id}" th:text="${countryOpt.name}"
+                th:selected="${ship.country.id == countryOpt.id}"></option>
         <option th:unless="${ship.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.name}" th:text="${countryOpt.name}"></option>
+                th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->

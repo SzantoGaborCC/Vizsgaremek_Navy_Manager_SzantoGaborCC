@@ -9,12 +9,12 @@
   <form action="#" th:action="${add} == true ? @{/ship-class-mvc/add-gun/{id}(id=${shipClass.id})} : @{/ship-class-mvc/update-gun/{shipClassId}/gun/{gunId}(gunId=${gunWithQuantity.gun.id},shipClassId=${shipClass.id})}" th:object="${gunWithQuantity}" method="post" novalidate>
       <div class="form-group">
           <label for="gun">Gun</label>
-          <select id="gun" name="gun">
+          <select id="gun" th:field="*{gun}">
               <option th:if="${gunWithQuantity.gun} != null" th:each="gunOpt : ${validGunValues}"
-                      th:value="${gunOpt.designation}" th:text="${gunOpt.designation}"
-                      th:selected="${gunWithQuantity.gun.designation == gunOpt.designation}"></option>
+                      th:value="${gunOpt.id}" th:text="${gunOpt.designation}"
+                      th:selected="${gunWithQuantity.gun.id == gunOpt.id}"></option>
               <option th:unless="${gunWithQuantity.gun} != null" th:each="gunOpt : ${validGunValues}"
-                      th:value="${gunOpt.designation}" th:text="${gunOpt.designation}"></option>
+                      th:value="${gunOpt.id}" th:text="${gunOpt.designation}"></option>
           </select>
           <span class="validationError" th:if="${#fields.hasErrors('gun')}" th:errors="*{gun}"></span>
           <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->

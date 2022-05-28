@@ -15,7 +15,7 @@
     </div>
     <div class="form-group">
       <label for="minimumRank">Minimum rank required</label>
-      <select id="minimumRank" name="minimumRank">
+      <select id="minimumRank" th:field="*{minimumRank}">
         <option th:if="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
                 th:value="${rankOpt.precedence}" th:text="${rankOpt.designation}"
                 th:selected="${fleet.minimumRank.precedence == rankOpt.precedence}"></option>
@@ -27,7 +27,7 @@
     </div>
     <div class="form-group">
       <label for="commander">Commander</label>
-      <select id="commander" name="commander">
+      <select id="commander" th:field="*{commander}">
         <option th:if="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
                 th:value="${commanderOpt.id}" th:text="${commanderOpt.name}"
                 th:selected="${fleet.commander.id == commanderOpt.id}"></option>
@@ -39,7 +39,7 @@
     </div>
     <div class="form-group">
       <label for="country">Country</label>
-      <select id="country" name="country">
+      <select id="country" th:field="*{country}">
         <option th:if="${fleet.country} != null" th:each="countryOpt : ${validCountryValues}"
                 th:value="${countryOpt.id}" th:text="${countryOpt.name}"
                 th:selected="${fleet.country.id == countryOpt.id}"></option>

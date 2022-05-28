@@ -171,7 +171,7 @@ public class ShipClassMvcController {
     @GetMapping("/delete-gun/{shipClassId}/gun/{gunId}")
     public String deleteById(@PathVariable long shipClassId, @PathVariable long gunId) {
         shipClassService.deleteGunFromShipClass(shipClassId, gunId);
-        return "redirect:/gun-mvc";
+        return "redirect:/ship-class-mvc/details/" + shipClassId;
     }
 }
 

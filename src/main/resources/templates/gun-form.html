@@ -38,12 +38,12 @@
     </div>
     <div class="form-group">
       <label for="country">Country</label>
-      <select id="country" name="country">
+      <select id="country" th:field="*{country}">
         <option th:if="${gun.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.name}" th:text="${countryOpt.name}"
-                th:selected="${gun.country.name == countryOpt.name}"></option>
+                th:value="${countryOpt.id}" th:text="${countryOpt.name}"
+                th:selected="${gun.country.id == countryOpt.id}"></option>
         <option th:unless="${gun.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.name}" th:text="${countryOpt.name}"></option>
+                th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->

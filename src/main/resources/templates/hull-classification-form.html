@@ -20,12 +20,12 @@
     </div>
     <div class="form-group">
       <label for="minimumRank">Minimum rank required</label>
-      <select id="minimumRank" name="minimumRank">
+      <select id="minimumRank" th:field="*{minimumRank}">
         <option th:if="${hullClassification.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.designation}" th:text="${rankOpt.designation}"
-                th:selected="${hullClassification.minimumRank.designation == rankOpt.designation}"></option>
+                th:value="${rankOpt.precedence}" th:text="${rankOpt.designation}"
+                th:selected="${hullClassification.minimumRank.precedence == rankOpt.precedence}"></option>
         <option th:unless="${hullClassification.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.designation}" th:text="${rankOpt.designation}"></option>
+                th:value="${rankOpt.precedence}" th:text="${rankOpt.designation}"></option>
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}" th:errors="*{minimumRank}"></span>
     </div>

@@ -6,17 +6,17 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StringToShipClassDTOConverter implements Converter<String, ShipClassDTO> {
+public class IdToShipClassDTOConverter implements Converter<String, ShipClassDTO> {
     private final ShipClassService shipClassService;
 
-    public StringToShipClassDTOConverter(ShipClassService shipClassService) {
+    public IdToShipClassDTOConverter(ShipClassService shipClassService) {
         this.shipClassService = shipClassService;
     }
 
     @Override
     public ShipClassDTO convert(String source) {
         return shipClassService.findAll().stream()
-                .filter(shipClassDTO -> shipClassDTO.getName().equals(source))
+                .filter(shipClassDTO -> shipClassDTO.getId().equals(Long.valueOf(source)))
                 .findAny().orElseThrow();
     }
 }

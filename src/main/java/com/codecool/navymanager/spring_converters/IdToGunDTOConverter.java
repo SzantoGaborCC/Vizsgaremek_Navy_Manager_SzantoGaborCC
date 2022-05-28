@@ -6,17 +6,17 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StringToGunDTOConverter implements Converter<String, GunDTO> {
+public class IdToGunDTOConverter implements Converter<String, GunDTO> {
     private final GunService gunService;
 
-    public StringToGunDTOConverter(GunService gunService) {
+    public IdToGunDTOConverter(GunService gunService) {
         this.gunService = gunService;
     }
 
     @Override
     public GunDTO convert(String source) {
         return gunService.findAll().stream()
-                .filter(shipClassDTO -> shipClassDTO.getDesignation().equals(source))
+                .filter(shipClassDTO -> shipClassDTO.getId().equals(Long.valueOf(source)))
                 .findAny().orElseThrow();
     }
 }
