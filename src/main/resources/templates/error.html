@@ -12,10 +12,10 @@
         <span><strong>Error:</strong></span>
         <span th:text="${error}"></span>
     </h3>
-    <h4 th:if="${message} != 'No message available'">
+    <h2 th:if="${message} != 'No message available'">
         <span><strong>Message:</strong></span>
         <span th:text="${message}"></span>
-    </h4>
+    </h2>
     <h4 th:if="${exception != null}">
         <span><strong>Exception:</strong></span>
         <span th:text="${exception}"></span>
