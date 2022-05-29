@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/header :: header (title='Navy Manager - Error Page')"></div>
+<body>
+<h1 class="alert alert-danger" role="alert">Something went wrong!</h1>
+<div class="alert alert-primary" role="alert" style="text-align: center;">
+    <h3>
+        <span><strong>Status:</strong></span>
+        <span th:text="${status}"></span>
+    </h3>
+    <h3>
+        <span><strong>Error:</strong></span>
+        <span th:text="${error}"></span>
+    </h3>
+    <h4 th:if="${message} != 'No message available'">
+        <span><strong>Message:</strong></span>
+        <span th:text="${message}"></span>
+    </h4>
+    <h4 th:if="${exception != null}">
+        <span><strong>Exception:</strong></span>
+        <span th:text="${exception}"></span>
+    </h4>
+</div>
+<div class="alert alert-info" role="alert" th:if="${trace != null}">
+    <h3>Stacktrace:</h3>
+    <span th:text="${trace}"></span>
+</div>
+<div th:insert="fragments/footer :: footer"></div>
+</body>
+</html>

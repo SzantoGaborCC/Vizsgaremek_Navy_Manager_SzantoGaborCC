@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
-public class StringToDateConverter implements Converter<String, Date> {
+public class YMDStringToDateConverter implements Converter<String, Date> {
     @Override
     public Date convert(String source) {
         try {
