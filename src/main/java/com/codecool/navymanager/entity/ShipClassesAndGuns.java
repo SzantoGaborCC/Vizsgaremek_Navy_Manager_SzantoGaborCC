@@ -3,9 +3,8 @@ package com.codecool.navymanager.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ship_classes_and_guns", indexes = {
-        @Index(name = "ship_classes_and_guns_index", columnList = "ship_class_id, gun_id", unique = true)
-})
+@Table(name = "ship_classes_and_guns",
+        uniqueConstraints = { @UniqueConstraint(columnNames = { "ship_class_id", "gun_id" }) })
 public class ShipClassesAndGuns {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
