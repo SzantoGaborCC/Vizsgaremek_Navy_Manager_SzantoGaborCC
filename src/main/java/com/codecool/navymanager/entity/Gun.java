@@ -1,9 +1,14 @@
 package com.codecool.navymanager.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "gun")
+@Getter
+@Setter
 public class Gun {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,60 +34,16 @@ public class Gun {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    public Long getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Gun that = (Gun) o;
+        return id != null && id.equals(that.id);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
-
-    public String getDesignation() {
-        return designation;
-    }
-
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
-
-    public Integer getCaliberInMms() {
-        return caliberInMms;
-    }
-
-    public void setCaliberInMms(Integer caliberInMms) {
-        this.caliberInMms = caliberInMms;
-    }
-
-    public Integer getProjectileWeightInKgs() {
-        return projectileWeightInKgs;
-    }
-
-    public void setProjectileWeightInKgs(Integer projectileWeightInKgs) {
-        this.projectileWeightInKgs = projectileWeightInKgs;
-    }
-
-    public Integer getRangeInMeters() {
-        return rangeInMeters;
-    }
-
-    public void setRangeInMeters(Integer rangeInMeters) {
-        this.rangeInMeters = rangeInMeters;
-    }
-
-    public Integer getMinimumShipDisplacementInTons() {
-        return minimumShipDisplacementInTons;
-    }
-
-    public void setMinimumShipDisplacementInTons(Integer minimumShipDisplacementInTons) {
-        this.minimumShipDisplacementInTons = minimumShipDisplacementInTons;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
 }

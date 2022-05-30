@@ -1,11 +1,16 @@
 package com.codecool.navymanager.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "fleet")
+@Getter
+@Setter
 public class Fleet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +22,7 @@ public class Fleet {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "minimum_rank_precedence", nullable = false)
-    private Rank minimumRankPrecedence;
+    private Rank minimumRank;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "commander_id", nullable = false)
@@ -33,52 +38,16 @@ public class Fleet {
             inverseJoinColumns = @JoinColumn(name = "ship_id"))
     private Set<Ship> ships = new LinkedHashSet<>();
 
-    public Long getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fleet that = (Fleet) o;
+        return id != null && id.equals(that.id);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
-
-    public String getDesignation() {
-        return designation;
-    }
-
-    public void setDesignation(String designation) {
-        this.designation = designation;
-    }
-
-    public Rank getMinimumRankPrecedence() {
-        return minimumRankPrecedence;
-    }
-
-    public void setMinimumRankPrecedence(Rank minimumRankPrecedence) {
-        this.minimumRankPrecedence = minimumRankPrecedence;
-    }
-
-    public Officer getCommander() {
-        return commander;
-    }
-
-    public void setCommander(Officer commander) {
-        this.commander = commander;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
-    public Set<Ship> getShips() {
-        return ships;
-    }
-
-    public void setShips(Set<Ship> ships) {
-        this.ships = ships;
-    }
-
 }

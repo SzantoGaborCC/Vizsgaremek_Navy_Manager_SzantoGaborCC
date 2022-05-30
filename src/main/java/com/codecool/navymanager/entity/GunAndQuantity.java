@@ -1,11 +1,17 @@
 package com.codecool.navymanager.entity;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ship_classes_and_guns",
         uniqueConstraints = { @UniqueConstraint(columnNames = { "ship_class_id", "gun_id" }) })
-public class ShipClassesAndGuns {
+@Getter
+@Setter
+public class GunAndQuantity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,36 +28,16 @@ public class ShipClassesAndGuns {
     @Column(name = "gun_quantity", nullable = false)
     private Integer gunQuantity;
 
-    public Long getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GunAndQuantity that = (GunAndQuantity) o;
+        return id != null && id.equals(that.id);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
-
-    public ShipClass getShipClass() {
-        return shipClass;
-    }
-
-    public void setShipClass(ShipClass shipClass) {
-        this.shipClass = shipClass;
-    }
-
-    public Gun getGun() {
-        return gun;
-    }
-
-    public void setGun(Gun gun) {
-        this.gun = gun;
-    }
-
-    public Integer getGunQuantity() {
-        return gunQuantity;
-    }
-
-    public void setGunQuantity(Integer gunQuantity) {
-        this.gunQuantity = gunQuantity;
-    }
-
 }

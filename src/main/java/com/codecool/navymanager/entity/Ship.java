@@ -1,9 +1,14 @@
 package com.codecool.navymanager.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ship")
+@Getter
+@Setter
 public class Ship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,44 +30,17 @@ public class Ship {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    public Long getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ship that = (Ship) o;
+        return id != null && id.equals(that.id);
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ShipClass getShipClass() {
-        return shipClass;
-    }
-
-    public void setShipClass(ShipClass shipClass) {
-        this.shipClass = shipClass;
-    }
-
-    public Officer getCaptain() {
-        return captain;
-    }
-
-    public void setCaptain(Officer captain) {
-        this.captain = captain;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 
 }

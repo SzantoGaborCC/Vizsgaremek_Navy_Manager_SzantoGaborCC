@@ -1,12 +1,14 @@
 package com.codecool.navymanager.spring_converters;
 
-import com.codecool.navymanager.DTO.RankDTO;
+
+import com.codecool.navymanager.entityDTO.RankDto;
 import com.codecool.navymanager.service.RankService;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PrecedenceToRankDTOConverter implements Converter<String, RankDTO> {
+public class PrecedenceToRankDTOConverter implements Converter<String, RankDto> {
     private final RankService rankService;
 
     public PrecedenceToRankDTOConverter(RankService rankService) {
@@ -14,9 +16,9 @@ public class PrecedenceToRankDTOConverter implements Converter<String, RankDTO> 
     }
 
     @Override
-    public RankDTO convert(String source) {
+    public RankDto convert(String source) {
         return rankService.findAll().stream()
-                .filter(rankDTO -> rankDTO.getPrecedence() == (Integer.valueOf(source)))
+                .filter(rankDto -> rankDto.precedence() == (Integer.valueOf(source)))
                 .findAny().orElseThrow();
     }
 }

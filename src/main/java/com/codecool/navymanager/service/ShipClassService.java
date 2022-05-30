@@ -1,11 +1,10 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.DTO.GunDTO;
-import com.codecool.navymanager.DTO.GunWithQuantityDTO;
-import com.codecool.navymanager.DTO.ShipClassDTO;
+
 import com.codecool.navymanager.dao.ShipClassDao;
 import com.codecool.navymanager.dao.ShipClassesAndGunsDao;
-import com.codecool.navymanager.model.ShipClass;
+
+import com.codecool.navymanager.entity.ShipClass;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
