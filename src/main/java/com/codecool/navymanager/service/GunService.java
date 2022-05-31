@@ -1,8 +1,8 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.DTO.GunDTO;
-import com.codecool.navymanager.dao.GunDao;
-import com.codecool.navymanager.model.Gun;
+
+import com.codecool.navymanager.entityDTO.GunDto;
+import com.codecool.navymanager.repository.GunRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,48 +11,31 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class GunService {
-    private final GunDao gunDao;
-    private final CountryService countryService;
+    private final GunRepository gunRepository;
 
-    public GunService(GunDao gunDao, CountryService countryService) {
-        this.gunDao = gunDao;
-        this.countryService = countryService;
+    public GunService(GunRepository gunRepository) {
+        this.gunRepository = gunRepository;
     }
 
-    public List<GunDTO> findAll() {
-        return gunDao.findAll().stream().map(this::createGunDTOWithDependencies).toList();
+    public List<GunDto> findAll() {
+        return gunRepository.findAll().stream().map(GunDto::new).toList();
     }
 
-    public GunDTO findById(long id) {
-        Gun gun = gunDao.findById(id).orElseThrow();
-        return createGunDTOWithDependencies(gun);
+    public GunDto findById(long id) {
+        return new GunDto(gunRepository.findById(id).orElseThrow());
     }
 
-    public List<GunDTO> findByCountry(long countryId)  {
-        return gunDao.findByCountry(countryId).stream().map(this::createGunDTOWithDependencies).toList();
-    }
-
-    private GunDTO createGunDTOWithDependencies(Gun gun) {
-        GunDTO gunDTO = new GunDTO(gun);
-        gunDTO.setCountry(countryService.findById(gun.getCountryId()));
-        return gunDTO;
-    }
-
-
-    @Transactional
-    public void add(GunDTO gunDTO) {
-        Gun gun = gunDTO.convertToGun();
-        gunDao.add(gun);
+    public List<GunDto> findByCountry(long countryId)  {
+        return gunRepository.findByCountryId(countryId).stream().map(GunDto::new).toList();
     }
 
     @Transactional
-    public void update(GunDTO gunDTO, long id) {
-        System.out.println(gunDTO);
-        gunDao.update(gunDTO.convertToGun(), id);
+    public void save(GunDto gunDto) {
+       gunRepository.save(gunDto.toEntity());
     }
 
     @Transactional
     public void delete(long id) {
-        gunDao.delete(id);
+        gunRepository.deleteById(id);
     }
 }

@@ -1,10 +1,12 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.DTO.FleetDTO;
-import com.codecool.navymanager.DTO.ShipDTO;
-import com.codecool.navymanager.dao.FleetDao;
-import com.codecool.navymanager.dao.FleetsAndShipsDao;
-import com.codecool.navymanager.model.Fleet;
+
+import com.codecool.navymanager.entity.Fleet;
+import com.codecool.navymanager.entity.Ship;
+import com.codecool.navymanager.entityDTO.FleetDto;
+import com.codecool.navymanager.entityDTO.ShipDto;
+
+import com.codecool.navymanager.repository.FleetRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,77 +17,72 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class FleetService {
-    private final FleetDao fleetDao;
+    private final FleetRepository fleetRepository;
 
-    private  final RankService rankService;
-    private final OfficerService officerService;
-    private final CountryService countryService;
-    private final ShipService shipService;
-
-    private final FleetsAndShipsDao fleetsAndShipsDao;
-
-    public FleetService(FleetDao fleetDao, RankService rankService,
-                        OfficerService officerService, CountryService countryService,
-                        ShipService shipService, FleetsAndShipsDao fleetsAndShipsDao) {
-        this.fleetDao = fleetDao;
-        this.rankService = rankService;
-        this.officerService = officerService;
-        this.countryService = countryService;
-        this.shipService = shipService;
-        this.fleetsAndShipsDao = fleetsAndShipsDao;
+    public FleetService(FleetRepository fleetRepository) {
+        this.fleetRepository = fleetRepository;
     }
 
-    public List<FleetDTO> findAll() {
-        return fleetDao.findAll().stream().map(this::createFleetDTOWithDependencies).toList();
+    public List<FleetDto> findAll() {
+        return fleetRepository.findAll().stream().map(FleetDto::new).toList();
     }
 
-    public FleetDTO findById(long id) {
-        Fleet fleet = fleetDao.findById(id).orElseThrow();
-        return createFleetDTOWithDependencies(fleet);
+    public FleetDto findById(long id) {
+        return new FleetDto(fleetRepository.findById(id).orElseThrow());
     }
 
-    private FleetDTO createFleetDTOWithDependencies(Fleet fleet) {
-        FleetDTO fleetDTO = new FleetDTO(fleet);
-        fleetDTO.setMinimumRank(rankService.findByPrecedence(fleet.getMinimumRankPrecedence()));
-        fleetDTO.setCommander(officerService.findById(fleet.getCommanderId()));
-        fleetDTO.setCountry(countryService.findById(fleet.getCountryId()));
-        fleetDTO.setShips(getShipsFromIds(fleetDTO.getId()));
-        return fleetDTO;
-    }
-
-    private Set<ShipDTO> getShipsFromIds(long fleetId) {
-        Set<Long> shipIds = fleetsAndShipsDao.findShipIdsByFleetId(fleetId);
-        return shipIds.stream().map(shipService::findById).collect(Collectors.toSet());
+    public Set<ShipDto> findShips(long fleetId) {
+        return fleetRepository.findShips(fleetId).stream()
+                .map(ShipDto::new)
+                .collect(Collectors.toSet());
     }
 
     @Transactional
-    public void add(FleetDTO fleetDTO) {
-        fleetDao.add(fleetDTO.convertToFleet());
+    public void add(FleetDto fleetDto) {
+        fleetRepository.save(fleetDto.toEntity());
     }
 
     @Transactional
-    public void update(FleetDTO fleetDTO, long id) {
-        fleetDao.update(fleetDTO.convertToFleet(), id);
+    public void update(FleetDto fleetDto) {
+        fleetRepository.save(fleetDto.toEntity());
     }
 
     @Transactional
-    public void delete(long id) {
-        fleetDao.delete(id);
+    public void deleteById(Long id) {
+        fleetRepository.deleteById(id);
     }
+
     @Transactional
-    public void addShipToFleet(Long fleetId, Long shipId) {
+    public void addShipToFleet(Long fleetId, Ship ship) {
         try {
-            fleetsAndShipsDao.addShipToFleet(fleetId, shipId);
+            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
+            fleet.getShips().add(ship);
+            fleetRepository.save(fleet);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid Fleet or Ship Id!");
         }
     }
+
     @Transactional
-    public void updateShipForAFleet(long fleetId, long oldShipId, long newShipId) {
-        fleetsAndShipsDao.updateShipForAFleet(fleetId, oldShipId, newShipId);
+    public void updateShipForAFleet(long fleetId, Ship oldShip, Ship newShip) {
+        try {
+            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
+            fleet.getShips().remove(oldShip);
+            fleet.getShips().add(newShip);
+            fleetRepository.save(fleet);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid Fleet or Ship Id!");
+        }
     }
+
     @Transactional
-    public void deleteShipFromFleet(long fleetId, long shipId) {
-        fleetsAndShipsDao.deleteShipFromFleet(fleetId, shipId);
+    public void deleteShipFromFleet(long fleetId, Ship ship) {
+        try {
+            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
+            fleet.getShips().remove(ship);
+            fleetRepository.save(fleet);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid Fleet or Ship Id!");
+        }
     }
 }

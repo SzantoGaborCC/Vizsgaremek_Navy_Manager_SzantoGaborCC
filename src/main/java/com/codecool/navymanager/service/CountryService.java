@@ -18,7 +18,7 @@ public class CountryService {
 
     public List<CountryDto> findAll() {
         return countryRepository.findAll().stream()
-                .map(country -> new CountryDto(country))
+                .map(CountryDto::new)
                 .toList();
     }
 
@@ -27,17 +27,12 @@ public class CountryService {
     }
 
     @Transactional
-    public void add(CountryDto countryDto) {
+    public void save(CountryDto countryDto) {
         countryRepository.save(countryDto.toEntity());
     }
 
     @Transactional
-    public void update(CountryDto countryDto) {
-        countryRepository.save(countryDto.toEntity());
-    }
-
-    @Transactional
-    public void delete(CountryDto countryDto) {
-        countryRepository.delete(countryDto.toEntity());
+    public void deleteById(Long id) {
+        countryRepository.deleteById(id);
     }
 }
