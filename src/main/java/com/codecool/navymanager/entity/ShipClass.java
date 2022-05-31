@@ -1,6 +1,8 @@
 package com.codecool.navymanager.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,8 @@ import java.util.Set;
 @Table(name = "ship_class")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ShipClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

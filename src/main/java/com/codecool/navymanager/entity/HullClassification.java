@@ -1,6 +1,8 @@
 package com.codecool.navymanager.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import javax.persistence.*;
 @Table(name = "hull_classification")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class HullClassification {
     @Id
     @Column(name = "abbreviation", nullable = false, length = 3)

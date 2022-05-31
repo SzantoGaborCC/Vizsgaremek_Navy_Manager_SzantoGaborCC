@@ -1,7 +1,9 @@
 package com.codecool.navymanager.entity;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,8 @@ import javax.persistence.*;
         uniqueConstraints = { @UniqueConstraint(columnNames = { "ship_class_id", "gun_id" }) })
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class GunAndQuantity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
