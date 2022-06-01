@@ -3,6 +3,7 @@ package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Ship;
+import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 
@@ -43,8 +44,12 @@ public class FleetService {
     }
 
     @Transactional
-    public void update(FleetDto fleetDto) {
-        fleetRepository.save(fleetDto.toEntity());
+    public void update(FleetDto fleetDto, long id) {
+        if (fleetRepository.existsById(id)) {
+            fleetRepository.save(fleetDto.toEntity());
+        } else {
+            throw new IllegalArgumentException("No such Fleet to update!");
+        }
     }
 
     @Transactional

@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.DTO.CountryDTO;
+import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.service.CountryService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,27 +16,27 @@ public class CountryRestController {
     }
 
     @GetMapping
-    public List<CountryDTO> findAll() {
+    public List<CountryDto> findAll() {
         return countryService.findAll();
     }
 
     @GetMapping("/{id}")
-    public CountryDTO findById(@PathVariable long id) {
+    public CountryDto findById(@PathVariable long id) {
         return countryService.findById(id);
     }
 
     @PostMapping
-    public void add(@RequestBody CountryDTO country) {
-        countryService.add(country);
+    public void add(@RequestBody CountryDto country) {
+        countryService.save(country);
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestBody CountryDTO country, @PathVariable long id) {
-        countryService.update(country, id);
+    public void update(@RequestBody CountryDto country, @PathVariable long id) {
+        countryService.save(country);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
-        countryService.delete(id);
+        countryService.deleteById(id);
     }
 }

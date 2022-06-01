@@ -27,8 +27,17 @@ public class CountryService {
     }
 
     @Transactional
-    public void save(CountryDto countryDto) {
+    public void add(CountryDto countryDto) {
         countryRepository.save(countryDto.toEntity());
+    }
+
+    @Transactional
+    public void update(CountryDto countryDto, long id) {
+        if (countryRepository.existsById(id)) {
+            countryRepository.save(countryDto.toEntity());
+        } else {
+            throw new IllegalArgumentException("No such Country to update!");
+        }
     }
 
     @Transactional

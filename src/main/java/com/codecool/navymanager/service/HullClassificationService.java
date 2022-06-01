@@ -1,5 +1,7 @@
 package com.codecool.navymanager.service;
 
+import com.codecool.navymanager.entity.HullClassification;
+import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.HullClassificationDto;
 
 import com.codecool.navymanager.repository.HullClassificationRepository;
@@ -29,6 +31,15 @@ public class HullClassificationService {
     @Transactional
     public void add(HullClassificationDto hullClassificationDto) {
         hullClassificationRepository.save(hullClassificationDto.toEntity());
+    }
+
+    @Transactional
+    public void update(HullClassificationDto hullClassificationDto, String abbreviation) {
+        if (hullClassificationRepository.existsByAbbreviation(abbreviation)) {
+            hullClassificationRepository.save(hullClassificationDto.toEntity());
+        } else {
+            throw new IllegalArgumentException("No such Gun to update!");
+        }
     }
 
     @Transactional

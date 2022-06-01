@@ -26,8 +26,17 @@ public class OfficerService {
     }
 
     @Transactional
-    public void save(OfficerDto officerDto) {
+    public void add(OfficerDto officerDto) {
         officerRepository.save(officerDto.toEntity());
+    }
+
+    @Transactional
+    public void update(OfficerDto officerDto, long id) {
+        if (officerRepository.existsById(id)) {
+            officerRepository.save(officerDto.toEntity());
+        } else {
+            throw new IllegalArgumentException("No such Officer to update!");
+        }
     }
 
     @Transactional

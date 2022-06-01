@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.DTO.OfficerDTO;
+import com.codecool.navymanager.entityDTO.OfficerDto;
 import com.codecool.navymanager.service.OfficerService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,27 +16,27 @@ public class OfficerRestController {
     }
 
     @GetMapping
-    public List<OfficerDTO> findAll() {
+    public List<OfficerDto> findAll() {
         return officerService.findAll();
     }
 
     @GetMapping("/{id}")
-    public OfficerDTO findById(@PathVariable long id) {
+    public OfficerDto findById(@PathVariable long id) {
         return officerService.findById(id);
     }
 
     @PostMapping
-    public void add(@RequestBody OfficerDTO officer) {
-        officerService.add(officer);
+    public void add(@RequestBody OfficerDto officer) {
+        officerService.save(officer);
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestBody OfficerDTO officer, @PathVariable long id) {
+    public void update(@RequestBody OfficerDto officer, @PathVariable long id) {
         officerService.update(officer, id);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
-        officerService.delete(id);
+        officerService.deleteById(id);
     }
 }

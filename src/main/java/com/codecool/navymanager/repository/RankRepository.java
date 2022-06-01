@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface RankRepository extends JpaRepository<Rank, Integer> {
     Optional<Rank> findByPrecedence(int precedence);
+
+    boolean existsByPrecedence(int precedence);
     void deleteByPrecedence(int precedence);
 }

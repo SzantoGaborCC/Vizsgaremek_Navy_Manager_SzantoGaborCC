@@ -1,5 +1,6 @@
 package com.codecool.navymanager.service;
 
+import com.codecool.navymanager.entityDTO.GunDto;
 import com.codecool.navymanager.entityDTO.RankDto;
 import com.codecool.navymanager.repository.RankRepository;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,17 @@ public class RankService {
     }
 
     @Transactional
-    public void save(RankDto rankDto) {
+    public void add(RankDto rankDto) {
         rankRepository.save(rankDto.toEntity());
+    }
+
+    @Transactional
+    public void update(RankDto rankDto, int precedence) {
+        if (rankRepository.existsByPrecedence(precedence)) {
+           rankRepository.save(rankDto.toEntity());
+        } else {
+            throw new IllegalArgumentException("No such Rank to update!");
+        }
     }
 
     @Transactional

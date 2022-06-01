@@ -4,6 +4,8 @@ package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.entity.ShipClass;
 import com.codecool.navymanager.entityDTO.GunAndQuantityDto;
+import com.codecool.navymanager.entityDTO.GunDto;
+import com.codecool.navymanager.entityDTO.RankDto;
 import com.codecool.navymanager.entityDTO.ShipClassDto;
 import com.codecool.navymanager.repository.ShipClassRepository;
 import org.springframework.stereotype.Service;
@@ -29,8 +31,17 @@ public class ShipClassService {
     }
 
     @Transactional
-    public void save(ShipClassDto shipClassDto) {
+    public void add(ShipClassDto shipClassDto) {
         shipClassRepository.save(shipClassDto.toEntity());
+    }
+
+    @Transactional
+    public void update(ShipClassDto shipClassDto, long id) {
+        if (shipClassRepository.existsById(id)) {
+            shipClassRepository.save(shipClassDto.toEntity());
+        } else {
+            throw new IllegalArgumentException("No such Ship Class to update!");
+        }
     }
 
     @Transactional

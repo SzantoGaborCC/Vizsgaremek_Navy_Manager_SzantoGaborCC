@@ -1,6 +1,7 @@
 package com.codecool.navymanager.service;
 
 
+import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.GunDto;
 import com.codecool.navymanager.repository.GunRepository;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,17 @@ public class GunService {
     }
 
     @Transactional
-    public void save(GunDto gunDto) {
+    public void add(GunDto gunDto) {
        gunRepository.save(gunDto.toEntity());
+    }
+
+    @Transactional
+    public void update(GunDto gunDto, long id) {
+        if (gunRepository.existsById(id)) {
+            gunRepository.save(gunDto.toEntity());
+        } else {
+            throw new IllegalArgumentException("No such Gun to update!");
+        }
     }
 
     @Transactional
