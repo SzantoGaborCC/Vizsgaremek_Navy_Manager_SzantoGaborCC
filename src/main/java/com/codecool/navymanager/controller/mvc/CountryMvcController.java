@@ -1,7 +1,7 @@
 package com.codecool.navymanager.controller.mvc;
 
 
-import com.codecool.navymanager.DTO.CountryDTO;
+
 import com.codecool.navymanager.service.CountryService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;

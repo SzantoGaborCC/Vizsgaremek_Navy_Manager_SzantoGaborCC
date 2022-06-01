@@ -18,7 +18,7 @@ public class PrecedenceToRankDTOConverter implements Converter<String, RankDto> 
     @Override
     public RankDto convert(String source) {
         return rankService.findAll().stream()
-                .filter(rankDto -> rankDto.precedence() == (Integer.valueOf(source)))
+                .filter(rankDto -> rankDto.getPrecedence() == (Integer.valueOf(source)))
                 .findAny().orElseThrow();
     }
 }
