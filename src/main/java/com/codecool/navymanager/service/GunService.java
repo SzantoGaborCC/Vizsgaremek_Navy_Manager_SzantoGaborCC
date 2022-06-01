@@ -35,7 +35,7 @@ public class GunService {
     }
 
     @Transactional
-    public void delete(long id) {
+    public void deleteById(long id) {
         gunRepository.deleteById(id);
     }
 }

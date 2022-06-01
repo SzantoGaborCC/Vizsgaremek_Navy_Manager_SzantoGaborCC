@@ -36,10 +36,14 @@ public class Fleet {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "fleets_and_ships",
             joinColumns = @JoinColumn(name = "fleet_id"),
-            inverseJoinColumns = @JoinColumn(name = "ship_id"))
+            inverseJoinColumns = @JoinColumn(name = "ship_id"),
+            uniqueConstraints =
+                @UniqueConstraint(
+                    name = "one_ship_can_only_be_in_only_one_fleet",
+                    columnNames = {"fleet_id", "ship_id"}))
     private Set<Ship> ships = new LinkedHashSet<>();
 
     @Override

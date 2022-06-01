@@ -1,8 +1,5 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.DTO.RankDTO;
-import com.codecool.navymanager.dao.RankDao;
-import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.RankDto;
 import com.codecool.navymanager.repository.RankRepository;
 import org.springframework.stereotype.Service;
@@ -21,26 +18,21 @@ public class RankService {
 
     public List<RankDto> findAll() {
         return rankRepository.findAll().stream()
-                .map(rank -> new RankDto(rank))
+                .map(RankDto::new)
                 .toList();
     }
 
-    public RankDto findByPrecedence(int rankPrecedence) {
-        return new RankDto(rankRepository.findByPrecedence(rankPrecedence).orElseThrow());
+    public RankDto findByPrecedence(int precedence) {
+        return new RankDto(rankRepository.findByPrecedence(precedence).orElseThrow());
     }
 
     @Transactional
-    public void add(RankDto rankDto) {
-        rankRepository.save(rankDto);
+    public void save(RankDto rankDto) {
+        rankRepository.save(rankDto.toEntity());
     }
 
     @Transactional
-    public void update(RankDTO rankDTO, long id) {
-        rankDao.update(rankDTO.convertToRank(), id);
-    }
-
-    @Transactional
-    public void delete(long id) {
-        rankDao.delete(id);
+    public void deleteByPrecedence(int precedence) {
+        rankRepository.deleteByPrecedence(precedence);
     }
 }

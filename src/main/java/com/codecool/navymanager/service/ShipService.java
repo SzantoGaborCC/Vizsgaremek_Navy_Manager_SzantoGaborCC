@@ -1,9 +1,10 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.DTO.GunDTO;
-import com.codecool.navymanager.DTO.ShipDTO;
-import com.codecool.navymanager.dao.ShipDao;
-import com.codecool.navymanager.model.Ship;
+
+import com.codecool.navymanager.entityDTO.CountryDto;
+import com.codecool.navymanager.entityDTO.ShipDto;
+
+import com.codecool.navymanager.repository.ShipRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,53 +13,32 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class ShipService {
-    private final ShipDao shipDao;
+    private final ShipRepository shipRepository;
 
-    private final ShipClassService shipClassService;
-    private final OfficerService officerService;
-
-    private final CountryService countryService;
-
-    public ShipService(ShipDao shipDao, ShipClassService shipClassService, OfficerService officerService, CountryService countryService) {
-        this.shipDao = shipDao;
-        this.shipClassService = shipClassService;
-        this.officerService = officerService;
-        this.countryService = countryService;
+    public ShipService(ShipRepository shipRepository) {
+        this.shipRepository = shipRepository;
     }
 
-    public List<ShipDTO> findAll() {
-        return shipDao.findAll().stream().map(this::createShipDTOWithDependencies).toList();
+    public List<ShipDto> findAll() {
+        return shipRepository.findAll().stream().map(ShipDto::new).toList();
     }
 
-    public ShipDTO findById(long id) {
-        Ship ship = shipDao.findById(id).orElseThrow();
-        return createShipDTOWithDependencies(ship);
-    }
-
-    private ShipDTO createShipDTOWithDependencies(Ship ship) {
-        ShipDTO shipDTO = new ShipDTO(ship);
-        shipDTO.setShipClass(shipClassService.findById(ship.getShipClassId()));
-        shipDTO.setCaptain(officerService.findById(ship.getCaptainId()));
-        shipDTO.setCountry(countryService.findById(ship.getCountryId()));
-        return shipDTO;
+    public ShipDto findById(long id) {
+        return new ShipDto(shipRepository.findById(id).orElseThrow());
     }
 
     @Transactional
-    public void add(ShipDTO shipDTO) {
-        shipDao.add(shipDTO.convertToShip());
+    public void save(ShipDto shipDto) {
+        shipRepository.save(shipDto.toEntity());
     }
 
     @Transactional
-    public void update(ShipDTO shipDTO, long id) {
-        shipDao.update(shipDTO.convertToShip(), id);
+    public void deleteById(long id) {
+        shipRepository.deleteById(id);
     }
 
-    @Transactional
-    public void delete(long id) {
-        shipDao.delete(id);
-    }
-
-    public List<ShipDTO> findByCountryId(long countryId)  {
-        return shipDao.findByCountryId(countryId).stream().map(this::createShipDTOWithDependencies).toList();
+    public List<ShipDto> findByCountry(CountryDto countryDto)  {
+        return shipRepository.findByCountry(countryDto.toEntity()).stream()
+                .map(ShipDto::new).toList();
     }
 }

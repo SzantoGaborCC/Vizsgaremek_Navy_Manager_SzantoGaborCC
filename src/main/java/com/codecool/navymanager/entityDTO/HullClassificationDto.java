@@ -19,7 +19,7 @@ public class HullClassificationDto implements Serializable {
     private String designation;
     private RankDto minimumRank;
 
-    HullClassificationDto(HullClassification hullClassification) {
+    public HullClassificationDto(HullClassification hullClassification) {
         abbreviation = hullClassification.getAbbreviation();
         designation = hullClassification.getDesignation();
         minimumRank = new RankDto(hullClassification.getMinimumRank());

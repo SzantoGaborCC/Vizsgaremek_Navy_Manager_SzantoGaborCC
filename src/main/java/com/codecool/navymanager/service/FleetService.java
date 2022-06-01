@@ -53,10 +53,10 @@ public class FleetService {
     }
 
     @Transactional
-    public void addShipToFleet(Long fleetId, Ship ship) {
+    public void addShipToFleet(Long fleetId, ShipDto shipDto) {
         try {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
-            fleet.getShips().add(ship);
+            fleet.getShips().add(shipDto.toEntity());
             fleetRepository.save(fleet);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid Fleet or Ship Id!");
@@ -64,11 +64,11 @@ public class FleetService {
     }
 
     @Transactional
-    public void updateShipForAFleet(long fleetId, Ship oldShip, Ship newShip) {
+    public void updateShipForAFleet(long fleetId, ShipDto oldShipDto, ShipDto newShipDto) {
         try {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
-            fleet.getShips().remove(oldShip);
-            fleet.getShips().add(newShip);
+            fleet.getShips().remove(oldShipDto.toEntity());
+            fleet.getShips().add(newShipDto.toEntity());
             fleetRepository.save(fleet);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid Fleet or Ship Id!");

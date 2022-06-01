@@ -1,8 +1,8 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.DTO.*;
-import com.codecool.navymanager.dao.OfficerDao;
-import com.codecool.navymanager.model.Officer;
+import com.codecool.navymanager.entity.Officer;
+import com.codecool.navymanager.entityDTO.OfficerDto;
+import com.codecool.navymanager.repository.OfficerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,45 +11,27 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class OfficerService {
-    private final OfficerDao officerDao;
-    private final RankService rankService;
+    private final OfficerRepository officerRepository;
 
-   private final CountryService countryService;
-
-    public OfficerService(OfficerDao officerDao, RankService rankService, CountryService countryService) {
-        this.officerDao = officerDao;
-        this.rankService = rankService;
-        this.countryService = countryService;
+    public OfficerService(OfficerRepository officerRepository) {
+        this.officerRepository = officerRepository;
     }
 
-    public List<OfficerDTO> findAll() {
-        return officerDao.findAll().stream().map(this::createOfficerDTOWithDependencies).toList();
+    public List<OfficerDto> findAll() {
+        return officerRepository.findAll().stream().map(OfficerDto::new).toList();
     }
 
-    public OfficerDTO findById(long id) {
-        Officer officer = officerDao.findById(id).orElseThrow();
-        return createOfficerDTOWithDependencies(officer);
-    }
-
-    private OfficerDTO createOfficerDTOWithDependencies(Officer officer) {
-        OfficerDTO officerDTO = new OfficerDTO(officer);
-        officerDTO.setRank(rankService.findByPrecedence(officer.getRank()));
-        officerDTO.setCountry(countryService.findById(officer.getCountryId()));
-        return officerDTO;
+    public OfficerDto findById(long id) {
+        return new OfficerDto(officerRepository.findById(id).orElseThrow());
     }
 
     @Transactional
-    public void add(OfficerDTO officerDTO) {
-        officerDao.add(officerDTO.convertToOfficer());
+    public void save(OfficerDto officerDto) {
+        officerRepository.save(officerDto.toEntity());
     }
 
     @Transactional
-    public void update(OfficerDTO officerDTO, long id) {
-        officerDao.update(officerDTO.convertToOfficer(), id);
-    }
-
-    @Transactional
-    public void delete(long id) {
-        officerDao.delete(id);
+    public void deleteById(long id) {
+        officerRepository.deleteById(id);
     }
 }

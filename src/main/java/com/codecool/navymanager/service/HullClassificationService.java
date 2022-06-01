@@ -1,10 +1,8 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.DTO.HullClassificationDTO;
-import com.codecool.navymanager.DTO.OfficerDTO;
-import com.codecool.navymanager.dao.HullClassificationDao;
-import com.codecool.navymanager.model.HullClassification;
-import com.codecool.navymanager.model.Officer;
+import com.codecool.navymanager.entityDTO.HullClassificationDto;
+
+import com.codecool.navymanager.repository.HullClassificationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,41 +11,28 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class HullClassificationService {
-    private final HullClassificationDao hullClassificationDao;
-    private final RankService rankService;
 
-    public HullClassificationService(HullClassificationDao hullClassificationDao, RankService rankService) {
-        this.hullClassificationDao = hullClassificationDao;
-        this.rankService = rankService;
+    private final HullClassificationRepository hullClassificationRepository;
+
+    public HullClassificationService(HullClassificationRepository hullClassificationRepository) {
+        this.hullClassificationRepository = hullClassificationRepository;
     }
 
-    public List<HullClassificationDTO> findAll() {
-        return hullClassificationDao.findAll().stream().map(this::createHullClassificationDTOWithDependencies).toList();
+    public List<HullClassificationDto> findAll() {
+        return hullClassificationRepository.findAll().stream().map(HullClassificationDto::new).toList();
     }
 
-    public HullClassificationDTO findByAbbreviation(String abbreviation) {
-        HullClassification hullClassification = hullClassificationDao.findByAbbreviation(abbreviation).orElseThrow();
-        return createHullClassificationDTOWithDependencies(hullClassification);
-    }
-
-    private HullClassificationDTO createHullClassificationDTOWithDependencies(HullClassification hullClassification) {
-        HullClassificationDTO hullClassificationDTO = new HullClassificationDTO(hullClassification);
-        hullClassificationDTO.setMinimumRank(rankService.findByPrecedence(hullClassification.getMinimumRankPrecedence()));
-        return hullClassificationDTO;
+    public HullClassificationDto findByAbbreviation(String abbreviation) {
+        return new HullClassificationDto(hullClassificationRepository.findByAbbreviation(abbreviation));
     }
 
     @Transactional
-    public void add(HullClassificationDTO hullClassificationDTO) {
-        hullClassificationDao.add(hullClassificationDTO.convertToHullClassification());
+    public void add(HullClassificationDto hullClassificationDto) {
+        hullClassificationRepository.save(hullClassificationDto.toEntity());
     }
 
     @Transactional
-    public void update(HullClassificationDTO hullClassificationDTO, String abbreviation) {
-        hullClassificationDao.update(hullClassificationDTO.convertToHullClassification(), abbreviation);
-    }
-
-    @Transactional
-    public void delete(String abbreviation) {
-        hullClassificationDao.delete(abbreviation);
+    public void deleteByAbbreviation(String abbreviation) {
+        hullClassificationRepository.deleteByAbbreviation(abbreviation);
     }
 }
