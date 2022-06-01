@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.DTO.ShipClassDTO;
+import com.codecool.navymanager.entityDTO.ShipClassDto;
 import com.codecool.navymanager.service.ShipClassService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,27 +16,27 @@ public class ShipClassRestController {
     }
 
     @GetMapping
-    public List<ShipClassDTO> findAll() {
+    public List<ShipClassDto> findAll() {
         return shipClassService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ShipClassDTO findById(@PathVariable long id) {
+    public ShipClassDto findById(@PathVariable long id) {
         return shipClassService.findById(id);
     }
 
     @PostMapping
-    public void add(@RequestBody ShipClassDTO shipClass) {
+    public void add(@RequestBody ShipClassDto shipClass) {
         shipClassService.add(shipClass);
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestBody ShipClassDTO shipClass, @PathVariable long id) {
+    public void update(@RequestBody ShipClassDto shipClass, @PathVariable long id) {
         shipClassService.update(shipClass, id);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
-        shipClassService.delete(id);
+        shipClassService.deleteById(id);
     }
 }

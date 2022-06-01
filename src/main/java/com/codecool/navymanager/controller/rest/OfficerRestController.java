@@ -27,7 +27,7 @@ public class OfficerRestController {
 
     @PostMapping
     public void add(@RequestBody OfficerDto officer) {
-        officerService.save(officer);
+        officerService.add(officer);
     }
 
     @PutMapping("/{id}")

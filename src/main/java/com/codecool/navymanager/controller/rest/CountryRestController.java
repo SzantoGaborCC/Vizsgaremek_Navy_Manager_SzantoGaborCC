@@ -27,12 +27,12 @@ public class CountryRestController {
 
     @PostMapping
     public void add(@RequestBody CountryDto country) {
-        countryService.save(country);
+        countryService.add(country);
     }
 
     @PutMapping("/{id}")
     public void update(@RequestBody CountryDto country, @PathVariable long id) {
-        countryService.save(country);
+        countryService.update(country, id);
     }
 
     @DeleteMapping("/{id}")

@@ -27,12 +27,12 @@ public class FleetRestController {
 
     @PostMapping
     public void add(@RequestBody FleetDto fleet) {
-        fleetService.save(fleet);
+        fleetService.add(fleet);
     }
 
     @PutMapping("/{id}")
     public void update(@RequestBody FleetDto fleet, @PathVariable long id) {
-        fleetService.save(fleet);
+        fleetService.update(fleet, id);
     }
 
     @DeleteMapping("/{id}")

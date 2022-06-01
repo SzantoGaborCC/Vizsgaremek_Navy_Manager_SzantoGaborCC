@@ -1,6 +1,5 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.DTO.RankDTO;
 import com.codecool.navymanager.entityDTO.RankDto;
 import com.codecool.navymanager.service.RankService;
 import org.springframework.web.bind.annotation.*;
@@ -28,16 +27,16 @@ public class RankRestController {
 
     @PostMapping
     public void add(@RequestBody RankDto rank) {
-        rankService.save(rank);
+        rankService.add(rank);
     }
 
     @PutMapping("/{precedence}")
     public void update(@RequestBody RankDto rank, @PathVariable int precedence) {
-        rankService.save(rank);
+        rankService.update(rank, precedence);
     }
 
     @DeleteMapping("/{precedence}")
     public void delete(@PathVariable int precedence) {
-        rankService.delete(precedence);
+        rankService.deleteByPrecedence(precedence);
     }
 }

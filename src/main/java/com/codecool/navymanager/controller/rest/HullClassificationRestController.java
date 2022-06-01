@@ -27,12 +27,12 @@ public class HullClassificationRestController {
 
     @PostMapping
     public void add(@RequestBody HullClassificationDto hullClassification) {
-        hullClassificationService.save(hullClassification);
+        hullClassificationService.add(hullClassification);
     }
 
     @PutMapping("/{abbr}")
     public void update(@RequestBody HullClassificationDto hullClassification, @PathVariable String abbr) {
-        hullClassificationService.save(hullClassification);
+        hullClassificationService.update(hullClassification, abbr);
     }
 
     @DeleteMapping("/{abbr}")

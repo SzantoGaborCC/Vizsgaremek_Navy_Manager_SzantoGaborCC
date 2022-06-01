@@ -27,12 +27,12 @@ public class GunRestController {
 
     @PostMapping
     public void add(@RequestBody GunDto gun) {
-        gunService.save(gun);
+        gunService.add(gun);
     }
 
     @PutMapping("/{id}")
     public void update(@RequestBody GunDto gun, @PathVariable long id) {
-        gunService.save(gun);
+        gunService.update(gun, id);
     }
 
     @DeleteMapping("/{id}")
