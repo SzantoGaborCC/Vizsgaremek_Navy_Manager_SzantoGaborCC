@@ -33,7 +33,7 @@ public class FleetService {
     }
 
     public Set<ShipDto> findShips(long fleetId) {
-        return fleetRepository.findShips(fleetId).stream()
+        return fleetRepository.findById(fleetId).orElseThrow().getShips().stream()
                 .map(ShipDto::new)
                 .collect(Collectors.toSet());
     }
@@ -69,10 +69,10 @@ public class FleetService {
     }
 
     @Transactional
-    public void updateShipForAFleet(long fleetId, ShipDto oldShipDto, ShipDto newShipDto) {
+    public void updateShipForAFleet(long fleetId, long oldShipId, ShipDto newShipDto) {
         try {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
-            fleet.getShips().remove(oldShipDto.toEntity());
+            fleet.getShips().removeIf(ship -> ship.getId() == oldShipId);
             fleet.getShips().add(newShipDto.toEntity());
             fleetRepository.save(fleet);
         } catch (Exception e) {
@@ -81,10 +81,10 @@ public class FleetService {
     }
 
     @Transactional
-    public void deleteShipFromFleet(long fleetId, Ship ship) {
+    public void deleteShipFromFleet(long fleetId, long shipId) {
         try {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
-            fleet.getShips().remove(ship);
+            fleet.getShips().removeIf(ship -> ship.getId() == shipId);
             fleetRepository.save(fleet);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid Fleet or Ship Id!");

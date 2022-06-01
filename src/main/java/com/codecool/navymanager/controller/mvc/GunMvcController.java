@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.mvc;
 
-import com.codecool.navymanager.DTO.GunDTO;
+import com.codecool.navymanager.entityDTO.GunDto;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.GunService;
 import org.springframework.http.HttpStatus;
@@ -30,20 +30,20 @@ public class GunMvcController {
     }
 
     @GetMapping("/{id}")
-    public GunDTO findById(@PathVariable Long id) {
+    public GunDto findById(@PathVariable Long id) {
         return gunService.findById(id);
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model){
         model.addAttribute("create", true);
-        model.addAttribute("gun", new GunDTO());
+        model.addAttribute("gun", new GunDto());
         model.addAttribute("validCountryValues", countryService.findAll());
         return "gun-form";
     }
 
     @PostMapping("/create")
-    public String add(@ModelAttribute("gun") @Valid GunDTO gun, BindingResult result, Model model) {
+    public String add(@ModelAttribute("gun") @Valid GunDto gun, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             model.addAttribute("validCountryValues", countryService.findAll());
@@ -60,14 +60,14 @@ public class GunMvcController {
 
     @GetMapping("/delete/{id}")
     public String deleteById(@PathVariable Long id) {
-        gunService.delete(id);
+        gunService.deleteById(id);
         return "redirect:/gun-mvc";
     }
 
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-           GunDTO gun = gunService.findById(id);
+           GunDto gun = gunService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("gun", gun);
             model.addAttribute("validCountryValues", countryService.findAll());
@@ -79,7 +79,7 @@ public class GunMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @ModelAttribute("gun") @Valid GunDTO gun, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @ModelAttribute("gun") @Valid GunDto gun, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             model.addAttribute("validCountryValues", countryService.findAll());

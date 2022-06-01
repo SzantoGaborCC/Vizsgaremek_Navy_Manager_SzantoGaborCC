@@ -1,9 +1,6 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.entity.HullClassification;
-import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.HullClassificationDto;
-
 import com.codecool.navymanager.repository.HullClassificationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

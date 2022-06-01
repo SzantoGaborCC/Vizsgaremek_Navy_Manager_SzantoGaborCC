@@ -1,17 +1,16 @@
 package com.codecool.navymanager.controller.mvc;
 
-import com.codecool.navymanager.DTO.*;
+import com.codecool.navymanager.entityDTO.FleetDto;
+import com.codecool.navymanager.entityDTO.ShipDto;
 import com.codecool.navymanager.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.beans.PropertyEditorSupport;
 
 
 @Controller
@@ -44,7 +43,7 @@ public class FleetMvcController {
 
     @GetMapping("/details/{id}")
     public String showDetails(@PathVariable Long id, Model model) {
-        FleetDTO fleet = fleetService.findById(id);
+        FleetDto fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
         return "fleet-details";
     }
@@ -52,7 +51,7 @@ public class FleetMvcController {
     @GetMapping("/create")
     public String showCreateForm(Model model){
         model.addAttribute("create", true);
-        model.addAttribute("fleet", new FleetDTO());
+        model.addAttribute("fleet", new FleetDto());
         model.addAttribute("validRankValues", rankService.findAll());
         model.addAttribute("validCommanderValues", officerService.findAll());
         model.addAttribute("validCountryValues", countryService.findAll());
@@ -60,7 +59,7 @@ public class FleetMvcController {
     }
 
     @PostMapping("/create")
-    public String add(@ModelAttribute("fleet") @Valid FleetDTO fleet, BindingResult result, Model model) {
+    public String add(@ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -79,14 +78,14 @@ public class FleetMvcController {
 
     @GetMapping("/delete/{id}")
     public String deleteById(@PathVariable Long id) {
-        fleetService.delete(id);
+        fleetService.deleteById(id);
         return "redirect:/fleet-mvc";
     }
 
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
-            FleetDTO fleet = fleetService.findById(id);
+            FleetDto fleet = fleetService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -100,7 +99,7 @@ public class FleetMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDTO fleet, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -117,11 +116,11 @@ public class FleetMvcController {
             @PathVariable Long id,
             Model model) {
         model.addAttribute("add", true);
-        FleetDTO fleet = fleetService.findById(id);
+        FleetDto fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
-        model.addAttribute("ship", new ShipDTO());//
+        model.addAttribute("ship", new ShipDto());//
         //model.addAttribute("shipId", new IdentityDTO());
-        model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
+        model.addAttribute("validShipValues", shipService.findByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
 
@@ -129,17 +128,17 @@ public class FleetMvcController {
     public String addShip(
             @PathVariable Long id,
             //@ModelAttribute("shipId") @Valid IdentityDTO shipId,
-            @ModelAttribute("ship") @Valid ShipDTO ship,//
+            @ModelAttribute("ship") @Valid ShipDto ship,//
             Model model, BindingResult result) {
         if (result.hasErrors()) {
-            FleetDTO fleet = fleetService.findById(id);
+            FleetDto fleet = fleetService.findById(id);
             model.addAttribute("add", true);
             model.addAttribute("fleet", fleet);
-            model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
+            model.addAttribute("validShipValues", shipService.findByCountry(fleet.getCountry()));
             return "fleet-ship-form";
         }
         //fleetService.addShipToFleet(id, shipId.getValue());
-        fleetService.addShipToFleet(id, ship.getId());
+        fleetService.addShipToFleet(id, ship);
         return "redirect:/fleet-mvc/details/" + id;
     }
 
@@ -148,13 +147,13 @@ public class FleetMvcController {
             @PathVariable long fleetId, @PathVariable long shipId,
             Model model) {
 
-        FleetDTO fleet = fleetService.findById(fleetId);
-        ShipDTO ship = shipService.findById(shipId);
+        FleetDto fleet = fleetService.findById(fleetId);
+        ShipDto ship = shipService.findById(shipId);
         model.addAttribute("add", false);
         model.addAttribute("fleet", fleet);
         //model.addAttribute("shipId", new IdentityDTO(ship.getId()));
         model.addAttribute("ship", ship);//
-        model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
+        model.addAttribute("validShipValues", shipService.findByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
 
@@ -162,17 +161,17 @@ public class FleetMvcController {
     public String updateShip(
             @PathVariable long fleetId, @PathVariable long oldShipId,
             //@ModelAttribute("shipId") @Valid IdentityDTO shipId,
-            @ModelAttribute("ship") @Valid ShipDTO ship,//
+            @ModelAttribute("ship") @Valid ShipDto ship,//
             Model model, BindingResult result) {
         if (result.hasErrors()) {
-            FleetDTO fleet = fleetService.findById(fleetId);
+            FleetDto fleet = fleetService.findById(fleetId);
             model.addAttribute("add", false);
             model.addAttribute("fleet", fleet);
-            model.addAttribute("validShipValues", shipService.findByCountryId(fleet.getCountry().getId()));
+            model.addAttribute("validShipValues", shipService.findByCountry(fleet.getCountry()));
             return "fleet-ship-form";
         }
         //fleetService.updateShipForAFleet(fleetId, oldShipId, shipId.getValue());
-        fleetService.updateShipForAFleet(fleetId, oldShipId, ship.getId());
+        fleetService.updateShipForAFleet(fleetId, oldShipId, ship);
         return "redirect:/fleet-mvc/details/" + fleetId;
     }
 
@@ -182,7 +181,7 @@ public class FleetMvcController {
         return "redirect:/fleet-mvc/details/" + fleetId;
     }
 
-    //@InitBinder
+    /*@InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(
                 ShipDTO.class,
@@ -199,6 +198,6 @@ public class FleetMvcController {
                     }
                 }
         );
-    }
+    }*/
 }
 

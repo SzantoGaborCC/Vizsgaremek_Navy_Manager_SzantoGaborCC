@@ -30,6 +30,11 @@ public class ShipClassService {
         return new ShipClassDto(shipClassRepository.findById(id).orElseThrow());
     }
 
+    public GunAndQuantityDto findGunAndQuantityByShipClassIdAndGunId(long shipClassId, long gunId) {
+        return new GunAndQuantityDto(shipClassRepository.findById(shipClassId).orElseThrow().getGuns().stream()
+                .filter(gunAndQuantity -> gunAndQuantity.getId().equals(gunId)).findAny().orElseThrow());
+    }
+
     @Transactional
     public void add(ShipClassDto shipClassDto) {
         shipClassRepository.save(shipClassDto.toEntity());
@@ -63,11 +68,11 @@ public class ShipClassService {
     @Transactional
     public void updateGunForAShipClass(
             long shipClassId,
-            GunAndQuantityDto oldGunAndQuantityDto,
+            long gunId,
             GunAndQuantityDto newGunAndQuantityDto) {
         try {
             ShipClass shipClass = shipClassRepository.findById(shipClassId).orElseThrow();
-            shipClass.getGuns().remove(oldGunAndQuantityDto.toEntity());
+            shipClass.getGuns().removeIf(gunAndQuantity -> gunAndQuantity.getId() == gunId);
             shipClass.getGuns().add(newGunAndQuantityDto.toEntity());
             shipClassRepository.save(shipClass);
         } catch (Exception e) {
@@ -76,9 +81,9 @@ public class ShipClassService {
     }
 
     @Transactional
-    public void deleteGunFromShipClass(long shipClassId, GunAndQuantityDto gunAndQuantityDto) {
+    public void deleteGunFromShipClass(long shipClassId, long gunId) {
         ShipClass shipClass = shipClassRepository.findById(shipClassId).orElseThrow();
-        shipClass.getGuns().remove(gunAndQuantityDto.toEntity());
+        shipClass.getGuns().removeIf(gunAndQuantity -> gunAndQuantity.getId() == gunId);
         shipClassRepository.save(shipClass);
     }
 }

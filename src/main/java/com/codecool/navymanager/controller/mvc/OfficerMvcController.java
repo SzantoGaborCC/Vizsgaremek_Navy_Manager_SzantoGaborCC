@@ -1,26 +1,18 @@
 package com.codecool.navymanager.controller.mvc;
 
 
-import com.codecool.navymanager.DTO.OfficerDTO;
-import com.codecool.navymanager.DTO.ShipDTO;
+import com.codecool.navymanager.entityDTO.OfficerDto;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.OfficerService;
 import com.codecool.navymanager.service.RankService;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.awt.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorSupport;
-import java.text.SimpleDateFormat;
 
 @Controller
 @RequestMapping("/officer-mvc")
@@ -42,13 +34,13 @@ public class OfficerMvcController {
     }
 
     @GetMapping("/{id}")
-    public OfficerDTO findById(@PathVariable Long id) {
+    public OfficerDto findById(@PathVariable Long id) {
         return officerService.findById(id);
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model){
-        model.addAttribute("officer", new OfficerDTO());
+        model.addAttribute("officer", new OfficerDto());
         model.addAttribute("create", true);
         model.addAttribute("validRankValues", rankService.findAll());
         model.addAttribute("validCountryValues", countryService.findAll());
@@ -56,7 +48,7 @@ public class OfficerMvcController {
     }
 
     @PostMapping("/create")
-    public String add(@ModelAttribute("officer") @Valid OfficerDTO officer, BindingResult result, Model model) {
+    public String add(@ModelAttribute("officer") @Valid OfficerDto officer, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -74,14 +66,14 @@ public class OfficerMvcController {
 
     @GetMapping("/delete/{id}")
     public String deleteById(@PathVariable Long id) {
-        officerService.delete(id);
+        officerService.deleteById(id);
         return "redirect:/officer-mvc";
     }
 
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id,Model model) {
         try {
-            OfficerDTO officer = officerService.findById(id);
+            OfficerDto officer = officerService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("officer", officer);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -94,7 +86,7 @@ public class OfficerMvcController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @ModelAttribute("officer") @Valid OfficerDTO officer, BindingResult result, Model model) {
+    public String update(@PathVariable long id, @ModelAttribute("officer") @Valid OfficerDto officer, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             model.addAttribute("validRankValues", rankService.findAll());
