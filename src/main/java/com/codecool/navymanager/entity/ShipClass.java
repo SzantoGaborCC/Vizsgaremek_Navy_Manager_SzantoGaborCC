@@ -47,7 +47,7 @@ public class ShipClass {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @OneToMany(mappedBy = "shipClass", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "shipClass", cascade = CascadeType.ALL)
     private Set<GunAndQuantity> guns;
 
     @Override
@@ -61,5 +61,13 @@ public class ShipClass {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "ShipClass{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

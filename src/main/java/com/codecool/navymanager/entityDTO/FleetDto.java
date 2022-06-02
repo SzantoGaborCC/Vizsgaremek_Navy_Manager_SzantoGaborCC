@@ -32,9 +32,11 @@ public class FleetDto implements Serializable {
         minimumRank = new RankDto(fleet.getMinimumRank());
         commander = new OfficerDto(fleet.getCommander());
         country = new CountryDto(fleet.getCountry());
-        ships = fleet.getShips().stream()
-                .map(ShipDto::new)
-                .collect(Collectors.toSet());
+        if (fleet.getShips() != null) {
+            ships = fleet.getShips().stream()
+                    .map(ShipDto::new)
+                    .collect(Collectors.toSet());
+        }
     }
 
     public Fleet toEntity() {
@@ -44,9 +46,10 @@ public class FleetDto implements Serializable {
                 minimumRank.toEntity(),
                 commander.toEntity(),
                 country.toEntity(),
-                ships.stream()
-                        .map(shipDto -> shipDto.toEntity())
-                        .collect(Collectors.toSet())
+                (ships == null) ? null :
+                    ships.stream()
+                            .map(shipDto -> shipDto.toEntity())
+                            .collect(Collectors.toSet())
         );
     }
 

@@ -37,4 +37,12 @@ public class Rank {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Rank{" +
+                "precedence=" + precedence +
+                ", designation='" + designation + '\'' +
+                '}';
+    }
 }

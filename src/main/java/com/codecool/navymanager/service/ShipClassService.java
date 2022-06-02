@@ -43,11 +43,10 @@ public class ShipClassService {
 
     @Transactional
     public void update(ShipClassDto shipClassDto, long id) {
-        if (shipClassRepository.existsById(id)) {
-            shipClassRepository.save(shipClassDto.toEntity());
-        } else {
-            throw new IllegalArgumentException("No such Ship Class to update!");
-        }
+        ShipClass shipClassToBeUpdated = shipClassRepository.findById(id).orElseThrow();
+        ShipClass updatedShipClass = shipClassDto.toEntity();
+        updatedShipClass.setGuns(shipClassToBeUpdated.getGuns());
+        shipClassRepository.save(shipClassDto.toEntity());
     }
 
     @Transactional

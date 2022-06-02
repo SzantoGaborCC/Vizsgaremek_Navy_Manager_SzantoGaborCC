@@ -58,13 +58,9 @@ public class ShipClassDto implements Serializable {
                 armorDeckInCms,
                 speedInKmh,
                 country.toEntity(),
-                guns.stream()
-                        .map(gunAndQuantityDto -> {
-                            GunAndQuantity gunAndQuantity = gunAndQuantityDto.toEntity();
-                            gunAndQuantity.setShipClass(this.toEntity());
-                            System.out.println("in ship class toentity: " + this.toEntity());
-                            return gunAndQuantity;
-                        })
+                (guns == null) ? null :
+                    guns.stream()
+                        .map(gunAndQuantityDto -> gunAndQuantityDto.toEntity())
                         .collect(Collectors.toSet())
         );
     }

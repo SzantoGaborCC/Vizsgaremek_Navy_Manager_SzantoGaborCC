@@ -46,4 +46,14 @@ public class ShipDto implements Serializable {
         return getClass().hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "ShipDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", shipClass=" + shipClass +
+                ", captain=" + captain +
+                ", country=" + country +
+                '}';
+    }
 }

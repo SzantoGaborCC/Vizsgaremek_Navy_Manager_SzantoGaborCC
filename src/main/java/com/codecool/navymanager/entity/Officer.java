@@ -46,4 +46,12 @@ public class Officer {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Officer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -46,4 +46,15 @@ public class Ship {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Ship{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", shipClass=" + shipClass +
+                ", captain=" + captain +
+                ", country=" + country +
+                '}';
+    }
 }

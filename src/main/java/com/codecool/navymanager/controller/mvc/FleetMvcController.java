@@ -67,12 +67,9 @@ public class FleetMvcController {
             model.addAttribute("validCountryValues", countryService.findAll());
             return "fleet-form";
         }
-        try {
+
            fleetService.add(fleet);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Invalid fleet data!", e);
-        }
+
         return "redirect:/fleet-mvc";
     }
 
@@ -110,7 +107,7 @@ public class FleetMvcController {
         fleetService.update(fleet, id);
         return "redirect:/fleet-mvc";
     }
-
+    //todo: no 'add'
     @GetMapping("/add-ship/{id}")
     public String showAddShipForm(
             @PathVariable Long id,
@@ -170,8 +167,11 @@ public class FleetMvcController {
             model.addAttribute("validShipValues", shipService.findByCountry(fleet.getCountry()));
             return "fleet-ship-form";
         }
-        //fleetService.updateShipForAFleet(fleetId, oldShipId, shipId.getValue());
-        fleetService.updateShipForAFleet(fleetId, oldShipId, ship);
+
+        ShipDto newShip = shipService.findAll().stream()
+                .filter(shipDto -> shipDto.getId().equals(ship.getId()))
+                .findAny().orElseThrow();
+        fleetService.updateShipForAFleet(fleetId, oldShipId, newShip);
         return "redirect:/fleet-mvc/details/" + fleetId;
     }
 

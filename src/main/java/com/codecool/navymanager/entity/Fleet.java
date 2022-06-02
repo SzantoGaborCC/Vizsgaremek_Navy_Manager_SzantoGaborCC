@@ -44,7 +44,7 @@ public class Fleet {
                 @UniqueConstraint(
                     name = "one_ship_can_only_be_in_only_one_fleet",
                     columnNames = {"fleet_id", "ship_id"}))
-    private Set<Ship> ships = new LinkedHashSet<>();
+    private Set<Ship> ships;
 
     @Override
     public boolean equals(Object o) {
@@ -57,5 +57,17 @@ public class Fleet {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Fleet{" +
+                "id=" + id +
+                ", designation='" + designation + '\'' +
+                ", minimumRank=" + minimumRank +
+                ", commander=" + commander +
+                ", country=" + country +
+                ", ships=" + ships +
+                '}';
     }
 }
