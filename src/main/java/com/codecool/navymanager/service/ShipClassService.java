@@ -2,6 +2,7 @@ package com.codecool.navymanager.service;
 
 
 
+import com.codecool.navymanager.entity.GunAndQuantity;
 import com.codecool.navymanager.entity.ShipClass;
 import com.codecool.navymanager.entityDTO.GunAndQuantityDto;
 import com.codecool.navymanager.entityDTO.GunDto;
@@ -32,7 +33,7 @@ public class ShipClassService {
 
     public GunAndQuantityDto findGunAndQuantityByShipClassIdAndGunId(long shipClassId, long gunId) {
         return new GunAndQuantityDto(shipClassRepository.findById(shipClassId).orElseThrow().getGuns().stream()
-                .filter(gunAndQuantity -> gunAndQuantity.getId().equals(gunId)).findAny().orElseThrow());
+                .filter(gunAndQuantity -> gunAndQuantity.getGun().getId().equals(gunId)).findAny().orElseThrow());
     }
 
     @Transactional
@@ -58,10 +59,12 @@ public class ShipClassService {
     public void addGunToShipClass(long shipClassId, GunAndQuantityDto gunAndQuantityDto) {
         try {
             ShipClass shipClass = shipClassRepository.findById(shipClassId).orElseThrow();
-            shipClass.getGuns().add(gunAndQuantityDto.toEntity());
+            GunAndQuantity gunAndQuantity = gunAndQuantityDto.toEntity();
+            gunAndQuantity.setShipClass(shipClass);
+            shipClass.getGuns().add(gunAndQuantity);
             shipClassRepository.save(shipClass);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid Ship or Gun Id!");
+            throw new IllegalArgumentException("Invalid Ship or Gun Id! " + e.getMessage());
         }
     }
 
@@ -72,18 +75,25 @@ public class ShipClassService {
             GunAndQuantityDto newGunAndQuantityDto) {
         try {
             ShipClass shipClass = shipClassRepository.findById(shipClassId).orElseThrow();
-            shipClass.getGuns().removeIf(gunAndQuantity -> gunAndQuantity.getId() == gunId);
-            shipClass.getGuns().add(newGunAndQuantityDto.toEntity());
+            shipClass.getGuns().removeIf(gunAndQuantity -> gunAndQuantity.getGun().getId() == gunId);
+            GunAndQuantity newGunAndQuantity = newGunAndQuantityDto.toEntity();
+            newGunAndQuantity.setShipClass(shipClass);
+            shipClass.getGuns().add(newGunAndQuantity);
             shipClassRepository.save(shipClass);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid Ship or Gun Id!");
+            throw new IllegalArgumentException("Invalid Ship or Gun Id!" + e.getMessage());
         }
     }
 
     @Transactional
     public void deleteGunFromShipClass(long shipClassId, long gunId) {
+        System.out.println("delete gun called on ship class!");
         ShipClass shipClass = shipClassRepository.findById(shipClassId).orElseThrow();
-        shipClass.getGuns().removeIf(gunAndQuantity -> gunAndQuantity.getId() == gunId);
+        System.out.println("before delete: " + shipClass.getGuns());
+        if (shipClass.getGuns().removeIf(gunAndQuantity -> gunAndQuantity.getGun().getId() == gunId))
+            System.out.println("removed!");
+        System.out.println("after delete: " + shipClass.getGuns());
         shipClassRepository.save(shipClass);
+        System.out.println("after rereading from database: " + shipClassRepository.findById(shipClassId).orElseThrow().getGuns());
     }
 }

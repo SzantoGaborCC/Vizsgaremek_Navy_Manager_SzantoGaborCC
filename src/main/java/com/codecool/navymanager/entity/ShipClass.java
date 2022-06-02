@@ -47,8 +47,8 @@ public class ShipClass {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @OneToMany(mappedBy = "shipClass", cascade = CascadeType.ALL)
-    private Set<GunAndQuantity> guns = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "shipClass", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<GunAndQuantity> guns;
 
     @Override
     public boolean equals(Object o) {

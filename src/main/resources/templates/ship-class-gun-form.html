@@ -6,14 +6,15 @@
 <div th:replace="fragments/menu :: menu (entityName = 'Ship Class', listUrl = '/ship-class-mvc', createUrl='/ship-class-mvc/create')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Gun for ' : 'Add New Gun to '} + ${shipClass.name} + ' Class'"></h2>
 <div class="container">
-  <form action="#" th:action="${add} == true ? @{/ship-class-mvc/add-gun/{id}(id=${shipClass.id})} : @{/ship-class-mvc/update-gun/{shipClassId}/gun/{gunId}(gunId=${gunWithQuantity.gun.id},shipClassId=${shipClass.id})}" th:object="${gunWithQuantity}" method="post" novalidate>
+  <form action="#" th:action="${add} == true ? @{/ship-class-mvc/add-gun/{id}(id=${shipClass.id})} : @{/ship-class-mvc/update-gun/{shipClassId}/gun/{gunId}(gunId=${gunAndQuantity.gun.id},shipClassId=${shipClass.id})}" th:object="${gunAndQuantity}" method="post" novalidate>
+      <input type="hidden" id="id" th:field="*{id}">
       <div class="form-group">
           <label for="gun">Gun</label>
           <select id="gun" th:field="*{gun}">
-              <option th:if="${gunWithQuantity.gun} != null" th:each="gunOpt : ${validGunValues}"
+              <option th:if="${gunAndQuantity.gun} != null" th:each="gunOpt : ${validGunValues}"
                       th:value="${gunOpt.id}" th:text="${gunOpt.designation}"
-                      th:selected="${gunWithQuantity.gun.id == gunOpt.id}"></option>
-              <option th:unless="${gunWithQuantity.gun} != null" th:each="gunOpt : ${validGunValues}"
+                      th:selected="${gunAndQuantity.gun.id == gunOpt.id}"></option>
+              <option th:unless="${gunAndQuantity.gun} != null" th:each="gunOpt : ${validGunValues}"
                       th:value="${gunOpt.id}" th:text="${gunOpt.designation}"></option>
           </select>
           <span class="validationError" th:if="${#fields.hasErrors('gun')}" th:errors="*{gun}"></span>
@@ -21,8 +22,8 @@
       </div>
       <div class="form-group">
           <label for="gunQuantity">Gun Quantity</label>
-          <input type="text" class="form-control" id="gunQuantity" th:field="*{gunQuantity}">
-          <span class="validationError" th:if="${#fields.hasErrors('gunQuantity')}" th:errors="*{gunQuantity}"></span>
+          <input type="text" class="form-control" id="gunQuantity" th:field="*{quantity}">
+          <span class="validationError" th:if="${#fields.hasErrors('quantity')}" th:errors="*{gunQuantity}"></span>
       </div>
       <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
   </form>

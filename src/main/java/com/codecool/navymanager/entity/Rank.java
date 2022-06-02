@@ -20,6 +20,7 @@ public class Rank {
     @Id
     @Column(name = "precedence", nullable = false)
     private Integer precedence;
+    //todo: using an updatable id can break the api, should have a normal serial id
 
     @Column(name = "designation", nullable = false, length = 100)
     private String designation;

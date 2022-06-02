@@ -50,4 +50,12 @@ public class Gun {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Gun{" +
+                "id=" + id +
+                ", designation='" + designation + '\'' +
+                '}';
+    }
 }

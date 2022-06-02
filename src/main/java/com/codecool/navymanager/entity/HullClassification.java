@@ -17,6 +17,7 @@ public class HullClassification {
     @Id
     @Column(name = "abbreviation", nullable = false, length = 3)
     private String abbreviation;
+    //todo: using an updatable id can break the api, should have a normal serial id
 
     @Column(name = "designation", nullable = false, length = 100)
     private String designation;

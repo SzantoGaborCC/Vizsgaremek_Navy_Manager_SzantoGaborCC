@@ -57,4 +57,12 @@ public class GunDto implements Serializable {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "GunDto{" +
+                "id=" + id +
+                ", designation='" + designation + '\'' +
+                '}';
+    }
 }

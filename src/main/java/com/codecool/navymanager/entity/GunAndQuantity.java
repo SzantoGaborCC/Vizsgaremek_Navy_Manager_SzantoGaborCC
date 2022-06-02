@@ -44,4 +44,20 @@ public class GunAndQuantity {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    public GunAndQuantity(Long id, Gun gun, Integer gunQuantity) {
+        this.id = id;
+        this.gun = gun;
+        this.gunQuantity = gunQuantity;
+    }
+
+    @Override
+    public String toString() {
+        return "GunAndQuantity{" +
+                "id=" + id +
+                ", shipClass=" + shipClass +
+                ", gun=" + gun +
+                ", gunQuantity=" + gunQuantity +
+                '}';
+    }
 }

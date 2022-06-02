@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class YMDStringToLocalDateConverter implements Converter<String, LocalDate> {
+public class ISO8601StringToLocalDateConverter implements Converter<String, LocalDate> {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override

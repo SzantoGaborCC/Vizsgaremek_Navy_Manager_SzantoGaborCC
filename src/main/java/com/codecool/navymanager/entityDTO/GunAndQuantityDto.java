@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import java.io.Serializable;
 
 @Getter
@@ -24,13 +26,12 @@ public class GunAndQuantityDto implements Serializable {
 
     public GunAndQuantityDto(GunAndQuantity gunAndQuantity) {
                 id = gunAndQuantity.getId();
-                shipClass = new ShipClassDto(gunAndQuantity.getShipClass());
                 gun = new GunDto(gunAndQuantity.getGun());
                 quantity = gunAndQuantity.getGunQuantity();
     }
 
     public GunAndQuantity toEntity() {
-        return new GunAndQuantity(id, shipClass.toEntity(), gun.toEntity(), quantity);
+        return new GunAndQuantity(id, gun.toEntity(), quantity);
     }
 
     @Override
@@ -44,5 +45,15 @@ public class GunAndQuantityDto implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "GunAndQuantityDto{" +
+                "id=" + id +
+                ", shipClass=" + shipClass +
+                ", gun=" + gun +
+                ", quantity=" + quantity +
+                '}';
     }
 }

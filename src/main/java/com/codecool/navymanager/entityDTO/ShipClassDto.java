@@ -1,8 +1,12 @@
 package com.codecool.navymanager.entityDTO;
 
+import com.codecool.navymanager.entity.GunAndQuantity;
 import com.codecool.navymanager.entity.ShipClass;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.*;
 
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,7 +39,11 @@ public class ShipClassDto implements Serializable {
         this.speedInKmh = shipClass.getSpeedInKmh();
         this.country = new CountryDto(shipClass.getCountry());
         this.guns = shipClass.getGuns().stream()
-                .map(GunAndQuantityDto::new)
+                .map(gunAndQuantity -> {
+                    GunAndQuantityDto gunAndQuantityDto = new GunAndQuantityDto(gunAndQuantity);
+                    gunAndQuantityDto.setShipClass(this);
+                    return gunAndQuantityDto;
+                })
                 .collect(Collectors.toSet());
     }
 
@@ -51,8 +59,12 @@ public class ShipClassDto implements Serializable {
                 speedInKmh,
                 country.toEntity(),
                 guns.stream()
-                        .map(gunAndQuantityDto ->
-                                gunAndQuantityDto.toEntity())
+                        .map(gunAndQuantityDto -> {
+                            GunAndQuantity gunAndQuantity = gunAndQuantityDto.toEntity();
+                            gunAndQuantity.setShipClass(this.toEntity());
+                            System.out.println("in ship class toentity: " + this.toEntity());
+                            return gunAndQuantity;
+                        })
                         .collect(Collectors.toSet())
         );
     }

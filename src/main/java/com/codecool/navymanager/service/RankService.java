@@ -35,7 +35,8 @@ public class RankService {
     @Transactional
     public void update(RankDto rankDto, int precedence) {
         if (rankRepository.existsByPrecedence(precedence)) {
-           rankRepository.save(rankDto.toEntity());
+            rankRepository.deleteByPrecedence(precedence);
+            rankRepository.save(rankDto.toEntity());
         } else {
             throw new IllegalArgumentException("No such Rank to update!");
         }
