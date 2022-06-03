@@ -34,6 +34,18 @@ public class Ship {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fleet_id")
+    private Fleet fleet;
+
+    public Ship(Long id, String name, ShipClass shipClass, Officer captain, Country country) {
+        this.id = id;
+        this.name = name;
+        this.shipClass = shipClass;
+        this.captain = captain;
+        this.country = country;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

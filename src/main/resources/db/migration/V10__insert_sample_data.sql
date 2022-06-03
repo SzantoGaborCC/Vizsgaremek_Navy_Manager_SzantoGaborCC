@@ -128,16 +128,3 @@ INSERT INTO ship_classes_and_guns
 (ship_class_id, gun_id, gun_quantity)
 VALUES(1, 1, 12);
 
-INSERT INTO fleets_and_ships
-(fleet_id, ship_id)
-VALUES(1, 1);
-INSERT INTO fleets_and_ships
-(fleet_id, ship_id)
-VALUES(1, 2);
-INSERT INTO fleets_and_ships
-(fleet_id, ship_id)
-VALUES(1, 3);
-INSERT INTO fleets_and_ships
-(fleet_id, ship_id)
-VALUES(1, 4);
-

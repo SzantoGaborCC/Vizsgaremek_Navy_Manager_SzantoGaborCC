@@ -21,6 +21,8 @@ public class ShipDto implements Serializable {
     private OfficerDto captain;
     private CountryDto country;
 
+    private FleetDto fleet;
+
     public ShipDto(Ship ship) {
         id = ship.getId();
         name = ship.getName();

@@ -7,3 +7,4 @@ CREATE TABLE public.fleet (
 	CONSTRAINT fleet_commander_fk FOREIGN KEY (commander_id) REFERENCES public.officer(id),
     CONSTRAINT fleet_minimum_rank_fk FOREIGN KEY (minimum_rank_precedence) REFERENCES public.rank(precedence)
 );
+ALTER TABLE public.ship ADD CONSTRAINT ship_fleet_fk FOREIGN KEY (fleet_id) REFERENCES public.fleet(id);

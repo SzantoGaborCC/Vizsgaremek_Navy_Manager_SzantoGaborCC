@@ -65,6 +65,7 @@ public class FleetService {
         try {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
             Ship shipToAdd = shipRepository.findById(shipDto.getId()).orElseThrow();
+            shipToAdd.setFleet(fleet);
             fleet.getShips().add(shipToAdd);
             fleetRepository.save(fleet);
         } catch (Exception e) {
@@ -76,8 +77,12 @@ public class FleetService {
     public void updateShipForAFleet(long fleetId, long oldShipId, ShipDto newShipDto) {
         try {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
-            fleet.getShips().removeIf(ship -> ship.getId() == oldShipId);
-            fleet.getShips().add(newShipDto.toEntity());
+            Ship oldShip = shipRepository.findById(oldShipId).orElseThrow();
+            oldShip.setFleet(null);
+            fleet.getShips().remove(oldShip);
+            Ship newShip = newShipDto.toEntity();
+            newShip.setFleet(fleet);
+            fleet.getShips().add(newShip);
             fleetRepository.save(fleet);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid Fleet or Ship Id! " + e.getMessage());
@@ -88,7 +93,9 @@ public class FleetService {
     public void deleteShipFromFleet(long fleetId, long shipId) {
         try {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
-            fleet.getShips().removeIf(ship -> ship.getId() == shipId);
+            Ship shipToDelete = shipRepository.findById(shipId).orElseThrow();
+            fleet.getShips().remove(shipToDelete);
+            shipToDelete.setFleet(null);
             fleetRepository.save(fleet);
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid Fleet or Ship Id!");
