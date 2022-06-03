@@ -47,7 +47,7 @@ public class ShipClass {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @OneToMany(mappedBy = "shipClass", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shipClass", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<GunAndQuantity> guns;
 
     @Override

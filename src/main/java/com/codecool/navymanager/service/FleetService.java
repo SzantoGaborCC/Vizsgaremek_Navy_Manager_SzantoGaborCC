@@ -77,7 +77,6 @@ public class FleetService {
         try {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
             fleet.getShips().removeIf(ship -> ship.getId() == oldShipId);
-            System.out.println("fleetDto in update ship for a fleet: " + newShipDto);
             fleet.getShips().add(newShipDto.toEntity());
             fleetRepository.save(fleet);
         } catch (Exception e) {

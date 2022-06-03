@@ -150,7 +150,7 @@ public class ShipClassMvcController {
     }
 
     @PostMapping("/update-gun/{shipClassId}/gun/{gunId}")
-    public String updateGun(
+    public String updateGunForShipClass(
             @PathVariable long shipClassId, @PathVariable long gunId,
             @ModelAttribute("gunAndQuantity") @Valid GunAndQuantityDto gunAndQuantity,
             Model model, BindingResult result) {
@@ -168,7 +168,7 @@ public class ShipClassMvcController {
     }
 
     @GetMapping("/delete-gun/{shipClassId}/gun/{gunId}")
-    public String deleteById(@PathVariable long shipClassId, @PathVariable long gunId) {
+    public String deleteGunFromShipClass(@PathVariable long shipClassId, @PathVariable long gunId) {
         shipClassService.deleteGunFromShipClass(shipClassId, gunId);
         return "redirect:/ship-class-mvc/details/" + shipClassId;
     }

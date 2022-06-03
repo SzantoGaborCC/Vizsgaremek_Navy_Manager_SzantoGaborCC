@@ -43,10 +43,10 @@ public class ShipClassService {
 
     @Transactional
     public void update(ShipClassDto shipClassDto, long id) {
-        ShipClass shipClassToBeUpdated = shipClassRepository.findById(id).orElseThrow();
-        ShipClass updatedShipClass = shipClassDto.toEntity();
-        updatedShipClass.setGuns(shipClassToBeUpdated.getGuns());
-        shipClassRepository.save(shipClassDto.toEntity());
+        ShipClass oldShipClass = shipClassRepository.findById(id).orElseThrow();
+        ShipClass newShipClass = shipClassDto.toEntity();
+        newShipClass.setGuns(oldShipClass.getGuns());
+        shipClassRepository.save(newShipClass);
     }
 
     @Transactional
@@ -86,13 +86,8 @@ public class ShipClassService {
 
     @Transactional
     public void deleteGunFromShipClass(long shipClassId, long gunId) {
-        System.out.println("delete gun called on ship class!");
         ShipClass shipClass = shipClassRepository.findById(shipClassId).orElseThrow();
-        System.out.println("before delete: " + shipClass.getGuns());
-        if (shipClass.getGuns().removeIf(gunAndQuantity -> gunAndQuantity.getGun().getId() == gunId))
-            System.out.println("removed!");
-        System.out.println("after delete: " + shipClass.getGuns());
+        shipClass.getGuns().removeIf(gunAndQuantity -> gunAndQuantity.getGun().getId() == gunId);
         shipClassRepository.save(shipClass);
-        System.out.println("after rereading from database: " + shipClassRepository.findById(shipClassId).orElseThrow().getGuns());
     }
 }
