@@ -30,6 +30,12 @@ public class OfficerDto implements Serializable {
         country = new CountryDto(officer.getCountry());
     }
 
+    public OfficerDto(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+
     public Officer toEntity() {
         return new Officer(id, name, dateOfBirth, rank.toEntity(), country.toEntity());
     }

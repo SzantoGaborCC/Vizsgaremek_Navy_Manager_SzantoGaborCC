@@ -117,8 +117,8 @@ INSERT INTO ship
 ("name", ship_class_id, captain_id, country_id)
 VALUES('Tegethoff', 1, 3, 1);
 INSERT INTO ship
-("name", ship_class_id, captain_id, country_id)
-VALUES('Szent István', 1, 1, 1);
+("name", ship_class_id, country_id)
+VALUES('Szent István', 1, 1);
 
 INSERT INTO fleet
 (designation, commander_id, country_id, minimum_rank_precedence)

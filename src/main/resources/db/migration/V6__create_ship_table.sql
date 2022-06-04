@@ -2,7 +2,7 @@ CREATE TABLE public.ship (
 	id BIGSERIAL PRIMARY KEY NOT NULL,
 	"name" VARCHAR(100) NOT NULL,
 	ship_class_id BIGINT NOT NULL,
-	captain_id BIGINT NOT NULL,
+	captain_id BIGINT,
 	country_id BIGINT NOT NULL,
 	fleet_id BIGINT
 );

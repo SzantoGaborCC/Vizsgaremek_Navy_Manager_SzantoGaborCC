@@ -1,7 +1,9 @@
 package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.entity.Officer;
+import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.OfficerDto;
+import com.codecool.navymanager.entityDTO.ShipDto;
 import com.codecool.navymanager.repository.OfficerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,11 @@ public class OfficerService {
 
     public OfficerDto findById(long id) {
         return new OfficerDto(officerRepository.findById(id).orElseThrow());
+    }
+
+    public List<OfficerDto> findAvailableOfficersByCountry(CountryDto countryDto)  {
+        return officerRepository.findAvailableOfficersByCountry(countryDto.toEntity()).stream()
+                .map(OfficerDto::new).toList();
     }
 
     @Transactional

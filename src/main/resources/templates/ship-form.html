@@ -24,7 +24,8 @@
       <span class="validationError" th:if="${#fields.hasErrors('shipClass')}" th:errors="*{shipClass}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
-    <div class="form-group">
+    <div th:if="${#lists.isEmpty(validShipValues)}" th:class="'text-danger'">No assignable officer found.</div>
+    <div th:unless="${#lists.isEmpty(validShipValues)}" class="form-group">
       <label for="captain">Captain</label>
       <select id="captain" th:field="*{captain}">
         <option th:if="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
@@ -36,7 +37,7 @@
       <span class="validationError" th:if="${#fields.hasErrors('captain')}" th:errors="*{captain}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
-    <div class="form-group">
+    <div th:if="${#lists.isEmpty(validShipValues)}" class="form-group">
       <label for="country">Country</label>
       <select id="country" th:field="*{country}">
         <option th:if="${ship.country} != null" th:each="countryOpt : ${validCountryValues}"

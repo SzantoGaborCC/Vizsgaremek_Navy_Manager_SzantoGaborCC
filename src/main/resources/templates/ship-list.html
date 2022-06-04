@@ -23,7 +23,7 @@
             <td th:text="${ship.id}"></td>
             <td th:text="${ship.name}"></td>
             <td th:text="${ship.shipClass.name}"></td>
-            <td th:text="${ship.captain.name}"></td>
+            <td th:text="${ship.captain} == null ? 'No captain was assigned' : ${ship.captain.name}" th:class="${ship.captain} == null ? 'text-danger' : ''"></td>
             <td th:text="${ship.country.name}"></td>
             <td class="text-center">
                 <a th:href="@{/ship-mvc/delete/{id}(id=${ship.id})}"><i class="fa fa-trash"></i></a>
