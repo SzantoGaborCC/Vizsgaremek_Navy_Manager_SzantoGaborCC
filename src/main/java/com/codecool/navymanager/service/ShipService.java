@@ -26,6 +26,16 @@ public class ShipService {
         return new ShipDto(shipRepository.findById(id).orElseThrow());
     }
 
+    public List<ShipDto> findByCountry(CountryDto countryDto)  {
+        return shipRepository.findByCountry(countryDto.toEntity()).stream()
+                .map(ShipDto::new).toList();
+    }
+
+    public List<ShipDto> findAvailableShipsByCountry(CountryDto countryDto)  {
+        return shipRepository.findAvailableShipsByCountry(countryDto.toEntity()).stream()
+                .map(ShipDto::new).toList();
+    }
+
     @Transactional
     public void add(ShipDto shipDto) {
         shipRepository.save(shipDto.toEntity());
@@ -43,10 +53,5 @@ public class ShipService {
     @Transactional
     public void deleteById(long id) {
         shipRepository.deleteById(id);
-    }
-
-    public List<ShipDto> findByCountry(CountryDto countryDto)  {
-        return shipRepository.findByCountry(countryDto.toEntity()).stream()
-                .map(ShipDto::new).toList();
     }
 }

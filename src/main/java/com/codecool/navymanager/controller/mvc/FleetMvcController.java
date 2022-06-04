@@ -45,6 +45,7 @@ public class FleetMvcController {
     public String showDetails(@PathVariable Long id, Model model) {
         FleetDto fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
+        model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-details";
     }
 
@@ -107,7 +108,7 @@ public class FleetMvcController {
         fleetService.update(fleet, id);
         return "redirect:/fleet-mvc";
     }
-    //todo: no 'add'
+
     @GetMapping("/add-ship/{id}")
     public String showAddShipForm(
             @PathVariable Long id,
@@ -117,7 +118,7 @@ public class FleetMvcController {
         model.addAttribute("fleet", fleet);
         model.addAttribute("ship", new ShipDto());//
         //model.addAttribute("shipId", new IdentityDTO());
-        model.addAttribute("validShipValues", shipService.findByCountry(fleet.getCountry()));
+        model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
 
@@ -131,7 +132,7 @@ public class FleetMvcController {
             FleetDto fleet = fleetService.findById(id);
             model.addAttribute("add", true);
             model.addAttribute("fleet", fleet);
-            model.addAttribute("validShipValues", shipService.findByCountry(fleet.getCountry()));
+            model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
             return "fleet-ship-form";
         }
         //fleetService.addShipToFleet(id, shipId.getValue());
