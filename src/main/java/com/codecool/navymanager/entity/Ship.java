@@ -26,8 +26,8 @@ public class Ship {
     @JoinColumn(name = "ship_class_id", nullable = false)
     private ShipClass shipClass;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "captain_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "captain_id")
     private Officer captain;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

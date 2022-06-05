@@ -32,7 +32,7 @@ public class ShipDto implements Serializable {
     }
 
     public Ship toEntity() {
-        return new Ship(id, name, shipClass.toEntity(), captain.toEntity(), country.toEntity());
+        return new Ship(id, name, shipClass != null ? shipClass.toEntity() : null, captain != null ? captain.toEntity() : null, country.toEntity());
     }
 
     @Override

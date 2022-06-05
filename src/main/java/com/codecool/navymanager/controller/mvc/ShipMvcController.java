@@ -97,7 +97,7 @@ public class ShipMvcController {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             model.addAttribute("validCaptainValues", officerService.findAvailableOfficersByCountry(ship.getCountry()));
-            model.addAttribute("validCaptainValues", officerService.findAll());
+            model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             return "ship-form";
         }

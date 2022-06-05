@@ -31,6 +31,8 @@ public class OfficerService {
         return officerRepository.findAvailableOfficersByCountry(countryDto.toEntity()).stream()
                 .map(OfficerDto::new).toList();
     }
+    //todo: if ship already has an officer, and he was the only one available, then select option is empty
+    // so you cannot remove him or do anything with him, in this case, there should be a button to remove him, and select option should be not shown
 
     @Transactional
     public void add(OfficerDto officerDto) {
