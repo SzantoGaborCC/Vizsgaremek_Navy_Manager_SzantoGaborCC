@@ -25,8 +25,8 @@
       <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
     <span th:if="${create == false}">
-    <div th:if="${#lists.isEmpty(validCaptainValues)} and ${ship.captain} == null" th:class="'text-danger'">No assignable officer found.</div>
-    <div th:unless="${#lists.isEmpty(validCaptainValues)}" class="form-group">
+    <div th:if="${#lists.size(validCaptainValues) == 1} and ${ship.captain} == null" th:class="'text-danger'">No assignable officer found.</div>
+    <div th:unless="${#lists.size(validCaptainValues) == 1} and ${ship.captain} == null" class="form-group">
       <label for="captain">Captain</label>
       <select id="captain" th:field="*{captain}">
         <option th:if="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"

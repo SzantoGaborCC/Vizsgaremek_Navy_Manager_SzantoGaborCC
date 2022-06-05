@@ -34,5 +34,12 @@
 </div>
 
 <div th:insert="fragments/footer :: footer"></div>
+<script>
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+</script>
 </body>
 </html>

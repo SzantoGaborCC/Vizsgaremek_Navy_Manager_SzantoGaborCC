@@ -17,6 +17,6 @@ public class IdToOfficerDtoConverter implements Converter<String, OfficerDto> {
     public OfficerDto convert(String source) {
         return officerService.findAll().stream()
                 .filter(rankDTO -> rankDTO.getId().equals(Long.valueOf(source)))
-                .findAny().orElseThrow();
+                .findAny().orElse(null);
     }
 }

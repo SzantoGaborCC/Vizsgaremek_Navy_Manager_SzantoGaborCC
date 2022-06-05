@@ -1,13 +1,12 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.entity.Officer;
-import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.OfficerDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 import com.codecool.navymanager.repository.OfficerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,12 +26,15 @@ public class OfficerService {
         return new OfficerDto(officerRepository.findById(id).orElseThrow());
     }
 
-    public List<OfficerDto> findAvailableOfficersByCountry(CountryDto countryDto)  {
-        return officerRepository.findAvailableOfficersByCountry(countryDto.toEntity()).stream()
-                .map(OfficerDto::new).toList();
+    public List<OfficerDto> findAvailableOfficers(ShipDto shipDto)  {
+        List<OfficerDto> foundOfficers = new ArrayList<>(officerRepository.findAvailableOfficersByCountry(shipDto.getCountry().toEntity()).stream()
+                .map(OfficerDto::new).toList());
+        if (shipDto.getCaptain() != null) {
+            foundOfficers.add(0, shipDto.getCaptain());
+        }
+        foundOfficers.add(0, new OfficerDto(-1L, "----Unassigned----"));
+        return foundOfficers;
     }
-    //todo: if ship already has an officer, and he was the only one available, then select option is empty
-    // so you cannot remove him or do anything with him, in this case, there should be a button to remove him, and select option should be not shown
 
     @Transactional
     public void add(OfficerDto officerDto) {

@@ -18,7 +18,7 @@ public class IdToShipDtoConverter implements Converter<String, ShipDto> {
     public ShipDto convert(String source) {
         return shipService.findAll().stream()
                 .filter(shipDto -> shipDto.getId().equals(Long.valueOf(source)))
-                .findAny().orElseThrow();
+                .findAny().orElse(null);
     }
 }
 
