@@ -22,7 +22,10 @@
             <td th:text="${fleet.id}"></td>
             <td th:text="${fleet.designation}"></td>
             <td><a th:href="@{/rank-mvc/details/{precedence}(precedence=${fleet.minimumRank.precedence})}" th:text="${fleet.minimumRank.designation}"></a></td>
-            <td><a th:href="@{/officer-mvc/details/{id}(id=${fleet.commander.id})}" th:text="${fleet.commander.name}"></a></td>
+            <td>
+                <span th:if="${fleet.commander} == null" class="text-danger">No commander was assigned</span>
+                <a th:unless="${fleet.commander} == null" th:href="@{/officer-mvc/details/{id}(id=${fleet.commander.id})}" th:text="${fleet.commander.name}"></a>
+            </td>
             <td><a th:href="@{/country-mvc/details/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
             <td class="text-center">
                 <a th:href="@{/fleet-mvc/delete/{id}(id=${fleet.id})}"><i class="fa fa-trash"></i></a>

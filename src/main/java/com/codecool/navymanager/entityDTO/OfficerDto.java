@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class OfficerDto implements Serializable {
     private static final long serialVersionUID = 1L;
+    public static final OfficerDto UNASSIGNED_OFFICER = new OfficerDto(-1L, "----Unassigned----");
 
     private Long id;
     private String name;

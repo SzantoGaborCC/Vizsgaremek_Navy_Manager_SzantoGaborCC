@@ -54,7 +54,7 @@ public class FleetMvcController {
         model.addAttribute("create", true);
         model.addAttribute("fleet", new FleetDto());
         model.addAttribute("validRankValues", rankService.findAll());
-        model.addAttribute("validCommanderValues", officerService.findAll());
+        model.addAttribute("validCommanderValues", null);
         model.addAttribute("validCountryValues", countryService.findAll());
         return "fleet-form";
     }
@@ -64,7 +64,7 @@ public class FleetMvcController {
         if (result.hasErrors()) {
             model.addAttribute("create", true);
             model.addAttribute("validRankValues", rankService.findAll());
-            model.addAttribute("validCommanderValues", officerService.findAll());
+            model.addAttribute("validCommanderValues", null);
             model.addAttribute("validCountryValues", countryService.findAll());
             return "fleet-form";
         }
@@ -87,7 +87,7 @@ public class FleetMvcController {
             model.addAttribute("create", false);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validRankValues", rankService.findAll());
-            model.addAttribute("validCommanderValues", officerService.findAll());
+            model.addAttribute("validCommanderValues", officerService.findAvailableOfficersForFleet(fleet));
             model.addAttribute("validCountryValues", countryService.findAll());
             return "fleet-form";
         } catch (Exception e) {
@@ -101,7 +101,7 @@ public class FleetMvcController {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             model.addAttribute("validRankValues", rankService.findAll());
-            model.addAttribute("validCommanderValues", officerService.findAll());
+            model.addAttribute("validCommanderValues", officerService.findAvailableOfficersForFleet(fleet));
             model.addAttribute("validCountryValues", countryService.findAll());
             return "fleet-form";
         }

@@ -25,7 +25,9 @@
       <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}" th:errors="*{minimumRank}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
-    <div class="form-group">
+    <span th:if="${create == false}">
+    <div th:if="${#lists.size(validCommanderValues) == 1} and ${fleet.commander} == null" th:class="'text-danger'">No assignable officer found.</div>
+    <div th:unless="${#lists.size(validCommanderValues) == 1} and ${fleet.commander} == null" class="form-group">
       <label for="commander">Commander</label>
       <select id="commander" th:field="*{commander}">
         <option th:if="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
@@ -37,6 +39,7 @@
       <span class="validationError" th:if="${#fields.hasErrors('commander')}" th:errors="*{commander}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
+    </span>
     <div class="form-group">
       <label for="country">Country</label>
       <select id="country" th:field="*{country}">

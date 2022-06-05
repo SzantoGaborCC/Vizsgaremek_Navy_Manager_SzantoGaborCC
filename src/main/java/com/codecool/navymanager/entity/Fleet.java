@@ -28,15 +28,15 @@ public class Fleet {
     @JoinColumn(name = "minimum_rank_precedence", nullable = false)
     private Rank minimumRank;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "commander_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "commander_id")
     private Officer commander;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @OneToMany(mappedBy = "fleet", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "fleet", cascade = CascadeType.PERSIST)
     private Set<Ship> ships;
 
     @Override

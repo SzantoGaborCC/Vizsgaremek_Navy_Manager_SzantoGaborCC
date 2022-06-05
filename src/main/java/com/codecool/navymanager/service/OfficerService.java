@@ -1,5 +1,7 @@
 package com.codecool.navymanager.service;
 
+import com.codecool.navymanager.entity.Officer;
+import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.OfficerDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 import com.codecool.navymanager.repository.OfficerRepository;
@@ -26,13 +28,25 @@ public class OfficerService {
         return new OfficerDto(officerRepository.findById(id).orElseThrow());
     }
 
-    public List<OfficerDto> findAvailableOfficers(ShipDto shipDto)  {
-        List<OfficerDto> foundOfficers = new ArrayList<>(officerRepository.findAvailableOfficersByCountry(shipDto.getCountry().toEntity()).stream()
-                .map(OfficerDto::new).toList());
+    public List<OfficerDto> findAvailableOfficersForShip(ShipDto shipDto)  {
+        List<OfficerDto> foundOfficers = new ArrayList<>();
+        foundOfficers.add(OfficerDto.UNASSIGNED_OFFICER);
         if (shipDto.getCaptain() != null) {
-            foundOfficers.add(0, shipDto.getCaptain());
+            foundOfficers.add(shipDto.getCaptain());
         }
-        foundOfficers.add(0, new OfficerDto(-1L, "----Unassigned----"));
+        foundOfficers.addAll(officerRepository.findAvailableOfficersByCountry(shipDto.getCountry().toEntity()).stream()
+                .map(OfficerDto::new).toList());
+        return foundOfficers;
+    }
+
+    public List<OfficerDto> findAvailableOfficersForFleet(FleetDto fleetDto)  {
+        List<OfficerDto> foundOfficers = new ArrayList<>();
+        foundOfficers.add(OfficerDto.UNASSIGNED_OFFICER);
+        if (fleetDto.getCommander() != null) {
+            foundOfficers.add(fleetDto.getCommander());
+        }
+        foundOfficers.addAll(officerRepository.findAvailableOfficersByCountry(fleetDto.getCountry().toEntity()).stream()
+                .map(OfficerDto::new).toList());
         return foundOfficers;
     }
 

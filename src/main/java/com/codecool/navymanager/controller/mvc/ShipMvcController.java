@@ -82,7 +82,7 @@ public class ShipMvcController {
             ShipDto ship = shipService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("ship", ship);
-            model.addAttribute("validCaptainValues", officerService.findAvailableOfficers(ship));
+            model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             return "ship-form";
@@ -98,7 +98,7 @@ public class ShipMvcController {
     public String update(@PathVariable long id, @ModelAttribute("ship") @Valid ShipDto ship, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
-            model.addAttribute("validCaptainValues", officerService.findAvailableOfficers(ship));
+            model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             return "ship-form";
