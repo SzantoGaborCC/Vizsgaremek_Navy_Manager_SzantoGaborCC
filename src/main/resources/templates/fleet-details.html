@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<div th:replace="fragments/header :: header (title='Navy Manager - Ships')"></div>
+<div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
 <div th:replace="fragments/menu :: menu (entityName = 'Fleet', createUrl = '/fleet-mvc/create', listUrl = '/fleet-mvc')"></div>
 <h2 style="font-weight: bold;text-align:center;"><span th:text="${fleet.designation} + ' - Details'"></span></h2>

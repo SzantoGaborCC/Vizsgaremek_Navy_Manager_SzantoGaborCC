@@ -1,6 +1,8 @@
 package com.codecool.navymanager.controller.mvc;
 
 
+import com.codecool.navymanager.entity.Officer;
+import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.OfficerDto;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.OfficerService;
@@ -33,9 +35,11 @@ public class OfficerMvcController {
         return "officer-list";
     }
 
-    @GetMapping("/{id}")
-    public OfficerDto findById(@PathVariable Long id) {
-        return officerService.findById(id);
+    @GetMapping("/details/{id}")
+    public String showDetails(@PathVariable Long id, Model model) {
+        OfficerDto officer = officerService.findById(id);
+        model.addAttribute("officer", officer);
+        return "officer-details";
     }
 
     @GetMapping("/create")
