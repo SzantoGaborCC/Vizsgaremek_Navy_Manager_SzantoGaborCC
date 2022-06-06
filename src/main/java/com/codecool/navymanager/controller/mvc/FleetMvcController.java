@@ -151,7 +151,7 @@ public class FleetMvcController {
         model.addAttribute("fleet", fleet);
         //model.addAttribute("shipId", new IdentityDTO(ship.getId()));
         model.addAttribute("ship", ship);//
-        model.addAttribute("validShipValues", shipService.findByCountry(fleet.getCountry()));
+        model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
 
@@ -165,7 +165,7 @@ public class FleetMvcController {
             FleetDto fleet = fleetService.findById(fleetId);
             model.addAttribute("add", false);
             model.addAttribute("fleet", fleet);
-            model.addAttribute("validShipValues", shipService.findByCountry(fleet.getCountry()));
+            model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
             return "fleet-ship-form";
         }
 

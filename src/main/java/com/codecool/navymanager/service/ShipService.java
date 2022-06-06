@@ -1,6 +1,7 @@
 package com.codecool.navymanager.service;
 
 
+import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 import com.codecool.navymanager.repository.ShipRepository;
@@ -43,11 +44,10 @@ public class ShipService {
 
     @Transactional
     public void update(ShipDto shipDto, long id) {
-        if (shipRepository.existsById(id)) {
-            shipRepository.save(shipDto.toEntity());
-        } else {
-            throw new IllegalArgumentException("No such Ship to update!");
-        }
+        Ship oldShipData = shipRepository.findById(id).orElseThrow();
+        Ship newShipData = shipDto.toEntity();
+        newShipData.setFleet(oldShipData.getFleet());
+        shipRepository.save(newShipData);
     }
 
     @Transactional

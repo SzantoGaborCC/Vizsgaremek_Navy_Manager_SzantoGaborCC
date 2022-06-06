@@ -55,7 +55,7 @@
             <td th:text="${ship.country.name}"></td>
             <td>
                 <a th:href="@{/fleet-mvc/delete-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}"><i class="fa fa-trash"></i></a>
-                <a th:href="@{/fleet-mvc/update-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <a th:unless="${#lists.isEmpty(validShipValues)}" th:href="@{/fleet-mvc/update-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}"><i class="fa-solid fa-arrow-right-arrow-left"></i></a></td>
         </tr>
         </tbody>
     </table>
