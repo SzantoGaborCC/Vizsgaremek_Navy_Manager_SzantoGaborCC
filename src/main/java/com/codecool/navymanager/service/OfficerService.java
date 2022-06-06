@@ -1,6 +1,5 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.OfficerDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
@@ -46,7 +45,9 @@ public class OfficerService {
             foundOfficers.add(fleetDto.getCommander());
         }
         foundOfficers.addAll(officerRepository.findAvailableOfficersByCountry(fleetDto.getCountry().toEntity()).stream()
-                .map(OfficerDto::new).toList());
+                .filter(officerDto -> officerDto.getRank().getPrecedence() >= fleetDto.getMinimumRank().getPrecedence())
+                .map(OfficerDto::new)
+                .toList());
         return foundOfficers;
     }
 
