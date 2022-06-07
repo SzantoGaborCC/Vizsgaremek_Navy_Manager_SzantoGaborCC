@@ -65,7 +65,7 @@
 </div>
 <div id="dialog-confirm" title="Delete ship from the fleet?"></div>
 <script>
-    function showDialog(url, method) {
+    function showDialog(url, method, data) {
         $( "#dialog-confirm" ).dialog({
             dialogClass: "no-close",
             resizable: false,
@@ -77,11 +77,11 @@
                     $.ajax({
                         method: method,
                         url: url,
-                        //data: { name: "John", location: "Boston" }
+                        data: data //{ name: "John", location: "Boston" }
 
                     });
+                    //$( this ).dialog( "close" );
                     location. reload();
-                    $( this ).dialog( "close" );
                 },
                 "Cancel": function() {
                     $( this ).dialog( "close" );

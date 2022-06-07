@@ -7,8 +7,9 @@
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Choose Another Ship for ' : 'Add New Ship to '} + ${fleet.designation}"></h2>
 <div class="container">
     <h4 th:if="${#lists.isEmpty(validShipValues)}" class="text-danger">This country has no other available ship.</h4>
-    <form action="#" th:unless="${#lists.isEmpty(validShipValues)}" th:action="${add} == true ? @{/fleet-mvc/add-ship/{id}(id=${fleet.id})} : @{/fleet-mvc/update-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}" th:object="${ship}" method="post" novalidate>
-      <!--<div class="form-group">
+    <form id="updateShipInFleetForm" action="#" th:unless="${#lists.isEmpty(validShipValues)}" th:action="${add} == true ? @{/fleet-mvc/add-ship/{id}(id=${fleet.id})} : @{/fleet-mvc/update-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}" th:object="${ship}" method="post" novalidate>
+        <input name="add" type="hidden" th:value="${add}">
+        <!--<div class="form-group">
           <label for="shipId">Choose a ship: </label>
           <select id="shipId" name="value">
               <option th:if="${shipId.value} != null" th:each="shipOpt : ${validShipValues}"
@@ -35,7 +36,31 @@
       <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
   </form>
 </div>
+<script>
+    $("#updateShipInFleetForm").submit(function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const actionUrl = form.attr('action');
+        console.log(actionUrl);
+        const formData = form.serialize();
+        let data = {};
+        $("#updateShipInFleetForm").serializeArray().map(function(x){data[x.name] = x.value;});
+        console.log(data['add']);
+        const method = data['add'] === "true" ? "POST" : "PUT";
+        console.log("method: " + method);
 
+        $.ajax({
+            method: method,
+            url: actionUrl,
+            data: data,
+            success: function(data)
+            {
+                 window.location = document.referrer;
+            }
+        });
+
+    });
+</script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>

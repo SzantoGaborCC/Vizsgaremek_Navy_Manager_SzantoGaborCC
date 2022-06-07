@@ -4,6 +4,7 @@ import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 import com.codecool.navymanager.service.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -124,7 +125,7 @@ public class FleetMvcController {
     }
 
     @PostMapping("/add-ship/{id}")
-    public String addShip(
+    public ResponseEntity<String> addShip(
             @PathVariable Long id,
             //@ModelAttribute("shipId") @Valid IdentityDTO shipId,
             @ModelAttribute("ship") @Valid ShipDto ship,//
@@ -134,11 +135,11 @@ public class FleetMvcController {
             model.addAttribute("add", true);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
-            return "fleet-ship-form";
+            return ResponseEntity.badRequest().body("Invalid ship data!");
         }
         //fleetService.addShipToFleet(id, shipId.getValue());
         fleetService.addShipToFleet(id, ship);
-        return "redirect:/fleet-mvc/details/" + id;
+        return ResponseEntity.ok().body("Ship added to fleet.");
     }
 
     @GetMapping("/update-ship/{fleetId}/ship/{shipId}")
@@ -156,8 +157,8 @@ public class FleetMvcController {
         return "fleet-ship-form";
     }
 
-    @PostMapping("/update-ship/{fleetId}/ship/{oldShipId}")
-    public String updateShip(
+    @PutMapping("/update-ship/{fleetId}/ship/{oldShipId}")
+    public ResponseEntity<String> updateShip(
             @PathVariable long fleetId, @PathVariable long oldShipId,
             //@ModelAttribute("shipId") @Valid IdentityDTO shipId,
             @ModelAttribute("ship") @Valid ShipDto ship,//
@@ -167,20 +168,20 @@ public class FleetMvcController {
             model.addAttribute("add", false);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
-            return "fleet-ship-form";
+            return ResponseEntity.badRequest().body("Invalid ship data!");
         }
 
         ShipDto newShip = shipService.findAll().stream()
                 .filter(shipDto -> shipDto.getId().equals(ship.getId()))
                 .findAny().orElseThrow();
         fleetService.updateShipForAFleet(fleetId, oldShipId, newShip);
-        return "redirect:/fleet-mvc/details/" + fleetId;
+        return ResponseEntity.ok().body("Ship switched with another.");
     }
 
     @DeleteMapping("/delete-ship/{fleetId}/ship/{shipId}")
-    public String deleteById(@PathVariable long fleetId, @PathVariable long shipId) {
+    public ResponseEntity<String> deleteById(@PathVariable long fleetId, @PathVariable long shipId) {
         fleetService.deleteShipFromFleet(fleetId, shipId);
-        return "redirect:/fleet-mvc/details/" + fleetId;
+        return ResponseEntity.ok().body("Ship removed from fleet.");
     }
 
     /*@InitBinder
