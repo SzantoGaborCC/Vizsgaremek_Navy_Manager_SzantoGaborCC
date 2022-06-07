@@ -71,7 +71,7 @@ public class RankMvcController {
                     HttpStatus.BAD_REQUEST, "Nonexistent rank!", e);
         }
     }
-
+    //todo: should have serial type of id, we cant update precedence this way, foreign key violation
     @PostMapping("/update/{precedence}")
     public String update(@PathVariable int precedence, @ModelAttribute("rank") @Valid RankDto rank, BindingResult result, Model model) {
         if (result.hasErrors()) {

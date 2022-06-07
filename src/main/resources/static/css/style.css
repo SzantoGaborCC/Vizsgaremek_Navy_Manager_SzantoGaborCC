@@ -24,3 +24,7 @@ tr.clickable-row { cursor: pointer; }
 .unassignedOfficer {
     color: red;
 }
+
+.no-close .ui-dialog-titlebar-close {
+    display: none;
+}

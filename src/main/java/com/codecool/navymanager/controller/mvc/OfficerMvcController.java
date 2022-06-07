@@ -89,6 +89,7 @@ public class OfficerMvcController {
         }
     }
 
+    //todo: When rank reduced, check for fleet and ship position eligibility?
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("officer") @Valid OfficerDto officer, BindingResult result, Model model) {
         if (result.hasErrors()) {

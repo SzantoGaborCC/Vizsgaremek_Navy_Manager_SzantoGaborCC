@@ -90,6 +90,7 @@ public class FleetService {
 
     @Transactional
     public void deleteShipFromFleet(long fleetId, long shipId) {
+        System.out.println("delete ship from fleet called!");
         try {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
             Ship shipToDelete = shipRepository.findById(shipId).orElseThrow();

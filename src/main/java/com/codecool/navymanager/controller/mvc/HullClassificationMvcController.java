@@ -80,6 +80,7 @@ public class HullClassificationMvcController {
         }
     }
 
+    //todo: when rank requirement increased, check for captain eligibility, should have serial type of id, we cant update abbreviation this way, foreign key violation
     @PostMapping("/update/{abbr}")
     public String update(@PathVariable String abbr, @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification, BindingResult result, Model model) {
         if (result.hasErrors()) {

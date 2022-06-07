@@ -106,7 +106,8 @@ public class ShipClassMvcController {
         shipClassService.update(shipClass, id);
         return "redirect:/ship-class-mvc";
     }
-
+    //todo: adding the same gun should impossible, should check for ship displacement.
+    // When ship displacement reduced, check for gun removal?
     @GetMapping("/add-gun/{id}")
     public String showAddGunForm(
             @PathVariable Long id,

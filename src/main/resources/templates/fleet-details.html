@@ -54,15 +54,42 @@
             <td th:text="${ship.captain.name}"></td>
             <td th:text="${ship.country.name}"></td>
             <td>
-                <a th:href="@{/fleet-mvc/delete-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}"><i class="fa fa-trash"></i></a>
-                <a th:unless="${#lists.isEmpty(validShipValues)}" th:href="@{/fleet-mvc/update-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}"><i class="fa-solid fa-arrow-right-arrow-left"></i></a></td>
+                <button th:onclick="'showDialog(\'/fleet-mvc/delete-ship/'+${fleet.id}+ '/ship/'+${ship.id}+'\',\'DELETE\');'" class="btn btn-link"><i class="fa fa-trash"></i></button>
+
+                <a th:unless="${#lists.isEmpty(validShipValues)}" class="btn btn-link" th:href="@{/fleet-mvc/update-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}"><i class="fa-solid fa-arrow-right-arrow-left"></i></a></td>
         </tr>
         </tbody>
     </table>
     <a th:class="${#lists.isEmpty(validShipValues)} ? 'btn btn-secondary disabled' : 'btn btn-primary'" th:href="@{/fleet-mvc/add-ship/{id}(id=${fleet.id})}" role="button"><i class="fa-solid fa-plus"></i> Add New Ship</a>
     <span th:if="${#lists.isEmpty(validShipValues)}" class="text-danger"> This country has no available ships to add.</span>
 </div>
+<div id="dialog-confirm" title="Delete ship from the fleet?"></div>
+<script>
+    function showDialog(url, method) {
+        $( "#dialog-confirm" ).dialog({
+            dialogClass: "no-close",
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "Ok": function() {
+                    $.ajax({
+                        method: method,
+                        url: url,
+                        //data: { name: "John", location: "Boston" }
 
+                    });
+                    location. reload();
+                    $( this ).dialog( "close" );
+                },
+                "Cancel": function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        });
+    }
+</script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>

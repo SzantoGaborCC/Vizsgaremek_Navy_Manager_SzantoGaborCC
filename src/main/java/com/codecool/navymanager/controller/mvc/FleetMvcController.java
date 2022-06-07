@@ -96,6 +96,7 @@ public class FleetMvcController {
         }
     }
 
+    //todo: when rank requirement increased, check for captain eligibility
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -176,7 +177,7 @@ public class FleetMvcController {
         return "redirect:/fleet-mvc/details/" + fleetId;
     }
 
-    @GetMapping("/delete-ship/{fleetId}/ship/{shipId}")
+    @DeleteMapping("/delete-ship/{fleetId}/ship/{shipId}")
     public String deleteById(@PathVariable long fleetId, @PathVariable long shipId) {
         fleetService.deleteShipFromFleet(fleetId, shipId);
         return "redirect:/fleet-mvc/details/" + fleetId;

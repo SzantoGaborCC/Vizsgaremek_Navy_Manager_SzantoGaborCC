@@ -33,7 +33,6 @@ public class HullClassificationService {
     @Transactional
     public void update(HullClassificationDto hullClassificationDto, String abbreviation) {
         if (hullClassificationRepository.existsByAbbreviation(abbreviation)) {
-            hullClassificationRepository.deleteByAbbreviation(abbreviation);
             hullClassificationRepository.save(hullClassificationDto.toEntity());
         } else {
             throw new IllegalArgumentException("No such Hull Classification to update!");
