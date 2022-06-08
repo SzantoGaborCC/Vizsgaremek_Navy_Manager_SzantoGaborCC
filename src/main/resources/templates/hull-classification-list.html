@@ -24,8 +24,8 @@
             <td th:text="${hullClassification.designation}"></td>
             <td th:text="${hullClassification.minimumRank.designation}"></td>
             <td class="text-center">
-                <a th:href="@{/hull-classification-mvc/delete/{abbreviation}(abbreviation=${hullClassification.abbreviation})}"><i class="fa fa-trash"></i></a>
-                <a th:href="@{/hull-classification-mvc/update/{abbreviation}(abbreviation=${hullClassification.abbreviation})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <a th:href="@{/hull-classification-mvc/delete/{id}(id=${hullClassification.id})}"><i class="fa fa-trash"></i></a>
+                <a th:href="@{/hull-classification-mvc/update/{id}(id=${hullClassification.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
     </table>

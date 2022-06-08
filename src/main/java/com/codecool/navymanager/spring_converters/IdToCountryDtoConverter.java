@@ -17,6 +17,6 @@ public class IdToCountryDtoConverter implements Converter<String, CountryDto> {
     public CountryDto convert(String source) {
         return countryService.findAll().stream()
                 .filter(rankDTO -> rankDTO.getId().equals(Long.valueOf(source)))
-                .findAny().orElseThrow();
+                .findAny().orElse(null);
     }
 }

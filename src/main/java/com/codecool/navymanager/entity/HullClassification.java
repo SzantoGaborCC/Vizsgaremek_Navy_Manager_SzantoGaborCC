@@ -19,14 +19,14 @@ public class HullClassification {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "abbreviation", nullable = false, length = 3)
+    @Column(name = "abbreviation", nullable = false, length = 3, unique=true)
     private String abbreviation;
 
-    @Column(name = "designation", nullable = false, length = 100)
+    @Column(name = "designation", nullable = false, length = 100, unique=true)
     private String designation;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "minimum_rank_precedence", nullable = false)
+    @JoinColumn(name = "minimum_rank_id", nullable = false)
     private Rank minimumRank;
 
     @Override

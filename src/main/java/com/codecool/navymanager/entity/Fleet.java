@@ -25,7 +25,7 @@ public class Fleet {
     private String designation;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "minimum_rank_precedence", nullable = false)
+    @JoinColumn(name = "minimum_rank_id", nullable = false)
     private Rank minimumRank;
 
     @ManyToOne(fetch = FetchType.LAZY)

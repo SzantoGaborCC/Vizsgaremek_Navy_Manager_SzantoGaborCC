@@ -8,17 +8,17 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PrecedenceToRankDTOConverter implements Converter<String, RankDto> {
+public class IdToRankDTOConverter implements Converter<String, RankDto> {
     private final RankService rankService;
 
-    public PrecedenceToRankDTOConverter(RankService rankService) {
+    public IdToRankDTOConverter(RankService rankService) {
         this.rankService = rankService;
     }
 
     @Override
     public RankDto convert(String source) {
         return rankService.findAll().stream()
-                .filter(rankDto -> rankDto.getPrecedence() == (Integer.valueOf(source)))
-                .findAny().orElseThrow();
+                .filter(rankDto -> rankDto.getId() == (Long.valueOf(source)))
+                .findAny().orElse(null);
     }
 }

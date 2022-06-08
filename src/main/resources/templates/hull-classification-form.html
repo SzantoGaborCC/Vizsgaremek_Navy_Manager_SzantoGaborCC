@@ -7,7 +7,7 @@
 <h2 style="font-weight: bold;text-align:center;" th:text="${create == false ? 'Update Hull Classification' : 'Create New Hull Classification'}"></h2>
 <div class="container">
 
-  <form action="#" th:action="${create} == true ? @{/hull-classification-mvc/create} : @{/hull-classification-mvc/update/{abbreviation}(abbreviation=${hullClassification.abbreviation})}" th:object="${hullClassification}" method="post" novalidate>
+  <form action="#" th:action="${create} == true ? @{/hull-classification-mvc/create} : @{/hull-classification-mvc/update/{id}(id=${hullClassification.id})}" th:object="${hullClassification}" method="post" novalidate>
     <input type="hidden" id="id" th:field="*{id}">
     <div class="form-group">
       <label for="abbreviation">Abbreviation</label>
@@ -23,10 +23,10 @@
       <label for="minimumRank">Minimum rank required</label>
       <select id="minimumRank" th:field="*{minimumRank}">
         <option th:if="${hullClassification.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.precedence}" th:text="${rankOpt.designation}"
-                th:selected="${hullClassification.minimumRank.precedence == rankOpt.precedence}"></option>
+                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"
+                th:selected="${hullClassification.minimumRank.id == rankOpt.id}"></option>
         <option th:unless="${hullClassification.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.precedence}" th:text="${rankOpt.designation}"></option>
+                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}" th:errors="*{minimumRank}"></span>
     </div>

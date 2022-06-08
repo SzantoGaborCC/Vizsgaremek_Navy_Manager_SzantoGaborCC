@@ -26,10 +26,10 @@
       <label for="rank">Rank</label>
       <select id="rank" th:field="*{rank}">
         <option th:if="${officer.rank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.precedence}" th:text="${rankOpt.designation}"
-                th:selected="${officer.rank.precedence == rankOpt.precedence}"></option>
+                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"
+                th:selected="${officer.rank.id == rankOpt.id}"></option>
         <option th:unless="${officer.rank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.precedence}" th:text="${rankOpt.designation}"></option>
+                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('rank')}" th:errors="*{rank}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->

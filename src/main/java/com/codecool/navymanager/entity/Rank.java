@@ -18,10 +18,10 @@ public class Rank {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "precedence", nullable = false)
+    @Column(name = "precedence", nullable = false, unique=true)
     private Integer precedence;
 
-    @Column(name = "designation", nullable = false, length = 100)
+    @Column(name = "designation", nullable = false, length = 100, unique=true)
     private String designation;
 
     @Override

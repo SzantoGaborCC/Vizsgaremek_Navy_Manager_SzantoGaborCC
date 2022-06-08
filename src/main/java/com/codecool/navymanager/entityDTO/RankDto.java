@@ -27,7 +27,7 @@ public class RankDto implements Serializable {
     public Rank toEntity() {
         return new Rank(id, precedence, designation);
     }
-    //todo: fix webpages using rank
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

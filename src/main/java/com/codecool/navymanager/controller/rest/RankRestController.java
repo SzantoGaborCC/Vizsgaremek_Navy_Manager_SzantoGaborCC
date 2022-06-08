@@ -20,9 +20,9 @@ public class RankRestController {
         return rankService.findAll();
     }
 
-    @GetMapping("/{precedence}")
-    public RankDto findByPrecedence(@PathVariable int precedence) {
-        return rankService.findByPrecedence(precedence);
+    @GetMapping("/{id}")
+    public RankDto findByPrecedence(@PathVariable long id) {
+        return rankService.findById(id);
     }
 
     @PostMapping
@@ -30,13 +30,13 @@ public class RankRestController {
         rankService.add(rank);
     }
 
-    @PutMapping("/{precedence}")
-    public void update(@RequestBody RankDto rank, @PathVariable int precedence) {
-        rankService.update(rank, precedence);
+    @PutMapping("/{id}")
+    public void update(@RequestBody RankDto rank, @PathVariable long id) {
+        rankService.update(rank, id);
     }
 
-    @DeleteMapping("/{precedence}")
-    public void delete(@PathVariable int precedence) {
-        rankService.deleteByPrecedence(precedence);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id) {
+        rankService.deleteById(id);
     }
 }

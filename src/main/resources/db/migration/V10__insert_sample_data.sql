@@ -59,53 +59,53 @@ INSERT INTO "rank"
 VALUES(10, 'Admiral of the Navy');
 
 INSERT INTO officer
-("name", date_of_birth, rank, country_id)
+("name", date_of_birth, rank_id, country_id)
 VALUES('Sigmund von Bülow', '1872-11-12', 9, 1);
 INSERT INTO officer
-("name", date_of_birth, rank, country_id)
+("name", date_of_birth, rank_id, country_id)
 VALUES('Wilhelm Student', '1875-03-11', 5, 2);
 INSERT INTO officer
-("name", date_of_birth, rank, country_id)
+("name", date_of_birth, rank_id, country_id)
 VALUES('Erich Falkenstein', '1877-03-11', 10, 2);
 INSERT INTO officer
-("name", date_of_birth, rank, country_id)
+("name", date_of_birth, rank_id, country_id)
 VALUES('Edmund Lighter', '1857-06-11', 4, 3);
 
 
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_precedence)
+(abbreviation, designation, minimum_rank_id)
 VALUES('BB', 'Battleship', 5);
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_precedence)
+(abbreviation, designation, minimum_rank_id)
 VALUES('CA', 'Heavy Cruiser', 5);
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_precedence)
+(abbreviation, designation, minimum_rank_id)
 VALUES('CL', 'Light Cruiser', 5);
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_precedence)
+(abbreviation, designation, minimum_rank_id)
 VALUES('DD', 'Destroyer', 4);
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_precedence)
+(abbreviation, designation, minimum_rank_id)
 VALUES('DE', 'Destroyer Escort', 4);
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_precedence)
+(abbreviation, designation, minimum_rank_id)
 VALUES('SS', 'Submarine', 4);
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_precedence)
+(abbreviation, designation, minimum_rank_id)
 VALUES('CV', 'Aircraft Carrier', 5);
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_precedence)
+(abbreviation, designation, minimum_rank_id)
 VALUES('CVL', 'Light Aircraft Carrier', 5);
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_precedence)
+(abbreviation, designation, minimum_rank_id)
 VALUES('CVE', 'Escort Aircraft Carrier', 5);
 
 INSERT INTO ship_class
-("name", displacement_in_tons, hull_classification, armor_belt_in_cms, armor_turret_in_cms, armor_deck_in_cms, speed_in_kmh, country_id)
-VALUES('Viribus Unitis', 20000, 'BB', 28, 28, 5, 37, 1);
+("name", displacement_in_tons, hull_classification_id, armor_belt_in_cms, armor_turret_in_cms, armor_deck_in_cms, speed_in_kmh, country_id)
+VALUES('Viribus Unitis', 20000, 1, 28, 28, 5, 37, 1);
 INSERT INTO ship_class
-("name", displacement_in_tons, hull_classification, armor_belt_in_cms, armor_turret_in_cms, armor_deck_in_cms, speed_in_kmh, country_id)
-VALUES('Radetzky', 14500, 'BB', 23, 25, 5, 38, 1);
+("name", displacement_in_tons, hull_classification_id, armor_belt_in_cms, armor_turret_in_cms, armor_deck_in_cms, speed_in_kmh, country_id)
+VALUES('Radetzky', 14500, 1, 23, 25, 5, 38, 1);
 
 INSERT INTO ship
 ("name", ship_class_id, captain_id, country_id)
@@ -121,7 +121,7 @@ INSERT INTO ship
 VALUES('Szent István', 1, 1);
 
 INSERT INTO fleet
-(designation, commander_id, country_id, minimum_rank_precedence)
+(designation, commander_id, country_id, minimum_rank_id)
 VALUES('1st Battleship Fleet', 2, 1, 8);
 
 INSERT INTO ship_classes_and_guns

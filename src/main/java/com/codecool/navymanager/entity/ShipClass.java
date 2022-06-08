@@ -28,7 +28,7 @@ public class ShipClass {
     private Integer displacementInTons;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "hull_classification", nullable = false)
+    @JoinColumn(name = "hull_classification_id", nullable = false)
     private HullClassification hullClassification;
 
     @Column(name = "armor_belt_in_cms", nullable = false)

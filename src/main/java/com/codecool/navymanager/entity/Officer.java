@@ -27,7 +27,7 @@ public class Officer {
     private LocalDate dateOfBirth;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "rank", nullable = false)
+    @JoinColumn(name = "rank_id", nullable = false)
     private Rank rank;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

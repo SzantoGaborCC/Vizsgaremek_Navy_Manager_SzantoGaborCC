@@ -21,7 +21,7 @@
         <tr class="clickable-row" th:data-href="@{/fleet-mvc/details/{id}(id=${fleet.id})}" th:each="fleet: ${fleets}">
             <td th:text="${fleet.id}"></td>
             <td th:text="${fleet.designation}"></td>
-            <td><a th:href="@{/rank-mvc/details/{precedence}(precedence=${fleet.minimumRank.precedence})}" th:text="${fleet.minimumRank.designation}"/></td>
+            <td><a th:href="@{/rank-mvc/details/{id}(id=${fleet.minimumRank.id})}" th:text="${fleet.minimumRank.designation}"/></td>
             <td>
                 <span th:if="${fleet.commander} == null" class="text-danger">No commander was assigned</span>
                 <a th:unless="${fleet.commander} == null" th:href="@{/officer-mvc/details/{id}(id=${fleet.commander.id})}" th:text="${fleet.commander.name}"/>
