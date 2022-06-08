@@ -97,8 +97,8 @@ public class FleetMvcController {
         }
     }
 
-    //todo: when rank requirement increased, check for captain eligibility
-    @PostMapping("/update/{id}")
+    //todo: when rank requirement increased, check for commander eligibility, possibly removing him
+    @PutMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);

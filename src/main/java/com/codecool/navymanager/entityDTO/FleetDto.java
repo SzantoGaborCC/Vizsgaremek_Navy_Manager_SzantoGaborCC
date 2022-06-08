@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,9 +22,13 @@ public class FleetDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    @NotNull(message = "Designation must be specified and its length must be between 1 and 255!")
+    @Size(min = 1, max = 255, message = "Designation length must be between 1 and 255!")
     private String designation;
+    @NotNull(message = "You must choose a valid minimum rank!")
     private RankDto minimumRank;
     private OfficerDto commander;
+    @NotNull(message = "You must choose a valid country!")
     private CountryDto country;
     private Set<ShipDto> ships;
 

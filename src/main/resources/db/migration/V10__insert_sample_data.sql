@@ -111,8 +111,8 @@ INSERT INTO ship
 ("name", ship_class_id, captain_id, country_id)
 VALUES('Viribus Unitis', 1, 4, 1);
 INSERT INTO ship
-("name", ship_class_id, captain_id, country_id)
-VALUES('Prinz Eugen', 1, 2, 1);
+("name", ship_class_id, country_id)
+VALUES('Prinz Eugen', 1, 1);
 INSERT INTO ship
 ("name", ship_class_id, captain_id, country_id)
 VALUES('Tegethoff', 1, 3, 1);

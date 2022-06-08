@@ -38,27 +38,7 @@
 </div>
 <script>
     $("#updateShipInFleetForm").submit(function(e) {
-        e.preventDefault();
-        const form = $(this);
-        const actionUrl = form.attr('action');
-        console.log(actionUrl);
-        const formData = form.serialize();
-        let data = {};
-        $("#updateShipInFleetForm").serializeArray().map(function(x){data[x.name] = x.value;});
-        console.log(data['add']);
-        const method = data['add'] === "true" ? "POST" : "PUT";
-        console.log("method: " + method);
-
-        $.ajax({
-            method: method,
-            url: actionUrl,
-            data: data,
-            success: function(data)
-            {
-                 window.location = document.referrer;
-            }
-        });
-
+        ajaxFormSubmit(e, 'updateShipInFleetForm');
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>

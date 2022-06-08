@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -21,7 +23,9 @@ public class Fleet {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "designation", nullable = false)
+    @NotNull(message = "Designation length must be between 1 and 255!")
+    @Size(min = 1, max = 255, message = "Designation length must be between 1 and 255!")
+    @Column(name = "designation")
     private String designation;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -32,8 +36,9 @@ public class Fleet {
     @JoinColumn(name = "commander_id")
     private Officer commander;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "country_id", nullable = false)
+    @NotNull(message = "You must choose a valid country!")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id")
     private Country country;
 
     @OneToMany(mappedBy = "fleet", cascade = CascadeType.PERSIST)
