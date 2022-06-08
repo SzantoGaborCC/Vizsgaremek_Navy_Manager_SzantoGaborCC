@@ -23,8 +23,8 @@ public class RankService {
                 .toList();
     }
 
-    public RankDto findByPrecedence(int precedence) {
-        return new RankDto(rankRepository.findByPrecedence(precedence).orElseThrow());
+    public RankDto findById(long id) {
+        return new RankDto(rankRepository.findById(id).orElse(null));
     }
 
     @Transactional
@@ -33,8 +33,8 @@ public class RankService {
     }
 
     @Transactional
-    public void update(RankDto rankDto, int precedence) {
-        if (rankRepository.existsByPrecedence(precedence)) {
+    public void update(RankDto rankDto, long id) {
+        if (rankRepository.existsById(id)) {
             rankRepository.save(rankDto.toEntity());
         } else {
             throw new IllegalArgumentException("No such Rank to update!");
@@ -42,7 +42,7 @@ public class RankService {
     }
 
     @Transactional
-    public void deleteByPrecedence(int precedence) {
-        rankRepository.deleteByPrecedence(precedence);
+    public void deleteById(long id) {
+        rankRepository.deleteById(id);
     }
 }

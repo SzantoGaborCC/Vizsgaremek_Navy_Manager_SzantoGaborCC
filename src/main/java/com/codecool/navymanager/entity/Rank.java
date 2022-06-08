@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "rank")
@@ -18,9 +15,11 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class Rank {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
     @Column(name = "precedence", nullable = false)
     private Integer precedence;
-    //todo: using an updatable id can break the api, should have a normal serial id
 
     @Column(name = "designation", nullable = false, length = 100)
     private String designation;
@@ -30,7 +29,7 @@ public class Rank {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rank that = (Rank) o;
-        return precedence != null && precedence.equals(that.precedence);
+        return id != null && id.equals(that.id);
     }
 
     @Override

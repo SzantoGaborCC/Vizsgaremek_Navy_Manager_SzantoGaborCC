@@ -15,23 +15,25 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class RankDto implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    private Long id;
     private Integer precedence;
     private String designation;
 
     public RankDto(Rank rank) {
-        this(rank.getPrecedence(), rank.getDesignation());
+        this(rank.getId(), rank.getPrecedence(), rank.getDesignation());
     }
 
     public Rank toEntity() {
-        return new Rank(precedence, designation);
+        return new Rank(id, precedence, designation);
     }
-
+    //todo: fix webpages using rank
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RankDto that = (RankDto) o;
-        return precedence != null && precedence.equals(that.precedence);
+        return id != null && id.equals(that.id);
     }
 
     @Override

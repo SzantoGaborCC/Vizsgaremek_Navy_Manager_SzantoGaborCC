@@ -30,9 +30,9 @@ public class HullClassificationMvcController {
         return "hull-classification-list";
     }
 
-    @GetMapping("/{abbreviation}")
-    public HullClassificationDto findByAbbreviation(@PathVariable String abbreviation) {
-        return hullClassificationService.findByAbbreviation(abbreviation);
+    @GetMapping("/{id}")
+    public HullClassificationDto findById(@PathVariable long id) {
+        return hullClassificationService.findById(id);
     }
 
     @GetMapping("/create")
@@ -60,16 +60,16 @@ public class HullClassificationMvcController {
         return "redirect:/hull-classification-mvc";
     }
 
-    @GetMapping("/delete/{abbr}")
-    public String deleteByAbbr(@PathVariable String abbr) {
-        hullClassificationService.deleteByAbbreviation(abbr);
+    @GetMapping("/delete/{id}")
+    public String deleteByAbbr(@PathVariable long id) {
+        hullClassificationService.deleteById(id);
         return "redirect:/hull-classification-mvc";
     }
 
-    @GetMapping("/update/{abbr}")
-    public String showUpdateForm(@PathVariable String abbr, Model model) {
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable long id, Model model) {
         try {
-            HullClassificationDto hullClassification = hullClassificationService.findByAbbreviation(abbr);
+            HullClassificationDto hullClassification = hullClassificationService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("hullClassification", hullClassification);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -80,15 +80,15 @@ public class HullClassificationMvcController {
         }
     }
 
-    //todo: when rank requirement increased, check for captain eligibility, should have serial type of id, we cant update abbreviation this way, foreign key violation
-    @PostMapping("/update/{abbr}")
-    public String update(@PathVariable String abbr, @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification, BindingResult result, Model model) {
+    //todo: when rank requirement increased, check for captain eligibility
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable long id, @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             model.addAttribute("validRankValues", rankService.findAll());
             return "hull-classification-form";
         }
-        hullClassificationService.update(hullClassification, abbr);
+        hullClassificationService.update(hullClassification, id);
         return "redirect:/hull-classification-mvc";
     }
 }

@@ -26,7 +26,7 @@
             <td th:text="${shipClass.id}"></td>
             <td th:text="${shipClass.name}"></td>
             <td th:text="${shipClass.displacementInTons} + ' t'"></td>
-            <td><a th:href="@{/hull-classification-mvc/details/{abbreviation}(abbreviation=${shipClass.hullClassification.abbreviation})}" th:text="${shipClass.hullClassification.designation}"/></td>
+            <td><a th:href="@{/hull-classification-mvc/details/{id}(id=${shipClass.hullClassification.id})}" th:text="${shipClass.hullClassification.designation}"/></td>
             <td th:text="${shipClass.armorBeltInCms} + ' cm'"></td>
             <td th:text="${shipClass.armorTurretInCms} + ' cm'"></td>
             <td th:text="${shipClass.armorDeckInCms} + ' cm'"></td>

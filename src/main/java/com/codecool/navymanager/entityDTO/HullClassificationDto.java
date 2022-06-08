@@ -15,11 +15,13 @@ import java.io.Serializable;
 public class HullClassificationDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private Long id;
     private String abbreviation;
     private String designation;
     private RankDto minimumRank;
 
     public HullClassificationDto(HullClassification hullClassification) {
+        id = hullClassification.getId();
         abbreviation = hullClassification.getAbbreviation();
         designation = hullClassification.getDesignation();
         minimumRank = new RankDto(hullClassification.getMinimumRank());
@@ -27,7 +29,7 @@ public class HullClassificationDto implements Serializable {
 
     public HullClassification toEntity() {
         return new HullClassification(
-                abbreviation, designation, minimumRank.toEntity()
+                id, abbreviation, designation, minimumRank.toEntity()
         );
     }
 
@@ -36,7 +38,7 @@ public class HullClassificationDto implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HullClassificationDto that = (HullClassificationDto) o;
-        return abbreviation != null && abbreviation.equals(that.abbreviation);
+        return id != null && id.equals(that.id);
     }
 
     @Override

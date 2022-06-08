@@ -17,10 +17,10 @@
     <label for="hullClassification">Hull Classification</label>
     <select id="hullClassification" th:field="*{hullClassification}">
       <option th:if="${shipClass.hullClassification} != null" th:each="hullClassificationOpt : ${validHullClassificationValues}"
-              th:value="${hullClassificationOpt.abbreviation}" th:text="${hullClassificationOpt.designation}"
-              th:selected="${shipClass.hullClassification.abbreviation == hullClassificationOpt.abbreviation}"></option>
+              th:value="${hullClassificationOpt.id}" th:text="${hullClassificationOpt.designation}"
+              th:selected="${shipClass.hullClassification.id == hullClassificationOpt.id}"></option>
       <option th:unless="${shipClass.hullClassification} != null" th:each="hullClassificationOpt : ${validHullClassificationValues}"
-              th:value="${hullClassificationOpt.abbreviation}" th:text="${hullClassificationOpt.designation}"></option>
+              th:value="${hullClassificationOpt.id}" th:text="${hullClassificationOpt.designation}"></option>
     </select>
     <span class="validationError" th:if="${#fields.hasErrors('hullClassification')}" th:errors="*{hullClassification}"></span>
     <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->

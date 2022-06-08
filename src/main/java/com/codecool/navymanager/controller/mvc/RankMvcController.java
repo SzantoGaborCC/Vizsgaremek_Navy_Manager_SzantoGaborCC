@@ -26,9 +26,9 @@ public class RankMvcController {
         return "rank-list";
     }
 
-    @GetMapping("/{precedence}")
-    public RankDto findById(@PathVariable int precedence) {
-        return rankService.findByPrecedence(precedence);
+    @GetMapping("/{id}")
+    public RankDto findById(@PathVariable long id) {
+        return rankService.findById(id);
     }
 
     @GetMapping("/create")
@@ -53,16 +53,16 @@ public class RankMvcController {
         return "redirect:/rank-mvc";
     }
 
-    @GetMapping("/delete/{precedence}")
-    public String deleteById(@PathVariable int precedence) {
-        rankService.deleteByPrecedence(precedence);
+    @GetMapping("/delete/{id}")
+    public String deleteById(@PathVariable long id) {
+        rankService.deleteById(id);
         return "redirect:/rank-mvc";
     }
 
-    @GetMapping("/update/{precedence}")
-    public String showUpdateForm(@PathVariable int precedence, Model model) {
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable long id, Model model) {
         try {
-            RankDto rank = rankService.findByPrecedence(precedence);
+            RankDto rank = rankService.findById(id);
             model.addAttribute("create", false);
             model.addAttribute("rank", rank);
             return "rank-form";
@@ -71,14 +71,14 @@ public class RankMvcController {
                     HttpStatus.BAD_REQUEST, "Nonexistent rank!", e);
         }
     }
-    //todo: should have serial type of id, we cant update precedence this way, foreign key violation
-    @PostMapping("/update/{precedence}")
-    public String update(@PathVariable int precedence, @ModelAttribute("rank") @Valid RankDto rank, BindingResult result, Model model) {
+
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable long id, @ModelAttribute("rank") @Valid RankDto rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("create", false);
             return "rank-form";
         }
-        rankService.update(rank, precedence);
+        rankService.update(rank, id);
         return "redirect:/rank-mvc";
     }
 }

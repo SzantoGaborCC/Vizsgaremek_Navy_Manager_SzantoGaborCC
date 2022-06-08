@@ -8,6 +8,7 @@
 <div class="container">
 
   <form action="#" th:action="${create} == true ? @{/hull-classification-mvc/create} : @{/hull-classification-mvc/update/{abbreviation}(abbreviation=${hullClassification.abbreviation})}" th:object="${hullClassification}" method="post" novalidate>
+    <input type="hidden" id="id" th:field="*{id}">
     <div class="form-group">
       <label for="abbreviation">Abbreviation</label>
       <input type="text" class="form-control" id="abbreviation" th:field="*{abbreviation}">

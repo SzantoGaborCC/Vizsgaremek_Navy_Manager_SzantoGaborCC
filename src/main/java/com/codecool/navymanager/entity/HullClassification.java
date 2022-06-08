@@ -15,9 +15,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class HullClassification {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
     @Column(name = "abbreviation", nullable = false, length = 3)
     private String abbreviation;
-    //todo: using an updatable id can break the api, should have a normal serial id
 
     @Column(name = "designation", nullable = false, length = 100)
     private String designation;
@@ -31,7 +34,7 @@ public class HullClassification {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HullClassification that = (HullClassification) o;
-        return abbreviation != null && abbreviation.equals(that.abbreviation);
+        return id != null && id.equals(that.id);
     }
 
     @Override

@@ -10,6 +10,7 @@
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
+            <th scope="col">Id</th>
             <th scope="col">Abbreviation</th>
             <th scope="col">Name</th>
             <th scope="col">Minimum rank required</th>
@@ -18,6 +19,7 @@
         </thead>
         <tbody>
         <tr th:each="hullClassification: ${hullClassifications}">
+            <td th:text="${hullClassification.id}"></td>
             <td th:text="${hullClassification.abbreviation}"></td>
             <td th:text="${hullClassification.designation}"></td>
             <td th:text="${hullClassification.minimumRank.designation}"></td>

@@ -21,8 +21,8 @@ public class HullClassificationService {
         return hullClassificationRepository.findAll().stream().map(HullClassificationDto::new).toList();
     }
 
-    public HullClassificationDto findByAbbreviation(String abbreviation) {
-        return new HullClassificationDto(hullClassificationRepository.findByAbbreviation(abbreviation));
+    public HullClassificationDto findById(long id) {
+        return new HullClassificationDto(hullClassificationRepository.findById(id));
     }
 
     @Transactional
@@ -31,8 +31,8 @@ public class HullClassificationService {
     }
 
     @Transactional
-    public void update(HullClassificationDto hullClassificationDto, String abbreviation) {
-        if (hullClassificationRepository.existsByAbbreviation(abbreviation)) {
+    public void update(HullClassificationDto hullClassificationDto, long id) {
+        if (hullClassificationRepository.existsById(id)) {
             hullClassificationRepository.save(hullClassificationDto.toEntity());
         } else {
             throw new IllegalArgumentException("No such Hull Classification to update!");
@@ -40,7 +40,7 @@ public class HullClassificationService {
     }
 
     @Transactional
-    public void deleteByAbbreviation(String abbreviation) {
-        hullClassificationRepository.deleteByAbbreviation(abbreviation);
+    public void deleteById(long id) {
+        hullClassificationRepository.deleteById(id);
     }
 }

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface RankRepository extends JpaRepository<Rank, Integer> {
-    Optional<Rank> findByPrecedence(int precedence);
+    Optional<Rank> findById(long id);
 
-    boolean existsByPrecedence(int precedence);
-    void deleteByPrecedence(int precedence);
+    boolean existsById(long id);
+    void deleteById(long id);
 }
