@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/gun")
+//@RestController
+//@RequestMapping("/gun")
 public class GunRestController {
     private final GunService gunService;
 

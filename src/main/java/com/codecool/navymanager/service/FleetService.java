@@ -3,15 +3,16 @@ package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Ship;
-import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
+
 
 import com.codecool.navymanager.repository.FleetRepository;
 import com.codecool.navymanager.repository.ShipRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,10 +49,8 @@ public class FleetService {
 
     @Transactional
     public void update(FleetDto fleetDto, long id) {
-        Fleet fleet = fleetRepository.findById(id).orElse(null);
-        if (fleet == null) {
-            throw new IllegalArgumentException("No such Fleet to update!");
-        } else if (!fleetDto.getCountry().getId().equals(fleet.getCountry().getId())) {
+        Fleet fleet = fleetRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("No such fleet!"));
+        if (!fleetDto.getCountry().getId().equals(fleet.getCountry().getId())) {
             for (Ship ship : fleet.getShips()) {
                 ship.setFleet(null);
             }
@@ -66,42 +65,25 @@ public class FleetService {
 
     @Transactional
     public void addShipToFleet(Long fleetId, ShipDto shipDto) {
-        try {
-            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
-            Ship shipToAdd = shipRepository.findById(shipDto.getId()).orElseThrow();
+            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException("No such fleet!"));
+            Ship shipToAdd = shipRepository.findById(shipDto.getId()).orElseThrow(() -> new IllegalArgumentException("No such ship!"));
             shipToAdd.setFleet(fleet);
             fleet.getShips().add(shipToAdd);
             fleetRepository.save(fleet);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid Fleet or Ship Id! " + e.getMessage());
-        }
     }
 
     @Transactional
-    public void updateShipForAFleet(long fleetId, long oldShipId, ShipDto newShipDto) {
-        try {
-           // Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
-           // Ship shipToUpdate = shipRepository.findById(newShipDto.getId()).orElseThrow();
-            deleteShipFromFleet(fleetId, oldShipId);
+    public void updateShipForAFleet(long fleetId, long shipId, ShipDto newShipDto) {
+            deleteShipFromFleet(fleetId, shipId);
             addShipToFleet(fleetId, newShipDto);
-           // shipToUpdate.setFleet(fleet);
-        //    fleet.getShips().add(shipToUpdate);
-          //  fleetRepository.save(fleet);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid Fleet or Ship Id! " + e.getMessage());
-        }
     }
-
+//todo: IllegalArgumentExceptions should be handled by ControllerAdvice
     @Transactional
     public void deleteShipFromFleet(long fleetId, long shipId) {
-        try {
-            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow();
-            Ship shipToDelete = shipRepository.findById(shipId).orElseThrow();
+            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException("No such fleet!"));
+            Ship shipToDelete = shipRepository.findById(shipId).orElseThrow(() -> new IllegalArgumentException("No such ship!"));
             fleet.getShips().remove(shipToDelete);
             shipToDelete.setFleet(null);
             fleetRepository.save(fleet);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid Fleet or Ship Id!");
-        }
     }
 }

@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/fleet")
+//@RestController
+//@RequestMapping("/fleet")
 public class FleetRestController {
     private final FleetService fleetService;
 

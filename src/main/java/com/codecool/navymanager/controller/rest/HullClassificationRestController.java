@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/hullClassification")
+//@RestController
+//@RequestMapping("/hullClassification")
 public class HullClassificationRestController {
     private final HullClassificationService hullClassificationService;
 

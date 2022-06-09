@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/shipClass")
+//@RestController
+//@RequestMapping("/shipClass")
 public class ShipClassRestController {
     private final ShipClassService shipClassService;
 

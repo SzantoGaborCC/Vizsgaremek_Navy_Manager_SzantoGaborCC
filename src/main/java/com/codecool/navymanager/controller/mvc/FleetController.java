@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 
 @Controller
-@RequestMapping("/fleet-mvc")
-public class FleetMvcController {
+@RequestMapping("/fleet")
+public class FleetController {
     private final FleetService fleetService;
     private final OfficerService officerService;
     private final RankService rankService;
@@ -28,11 +28,11 @@ public class FleetMvcController {
 
     private final ShipService shipService;
 
-    public FleetMvcController(FleetService fleetService,
-                              OfficerService officerService,
-                              RankService rankService,
-                              CountryService countryService,
-                              ShipService shipService) {
+    public FleetController(FleetService fleetService,
+                           OfficerService officerService,
+                           RankService rankService,
+                           CountryService countryService,
+                           ShipService shipService) {
         this.fleetService = fleetService;
         this.officerService = officerService;
         this.rankService = rankService;
@@ -46,14 +46,14 @@ public class FleetMvcController {
         return "fleet-list";
     }
 
-    @GetMapping("/details/{id}")
+    @GetMapping("/{id}")
     public String showDetails(@PathVariable Long id, Model model) {
         FleetDto fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-details";
     }
-
+//todo: working on fleet details
     @GetMapping("/add")
     public String showCreateForm(Model model){
         model.addAttribute("add", true);
@@ -64,7 +64,7 @@ public class FleetMvcController {
         return "fleet-form";
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<Response> add(@ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
         Response response = new Response();
         if (result.hasErrors()) {
@@ -81,7 +81,7 @@ public class FleetMvcController {
         response.setMessage("Fleet was added.");
         HttpHeaders headers = new HttpHeaders();
         System.out.println("using headers!");
-        headers.add("Location", "/fleet-mvc");
+        headers.add("Location", "/fleet");
         return ResponseEntity.ok().headers(headers).body(response);
     }
 
@@ -91,7 +91,7 @@ public class FleetMvcController {
         return ResponseEntity.ok().body("Fleet removed.");
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping("/{id}/update")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
             FleetDto fleet = fleetService.findById(id);
@@ -108,7 +108,7 @@ public class FleetMvcController {
     }
 
     //todo: when rank requirement increased, check for commander eligibility, possibly removing him
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
         Response response = new Response();
         if (result.hasErrors()) {
@@ -126,7 +126,7 @@ public class FleetMvcController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/add-ship/{id}")
+    @GetMapping("/{id}/ship/add")
     public String showAddShipForm(
             @PathVariable Long id,
             Model model) {
@@ -134,15 +134,13 @@ public class FleetMvcController {
         FleetDto fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
         model.addAttribute("ship", new ShipDto());//
-        //model.addAttribute("shipId", new IdentityDTO());
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
 
-    @PostMapping("/add-ship/{id}")
+    @PostMapping("/{id}/ship")
     public ResponseEntity<Response> addShip(
             @PathVariable Long id,
-            //@ModelAttribute("shipId") @Valid IdentityDTO shipId,
             @ModelAttribute("ship") @Valid ShipDto ship,//
             Model model, BindingResult result) {
         Response response = new Response();
@@ -156,31 +154,27 @@ public class FleetMvcController {
             response.setMessage("Invalid ship data!");
             return ResponseEntity.badRequest().body(response);
         }
-        //fleetService.addShipToFleet(id, shipId.getValue());
         fleetService.addShipToFleet(id, ship);
         response.setMessage("Ship was added to the fleet.");
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/update-ship/{fleetId}/ship/{shipId}")
+    @GetMapping("{fleetId}/ship/{shipId}/update")
     public String showUpdateShipForm(
             @PathVariable long fleetId, @PathVariable long shipId,
             Model model) {
-
         FleetDto fleet = fleetService.findById(fleetId);
         ShipDto ship = shipService.findById(shipId);
         model.addAttribute("add", false);
         model.addAttribute("fleet", fleet);
-        //model.addAttribute("shipId", new IdentityDTO(ship.getId()));
         model.addAttribute("ship", ship);//
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
 
-    @PutMapping("/update-ship/{fleetId}/ship/{oldShipId}")
+    @PutMapping("/{fleetId}/ship/{shipId}")
     public ResponseEntity<String> updateShip(
-            @PathVariable long fleetId, @PathVariable long oldShipId,
-            //@ModelAttribute("shipId") @Valid IdentityDTO shipId,
+            @PathVariable long fleetId, @PathVariable long shipId,
             @ModelAttribute("ship") @Valid ShipDto ship,//
             Model model, BindingResult result) {
         if (result.hasErrors()) {
@@ -194,33 +188,16 @@ public class FleetMvcController {
         ShipDto newShip = shipService.findAll().stream()
                 .filter(shipDto -> shipDto.getId().equals(ship.getId()))
                 .findAny().orElseThrow();
-        fleetService.updateShipForAFleet(fleetId, oldShipId, newShip);
+        fleetService.updateShipForAFleet(fleetId, shipId, newShip);
         return ResponseEntity.ok().body("Ship switched with another.");
     }
 
-    @DeleteMapping("/delete-ship/{fleetId}/ship/{shipId}")
-    public ResponseEntity<String> deleteById(@PathVariable long fleetId, @PathVariable long shipId) {
+    @DeleteMapping("/{fleetId}/ship/{shipId}")
+    public ResponseEntity<Response> deleteById(@PathVariable long fleetId, @PathVariable long shipId) {
         fleetService.deleteShipFromFleet(fleetId, shipId);
-        return ResponseEntity.ok().body("Ship removed from fleet.");
+        Response response = new Response();
+        response.setMessage("Ship removed from fleet.");
+        return ResponseEntity.ok().body(response);
     }
-
-    /*@InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(
-                ShipDTO.class,
-                new PropertyEditorSupport() {
-                    @Override
-                    public void setAsText(String text) throws IllegalArgumentException {
-                        System.out.println("--------------------------SHIP CONVERTER PROPERTY EDITOR CALLED!!!!!!!!!!------------------------");
-                        System.out.println("ship name given to converter: " + text);
-                        var ship = shipService.findAll().stream()
-                                .filter(shipDTO -> shipDTO.getName().equals(text))
-                                .findAny().orElseThrow();
-                        System.out.println("Ship id found by shipService: " + ship.getId());
-                        setValue(ship);
-                    }
-                }
-        );
-    }*/
 }
 
