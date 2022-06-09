@@ -2,16 +2,19 @@ package com.codecool.navymanager.controller.mvc;
 
 import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
+import com.codecool.navymanager.response.Response;
 import com.codecool.navymanager.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -99,18 +102,23 @@ public class FleetMvcController {
 
     //todo: when rank requirement increased, check for commander eligibility, possibly removing him
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
+    public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
+        Response response = new Response();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCommanderValues", officerService.findAvailableOfficersForFleet(fleet));
             model.addAttribute("validCountryValues", countryService.findAll());
-            return ResponseEntity.badRequest().body("Invalid fleet data!");
+            response.setErrorMessages(result.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
+            response.setMessage("Invalid fleet data!");
+            return ResponseEntity.badRequest().body(response);
         }
         fleetService.update(fleet, id);
-        return ResponseEntity.ok().body("Fleet updated.");
+        response.setMessage("Fleet was updated.");
+        return ResponseEntity.ok().body(response);
     }
-
+//todo: fleet form error checking in the form a json response should be worked on
     @GetMapping("/add-ship/{id}")
     public String showAddShipForm(
             @PathVariable Long id,
@@ -125,21 +133,26 @@ public class FleetMvcController {
     }
 
     @PostMapping("/add-ship/{id}")
-    public ResponseEntity<String> addShip(
+    public ResponseEntity<Response> addShip(
             @PathVariable Long id,
             //@ModelAttribute("shipId") @Valid IdentityDTO shipId,
             @ModelAttribute("ship") @Valid ShipDto ship,//
             Model model, BindingResult result) {
+        Response response = new Response();
         if (result.hasErrors()) {
             FleetDto fleet = fleetService.findById(id);
             model.addAttribute("add", true);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
-            return ResponseEntity.badRequest().body("Invalid ship data!");
+            response.setErrorMessages(result.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
+            response.setMessage("Invalid ship data!");
+            return ResponseEntity.badRequest().body(response);
         }
         //fleetService.addShipToFleet(id, shipId.getValue());
         fleetService.addShipToFleet(id, ship);
-        return ResponseEntity.ok().body("Ship added to fleet.");
+        response.setMessage("Ship was added to the fleet.");
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/update-ship/{fleetId}/ship/{shipId}")

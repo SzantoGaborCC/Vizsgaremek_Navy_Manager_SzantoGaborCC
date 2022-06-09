@@ -34,15 +34,23 @@ function ajaxFormSubmit(e, formId) {
     $("#" + formId).serializeArray().map(function(x){data[x.name] = x.value;});
     console.log('add: ' + data['add']);
     const method = data['add'] === "true" ? "POST" : "PUT";
+    console.log(data);
     console.log("method: " + method);
     console.log('actionUrl: ' + actionUrl);
+    $('span.validationError').remove()
     $.ajax({
         method: method,
         //url: actionUrl,
         data: data,
-        success: function(data)
+        success: function(response)
         {
             window.location = document.referrer;
+        },
+        error: function(response)
+        {
+            $.each(response.responseJSON.errorMessages, function (key, value) {
+                $('#' + key).after('<span class="validationError">' + value + '</span>');
+            });
         }
     });
 }
