@@ -31,17 +31,17 @@ public class RankMvcController {
         return rankService.findById(id);
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     public String showCreateForm(Model model){
-        model.addAttribute("create", true);
+        model.addAttribute("add", true);
         model.addAttribute("rank", new RankDto());
         return "rank-form";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public String add(@ModelAttribute("rank") @Valid RankDto rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", true);
+            model.addAttribute("add", true);
             return "rank-form";
         }
         try {
@@ -63,7 +63,7 @@ public class RankMvcController {
     public String showUpdateForm(@PathVariable long id, Model model) {
         try {
             RankDto rank = rankService.findById(id);
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("rank", rank);
             return "rank-form";
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class RankMvcController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("rank") @Valid RankDto rank, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             return "rank-form";
         }
         rankService.update(rank, id);

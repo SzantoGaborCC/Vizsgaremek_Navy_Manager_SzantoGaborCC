@@ -32,17 +32,17 @@ public class CountryMvcController {
         return countryService.findById(id);
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     public String showCreateForm(Model model){
         model.addAttribute("country", new CountryDto());
-        model.addAttribute("create", true);
+        model.addAttribute("add", true);
         return "country-form";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public String add(@ModelAttribute("country") @Valid CountryDto country, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", true);
+            model.addAttribute("add", true);
             return "country-form";
         }
         try {
@@ -64,7 +64,7 @@ public class CountryMvcController {
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
             CountryDto country = countryService.findById(id);
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("country", country);
             return "country-form";
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class CountryMvcController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("country") @Valid CountryDto country, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             return "country-form";
         }
         countryService.update(country, id);

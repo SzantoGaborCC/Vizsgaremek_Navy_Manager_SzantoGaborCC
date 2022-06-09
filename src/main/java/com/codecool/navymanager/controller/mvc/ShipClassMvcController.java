@@ -48,19 +48,19 @@ public class ShipClassMvcController {
         return "ship-class-details";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     public String showCreateForm(Model model) {
-        model.addAttribute("create", true);
+        model.addAttribute("add", true);
         model.addAttribute("shipClass", new ShipClassDto());
         model.addAttribute("validCountryValues", countryService.findAll());
         model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
         return "ship-class-form";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public String add(@ModelAttribute("shipClass") @Valid ShipClassDto shipClass, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", true);
+            model.addAttribute("add", true);
             model.addAttribute("validCountryValues", countryService.findAll());
             model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
             return "ship-class-form";
@@ -84,7 +84,7 @@ public class ShipClassMvcController {
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
             ShipClassDto shipClass = shipClassService.findById(id);
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("shipClass", shipClass);
             model.addAttribute("validCountryValues", countryService.findAll());
             model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
@@ -98,7 +98,7 @@ public class ShipClassMvcController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("shipClass") @Valid ShipClassDto shipClass, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("validCountryValues", countryService.findAll());
             model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
             return "ship-class-form";

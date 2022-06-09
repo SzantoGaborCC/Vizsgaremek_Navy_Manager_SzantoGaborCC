@@ -26,18 +26,19 @@ function showDialog(dialogId, url, method, data) {
 function ajaxFormSubmit(e, formId) {
     e.preventDefault();
     const form = $(this);
+    console.log($(this));
     const actionUrl = form.attr('action');
-    console.log(actionUrl);
+    console.log('actionUrl: ' + actionUrl);
     const formData = form.serialize();
     let data = {};
     $("#" + formId).serializeArray().map(function(x){data[x.name] = x.value;});
-    console.log(data['add']);
+    console.log('add: ' + data['add']);
     const method = data['add'] === "true" ? "POST" : "PUT";
     console.log("method: " + method);
-
+    console.log('actionUrl: ' + actionUrl);
     $.ajax({
         method: method,
-        url: actionUrl,
+        //url: actionUrl,
         data: data,
         success: function(data)
         {

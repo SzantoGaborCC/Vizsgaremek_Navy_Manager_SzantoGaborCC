@@ -3,7 +3,7 @@
 
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Fleet', createUrl = '/fleet-mvc/create', listUrl = '/fleet-mvc')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Fleet', addUrl = '/fleet-mvc/add', listUrl = '/fleet-mvc')"></div>
 <h2 style="font-weight: bold;text-align:center;">List of Fleets</h2>
 <div class="container">
     <table class="table table-bordered table-hover text-center">

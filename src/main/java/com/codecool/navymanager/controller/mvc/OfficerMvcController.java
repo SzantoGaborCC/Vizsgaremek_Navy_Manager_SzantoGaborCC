@@ -42,19 +42,19 @@ public class OfficerMvcController {
         return "officer-details";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     public String showCreateForm(Model model){
         model.addAttribute("officer", new OfficerDto());
-        model.addAttribute("create", true);
+        model.addAttribute("add", true);
         model.addAttribute("validRankValues", rankService.findAll());
         model.addAttribute("validCountryValues", countryService.findAll());
         return "officer-form";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public String add(@ModelAttribute("officer") @Valid OfficerDto officer, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", true);
+            model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             return "officer-form";
@@ -78,7 +78,7 @@ public class OfficerMvcController {
     public String showUpdateForm(@PathVariable Long id,Model model) {
         try {
             OfficerDto officer = officerService.findById(id);
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("officer", officer);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
@@ -93,7 +93,7 @@ public class OfficerMvcController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("officer") @Valid OfficerDto officer, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             return "officer-form";

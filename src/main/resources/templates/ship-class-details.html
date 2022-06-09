@@ -3,7 +3,7 @@
 
 <div th:replace="fragments/header :: header (title='Navy Manager - Ship Classes')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Ship Class', createUrl = '/ship-class-mvc/create', listUrl = '/ship-class-mvc')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Ship Class', addUrl = '/ship-class-mvc/add', listUrl = '/ship-class-mvc')"></div>
 <h2 style="font-weight: bold;text-align:center;"><span th:text="${shipClass.name} + ' Class - Details'"></span></h2>
 <div class="container">
     <table class="table table-bordered text-center">

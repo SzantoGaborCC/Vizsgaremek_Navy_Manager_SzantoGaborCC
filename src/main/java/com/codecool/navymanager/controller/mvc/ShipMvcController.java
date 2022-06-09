@@ -42,9 +42,9 @@ public class ShipMvcController {
         return shipService.findById(id);
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     public String showCreateForm(Model model){
-        model.addAttribute("create", true);
+        model.addAttribute("add", true);
         model.addAttribute("ship", new ShipDto());
         model.addAttribute("validCaptainValues", null);
         model.addAttribute("validShipClassValues", shipClassService.findAll());
@@ -52,10 +52,10 @@ public class ShipMvcController {
         return "ship-form";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public String add(@ModelAttribute("ship") @Valid ShipDto ship, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", true);
+            model.addAttribute("add", true);
             model.addAttribute("validCaptainValues", null);
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
@@ -80,7 +80,7 @@ public class ShipMvcController {
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
             ShipDto ship = shipService.findById(id);
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("ship", ship);
             model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
             model.addAttribute("validShipClassValues", shipClassService.findAll());
@@ -97,7 +97,7 @@ public class ShipMvcController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("ship") @Valid ShipDto ship, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());

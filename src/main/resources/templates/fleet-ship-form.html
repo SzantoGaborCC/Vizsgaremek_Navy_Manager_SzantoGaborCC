@@ -3,7 +3,7 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet-mvc', createUrl='/fleet-mvc/create')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet-mvc', addUrl='/fleet-mvc/add')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Choose Another Ship for ' : 'Add New Ship to '} + ${fleet.designation}"></h2>
 <div class="container">
     <h4 th:if="${#lists.isEmpty(validShipValues)}" class="text-danger">This country has no other available ship.</h4>

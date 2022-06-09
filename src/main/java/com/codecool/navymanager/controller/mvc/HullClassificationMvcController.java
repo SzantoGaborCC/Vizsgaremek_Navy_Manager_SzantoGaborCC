@@ -35,18 +35,18 @@ public class HullClassificationMvcController {
         return hullClassificationService.findById(id);
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     public String showCreateForm(Model model){
-        model.addAttribute("create", true);
+        model.addAttribute("add", true);
         model.addAttribute("hullClassification", new HullClassificationDto());
         model.addAttribute("validRankValues", rankService.findAll());
         return "hull-classification-form";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public String add(@ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", true);
+            model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
 
             return "hull-classification-form";
@@ -70,7 +70,7 @@ public class HullClassificationMvcController {
     public String showUpdateForm(@PathVariable long id, Model model) {
         try {
             HullClassificationDto hullClassification = hullClassificationService.findById(id);
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("hullClassification", hullClassification);
             model.addAttribute("validRankValues", rankService.findAll());
             return "hull-classification-form";
@@ -84,7 +84,7 @@ public class HullClassificationMvcController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
             return "hull-classification-form";
         }

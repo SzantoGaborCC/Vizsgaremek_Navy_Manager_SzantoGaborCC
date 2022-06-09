@@ -34,18 +34,18 @@ public class GunMvcController {
         return gunService.findById(id);
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     public String showCreateForm(Model model){
-        model.addAttribute("create", true);
+        model.addAttribute("add", true);
         model.addAttribute("gun", new GunDto());
         model.addAttribute("validCountryValues", countryService.findAll());
         return "gun-form";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public String add(@ModelAttribute("gun") @Valid GunDto gun, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", true);
+            model.addAttribute("add", true);
             model.addAttribute("validCountryValues", countryService.findAll());
             return "gun-form";
         }
@@ -68,7 +68,7 @@ public class GunMvcController {
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
            GunDto gun = gunService.findById(id);
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("gun", gun);
             model.addAttribute("validCountryValues", countryService.findAll());
             return "gun-form";
@@ -81,7 +81,7 @@ public class GunMvcController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable long id, @ModelAttribute("gun") @Valid GunDto gun, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("validCountryValues", countryService.findAll());
             return "gun-form";
         }

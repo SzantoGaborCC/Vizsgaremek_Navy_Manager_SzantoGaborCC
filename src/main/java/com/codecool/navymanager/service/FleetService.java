@@ -48,11 +48,15 @@ public class FleetService {
 
     @Transactional
     public void update(FleetDto fleetDto, long id) {
-        if (fleetRepository.existsById(id)) {
-            fleetRepository.save(fleetDto.toEntity());
-        } else {
+        Fleet fleet = fleetRepository.findById(id).orElse(null);
+        if (fleet == null) {
             throw new IllegalArgumentException("No such Fleet to update!");
+        } else if (!fleetDto.getCountry().getId().equals(fleet.getCountry().getId())) {
+            for (Ship ship : fleet.getShips()) {
+                ship.setFleet(null);
+            }
         }
+        fleetRepository.save(fleetDto.toEntity());
     }
 
     @Transactional

@@ -50,9 +50,9 @@ public class FleetMvcController {
         return "fleet-details";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/add")
     public String showCreateForm(Model model){
-        model.addAttribute("create", true);
+        model.addAttribute("add", true);
         model.addAttribute("fleet", new FleetDto());
         model.addAttribute("validRankValues", rankService.findAll());
         model.addAttribute("validCommanderValues", null);
@@ -60,19 +60,19 @@ public class FleetMvcController {
         return "fleet-form";
     }
 
-    @PostMapping("/create")
-    public String add(@ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
+    @PostMapping("/add")
+    public ResponseEntity<String> add(@ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", true);
+            model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCommanderValues", null);
             model.addAttribute("validCountryValues", countryService.findAll());
-            return "fleet-form";
+            return ResponseEntity.badRequest().body("Invalid fleet data!");
         }
 
            fleetService.add(fleet);
 
-        return "redirect:/fleet-mvc";
+        return ResponseEntity.ok().body("Fleet added.");
     }
 
     @GetMapping("/delete/{id}")
@@ -85,7 +85,7 @@ public class FleetMvcController {
     public String showUpdateForm(@PathVariable Long id, Model model) {
         try {
             FleetDto fleet = fleetService.findById(id);
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCommanderValues", officerService.findAvailableOfficersForFleet(fleet));
@@ -99,16 +99,16 @@ public class FleetMvcController {
 
     //todo: when rank requirement increased, check for commander eligibility, possibly removing him
     @PutMapping("/update/{id}")
-    public String update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
+    public ResponseEntity<String> update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("create", false);
+            model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCommanderValues", officerService.findAvailableOfficersForFleet(fleet));
             model.addAttribute("validCountryValues", countryService.findAll());
-            return "fleet-form";
+            return ResponseEntity.badRequest().body("Invalid fleet data!");
         }
         fleetService.update(fleet, id);
-        return "redirect:/fleet-mvc";
+        return ResponseEntity.ok().body("Fleet updated.");
     }
 
     @GetMapping("/add-ship/{id}")
