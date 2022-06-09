@@ -4,6 +4,7 @@ import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 import com.codecool.navymanager.response.Response;
 import com.codecool.navymanager.service.*;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -64,24 +65,30 @@ public class FleetMvcController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> add(@ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
+    public ResponseEntity<Response> add(@ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
+        Response response = new Response();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCommanderValues", null);
             model.addAttribute("validCountryValues", countryService.findAll());
-            return ResponseEntity.badRequest().body("Invalid fleet data!");
+            response.setErrorMessages(result.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
+            response.setMessage("Invalid fleet data!");
+            return ResponseEntity.badRequest().body(response);
         }
-
-           fleetService.add(fleet);
-
-        return ResponseEntity.ok().body("Fleet added.");
+        fleetService.add(fleet);
+        response.setMessage("Fleet was added.");
+        HttpHeaders headers = new HttpHeaders();
+        System.out.println("using headers!");
+        headers.add("Location", "/fleet-mvc");
+        return ResponseEntity.ok().headers(headers).body(response);
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteById(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
         fleetService.deleteById(id);
-        return "redirect:/fleet-mvc";
+        return ResponseEntity.ok().body("Fleet removed.");
     }
 
     @GetMapping("/update/{id}")
@@ -118,7 +125,7 @@ public class FleetMvcController {
         response.setMessage("Fleet was updated.");
         return ResponseEntity.ok().body(response);
     }
-//todo: fleet form error checking in the form a json response should be worked on
+
     @GetMapping("/add-ship/{id}")
     public String showAddShipForm(
             @PathVariable Long id,

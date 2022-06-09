@@ -28,14 +28,15 @@
             </td>
             <td><a th:href="@{/country-mvc/details/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
             <td class="text-center">
-                <a th:href="@{/fleet-mvc/delete/{id}(id=${fleet.id})}"><i class="fa fa-trash"></i></a>
-                <a th:href="@{/fleet-mvc/update/{id}(id=${fleet.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <button th:onclick="'showDialog(\'dialog-delete\',\'/fleet-mvc/'+${fleet.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
+                <a th:href="@{/fleet-mvc/update/{id}(id=${fleet.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<div th:insert="fragments/footer :: footer"></div>
+
+<div id="dialog-delete" title="Delete fleet?"></div>
 <script>
     jQuery(document).ready(function($) {
         $(".clickable-row").click(function() {
@@ -43,5 +44,6 @@
         });
     });
 </script>
+<div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>

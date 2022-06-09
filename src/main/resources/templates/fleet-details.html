@@ -54,7 +54,7 @@
             <td th:text="${ship.captain.name}"></td>
             <td th:text="${ship.country.name}"></td>
             <td>
-                <button th:onclick="'showDialog(\'dialog-delete\',\'/fleet-mvc/delete-ship/'+${fleet.id}+'/ship/'+${ship.id}+'\',\'DELETE\');'" class="btn btn-link"><i class="fa fa-trash"></i></button>
+                <button th:onclick="'showDialog(\'dialog-delete\',\'/fleet-mvc/delete-ship/'+${fleet.id}+'/ship/'+${ship.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
 
                 <a th:unless="${#lists.isEmpty(validShipValues)}" class="btn btn-link" th:href="@{/fleet-mvc/update-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}"><i class="fa-solid fa-arrow-right-arrow-left"></i></a></td>
         </tr>

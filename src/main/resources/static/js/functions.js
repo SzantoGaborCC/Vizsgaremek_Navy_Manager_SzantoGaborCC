@@ -13,8 +13,9 @@ function showDialog(dialogId, url, method, data) {
                     data: data //{ name: "John", location: "Boston" }
 
                 });
-                //$( this ).dialog( "close" );
-                location. reload();
+                setTimeout(function(){
+                    window.location.reload();
+                },200);
             },
             "Cancel": function() {
                 $( this ).dialog( "close" );
@@ -23,7 +24,7 @@ function showDialog(dialogId, url, method, data) {
     });
 }
 
-function ajaxFormSubmit(e, formId) {
+function ajaxFormSubmit(e, formId,redirectTo) {
     e.preventDefault();
     const form = $(this);
     console.log($(this));
@@ -44,7 +45,10 @@ function ajaxFormSubmit(e, formId) {
         data: data,
         success: function(response)
         {
-            window.location = document.referrer;
+            if (typeof redirectTo !== 'undefined' )
+                window.location = redirectTo;
+            else
+                window.location = document.referrer;
         },
         error: function(response)
         {
