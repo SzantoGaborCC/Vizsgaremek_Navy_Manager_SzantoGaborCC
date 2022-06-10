@@ -3,7 +3,7 @@
 
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Fleet', addUrl = '/fleet-mvc/add', listUrl = '/fleet-mvc')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Fleet', addUrl = '/fleet/add', listUrl = '/fleet')"></div>
 <h2 style="font-weight: bold;text-align:center;">List of Fleets</h2>
 <div class="container">
     <table class="table table-bordered table-hover text-center">
@@ -18,7 +18,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="clickable-row" th:data-href="@{/fleet-mvc/details/{id}(id=${fleet.id})}" th:each="fleet: ${fleets}">
+        <tr class="clickable-row" th:data-href="@{/fleet/{id}(id=${fleet.id})}" th:each="fleet: ${fleets}">
             <td th:text="${fleet.id}"></td>
             <td th:text="${fleet.designation}"></td>
             <td><a th:href="@{/rank-mvc/details/{id}(id=${fleet.minimumRank.id})}" th:text="${fleet.minimumRank.designation}"/></td>
@@ -28,8 +28,8 @@
             </td>
             <td><a th:href="@{/country-mvc/details/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
             <td class="text-center">
-                <button th:onclick="'showDialog(\'dialog-delete\',\'/fleet-mvc/'+${fleet.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
-                <a th:href="@{/fleet-mvc/update/{id}(id=${fleet.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <button th:onclick="'showDialog(\'dialog-delete\',\'/fleet/'+${fleet.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
+                <a th:href="@{/fleet/{id}/update(id=${fleet.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
     </table>

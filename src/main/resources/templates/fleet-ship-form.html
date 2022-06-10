@@ -8,19 +8,7 @@
 <div class="container">
     <h4 th:if="${#lists.isEmpty(validShipValues)}" class="text-danger">This country has no other available ship.</h4>
     <form id="shipInFleetForm" action="#" th:unless="${#lists.isEmpty(validShipValues)}" th:action="${add} == true ? @{/fleet-mvc/add-ship/{id}(id=${fleet.id})} : @{/fleet-mvc/update-ship/{fleetId}/ship/{shipId}(shipId=${ship.id},fleetId=${fleet.id})}" th:object="${ship}" method="post" novalidate>
-        <input name="add" type="hidden" th:value="${add}">
-        <!--<div class="form-group">
-          <label for="shipId">Choose a ship: </label>
-          <select id="shipId" name="value">
-              <option th:if="${shipId.value} != null" th:each="shipOpt : ${validShipValues}"
-                      th:value="${shipOpt.id}" th:text="${shipOpt.name}"
-                      th:selected="${shipId.value == shipOpt.id}"></option>
-              <option th:unless="${shipId.value} != null" th:each="shipOpt : ${validShipValues}"
-                      th:value="${shipOpt.id}" th:text="${shipOpt.name}"></option>
-          </select>
-          <span class="validationError" th:if="${#fields.hasErrors('value')}" th:errors="*{value}"></span>-->
-          <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
-     <!-- </div>-->
+      <input name="add" type="hidden" th:value="${add}">
       <div class="form-group">
           <label for="ship">Choose ship: </label>
           <select id="ship" th:field="*{id}">
@@ -31,8 +19,7 @@
                       th:value="${shipOpt.id}" th:text="${shipOpt.name}"></option>
           </select>
           <span class="validationError" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>
-          <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
-      </div>
+         </div>
       <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
   </form>
 </div>

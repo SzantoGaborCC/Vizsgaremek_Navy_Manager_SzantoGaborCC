@@ -1,6 +1,7 @@
-function showDialog(dialogId, url, method, data) {
+function showDialog(dialogId, title,  url, method, data) {
     $( '#' + dialogId ).dialog({
         dialogClass: "no-close",
+        title : title,
         resizable: false,
         height: "auto",
         width: 400,

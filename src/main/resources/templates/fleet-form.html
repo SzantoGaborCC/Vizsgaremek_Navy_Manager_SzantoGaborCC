@@ -53,22 +53,12 @@
       <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
-    <!--<div th:if="${create} == false" class="form-group">
-      <label for="status">Status</label>
-      <select id="status" name="status">
-        <option th:each="statusOpt : ${valid_status_values}"
-                th:value="${statusOpt}" th:text="${statusOpt}"
-                th:selected="${userStory.status == statusOpt}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
-      <div class="validationError" th:if="${#fields.detailedErrors('statusValid') != null}" th:each="err : ${#fields.detailedErrors('statusValid')}" th:text="${err.getMessage()}"></div>
-    </div>-->
     <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
   </form>
 </div>
 <script>
   $("#fleetForm").submit(function(e) {
-    ajaxFormSubmit(e, 'fleetForm','/fleet-mvc');
+    ajaxFormSubmit(e, 'fleetForm','/fleet');
   });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
