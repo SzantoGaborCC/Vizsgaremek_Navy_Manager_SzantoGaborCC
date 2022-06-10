@@ -11,12 +11,14 @@ function showDialog(dialogId, title,  url, method, data) {
                 $.ajax({
                     method: method,
                     url: url,
-                    data: data //{ name: "John", location: "Boston" }
-
+                    data: data, //{ name: "John", location: "Boston" }
+                    success: function(resp) {
+                        setTimeout(function(){
+                            window.location.reload();
+                        },1);
+                    }
                 });
-                setTimeout(function(){
-                    window.location.reload();
-                },200);
+
             },
             "Cancel": function() {
                 $( this ).dialog( "close" );
@@ -25,24 +27,20 @@ function showDialog(dialogId, title,  url, method, data) {
     });
 }
 
-function ajaxFormSubmit(e, formId,redirectTo) {
+function ajaxFormSubmit(e, formId) {
     e.preventDefault();
-    const form = $(this);
-    console.log($(this));
-    const actionUrl = form.attr('action');
-    console.log('actionUrl: ' + actionUrl);
-    const formData = form.serialize();
     let data = {};
     $("#" + formId).serializeArray().map(function(x){data[x.name] = x.value;});
-    console.log('add: ' + data['add']);
-    const method = data['add'] === "true" ? "POST" : "PUT";
-    console.log(data);
-    console.log("method: " + method);
-    console.log('actionUrl: ' + actionUrl);
+    const url = data['url'];
+    delete data['url'];
+    const method = data['method'];
+    delete data['method'];
+    const redirectTo = data['redirectTo'];
+    delete data['redirectTo'];
     $('span.validationError').remove()
     $.ajax({
         method: method,
-        //url: actionUrl,
+        url : url,
         data: data,
         success: function(response)
         {

@@ -3,6 +3,7 @@ package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Ship;
+import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 
@@ -54,6 +55,7 @@ public class FleetService {
             for (Ship ship : fleet.getShips()) {
                 ship.setFleet(null);
             }
+            fleetDto.setCommander(null);
         }
         fleetRepository.save(fleetDto.toEntity());
     }

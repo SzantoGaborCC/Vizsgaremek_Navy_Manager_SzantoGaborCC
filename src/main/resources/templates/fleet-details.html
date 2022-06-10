@@ -59,7 +59,7 @@
         </tr>
         </tbody>
     </table>
-    <a th:class="${#lists.isEmpty(validShipValues)} ? 'btn btn-secondary disabled' : 'btn btn-primary'" th:href="@{/fleet/{id}/add(id=${fleet.id})}" role="button"><i class="fa-solid fa-plus"></i> Add New Ship</a>
+    <a th:class="${#lists.isEmpty(validShipValues)} ? 'btn btn-secondary disabled' : 'btn btn-primary'" th:href="@{/fleet/{id}/ship/add(id=${fleet.id})}" role="button"><i class="fa-solid fa-plus"></i> Add New Ship</a>
     <span th:if="${#lists.isEmpty(validShipValues)}" class="text-danger"> This country has no available ships to add.</span>
 </div>
 <div id="dialog-delete"></div>
