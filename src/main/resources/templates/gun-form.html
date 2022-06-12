@@ -3,12 +3,13 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Guns')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Gun', listUrl = '/gun-mvc', createUrl='/gun-mvc/create')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Gun', listUrl = '/gun', createUrl='/gun/show-add-form')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${create == false ? 'Update Gun' : 'Create New Gun'}"></h2>
 <div class="container">
 
-  <form action="#" th:action="${create} == true ? @{/gun-mvc/create} : @{/gun-mvc/update/{id}(id=${gun.id})}" th:object="${gun}" method="post" novalidate>
-    <input name="add" type="hidden" th:value="${add}">
+  <form id="gunForm" th:object="${gun}" novalidate>
+    <input name="url" type="hidden" th:value="${add} == true ? '/gun' : '/gun/' + ${country.id}">
+    <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
     <input type="hidden" id="id" th:field="*{id}">
     <div class="form-group">
       <label for="designation">Designation</label>
@@ -49,20 +50,14 @@
       <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
-    <!--<div th:if="${create} == false" class="form-group">
-      <label for="status">Status</label>
-      <select id="status" name="status">
-        <option th:each="statusOpt : ${valid_status_values}"
-                th:value="${statusOpt}" th:text="${statusOpt}"
-                th:selected="${userStory.status == statusOpt}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
-      <div class="validationError" th:if="${#fields.detailedErrors('statusValid') != null}" th:each="err : ${#fields.detailedErrors('statusValid')}" th:text="${err.getMessage()}"></div>
-    </div>-->
     <button type="submit" class="btn btn-primary" th:text="${create == false ? 'Update' : 'Submit'}">Submit</button>
   </form>
 </div>
-
+<script>
+  $("#gunForm").submit(function(e) {
+    ajaxFormSubmit(e, 'gunForm');
+  });
+</script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>

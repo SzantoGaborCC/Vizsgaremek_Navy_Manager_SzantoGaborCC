@@ -3,9 +3,8 @@
 
 <div th:replace="fragments/header :: header (title='Navy Manager - Guns')"></div>
 <body>
-
-<div th:replace="fragments/menu :: menu (entityName = 'Gun', addUrl = '/gun/show-add-form', listUrl = '/gun')"></div>
-<h2 style="font-weight: bold;text-align:center;">List of Guns</h2>
+<div th:replace="fragments/menu :: menu (entityName = 'Gun', listUrl = '/gun')"></div>
+<h2 style="font-weight: bold;text-align:center;"><span th:text="${gun.designation} + ' - Details'"></span></h2>
 <div class="container">
     <table class="table table-bordered table-striped">
         <thead>
@@ -21,7 +20,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="gun: ${guns}">
+        <tr th:object="${country}">
             <td th:text="${gun.id}"></td>
             <td th:text="${gun.designation}"></td>
             <td th:text="${gun.caliberInMms}"></td>
@@ -30,20 +29,11 @@
             <td th:text="${gun.minimumShipDisplacementInTons}"></td>
             <td th:text="${gun.country.name}"></td>
             <td class="text-center">
-                <button th:onclick="'showDialog(\'dialog-delete\',\'Delete gun?\',\'/gun/'+${gun.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
                 <a th:href="@{/gun/{id}/show-update-form(id=${gun.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
     </table>
 </div>
-<div id="dialog-delete"></div>
-<script>
-    jQuery(document).ready(function($) {
-        $(".clickable-row").click(function() {
-            window.location = $(this).data("href");
-        });
-    });
-</script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>
