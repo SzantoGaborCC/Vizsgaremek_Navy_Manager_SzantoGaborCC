@@ -3,7 +3,7 @@
 
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Fleet', addUrl = '/fleet/add', listUrl = '/fleet')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Fleet', addUrl = '/fleet/show-add-form',disableAddUrl = 'true', listUrl = '/fleet')"></div>
 <h2 style="font-weight: bold;text-align:center;"><span th:text="${fleet.designation} + ' - Details'"></span></h2>
 <div class="container">
     <table class="table table-bordered text-center">
@@ -28,8 +28,7 @@
             </td>
             <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
             <td class="text-center">
-                <button th:onclick="'showDialog(\'dialog-delete\',\'Delete fleet?\',\'/fleet/'+${fleet.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
-                <a th:href="@{/fleet/{id}/update(id=${fleet.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <a th:href="@{/fleet/{id}/show-update-form(id=${fleet.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
     </table>
@@ -55,15 +54,14 @@
             <td>
                 <button th:onclick="'showDialog(\'dialog-delete\',\'Remove ship from fleet?\',\'/fleet/'+${fleet.id}+'/ship/'+${ship.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
 
-                <a th:unless="${#lists.isEmpty(validShipValues)}" class="btn btn-link" th:href="@{/fleet/{fleetId}/ship/{shipId}/update(shipId=${ship.id},fleetId=${fleet.id})}"><i class="fa-solid fa-arrow-right-arrow-left"></i></a></td>
+                <a th:unless="${#lists.isEmpty(validShipValues)}" class="btn btn-link" th:href="@{/fleet/{fleetId}/ship/{shipId}/show-update-ship-form(shipId=${ship.id},fleetId=${fleet.id})}"><i class="fa-solid fa-arrow-right-arrow-left"></i></a></td>
         </tr>
         </tbody>
     </table>
-    <a th:class="${#lists.isEmpty(validShipValues)} ? 'btn btn-secondary disabled' : 'btn btn-primary'" th:href="@{/fleet/{id}/ship/add(id=${fleet.id})}" role="button"><i class="fa-solid fa-plus"></i> Add New Ship</a>
+    <a th:class="${#lists.isEmpty(validShipValues)} ? 'btn btn-secondary disabled' : 'btn btn-primary'" th:href="@{/fleet/{id}/ship/show-add-ship-form(id=${fleet.id})}" role="button"><i class="fa-solid fa-plus"></i> Add New Ship</a>
     <span th:if="${#lists.isEmpty(validShipValues)}" class="text-danger"> This country has no available ships to add.</span>
 </div>
 <div id="dialog-delete"></div>
-
 <div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -47,15 +47,15 @@ public class FleetController {
     }
 
     @GetMapping("/{id}")
-    public String showDetails(@PathVariable Long id, Model model) {
+    public String getDetails(@PathVariable Long id, Model model) {
         FleetDto fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-details";
     }
-//todo: working on fleet details
-    @GetMapping("/add")
-    public String showCreateForm(Model model){
+
+    @GetMapping("/show-add-form")
+    public String showAddForm(Model model){
         model.addAttribute("add", true);
         model.addAttribute("fleet", new FleetDto());
         model.addAttribute("validRankValues", rankService.findAll());
@@ -79,21 +79,17 @@ public class FleetController {
         }
         fleetService.add(fleet);
         response.setMessage("Fleet was added.");
-        HttpHeaders headers = new HttpHeaders();
-        System.out.println("using headers!");
-        headers.add("Location", "/fleet");
-        return ResponseEntity.ok().headers(headers).body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
         fleetService.deleteById(id);
-        return ResponseEntity.ok().body("Fleet removed.");
+        return ResponseEntity.ok().body("Fleet was removed.");
     }
 
-    @GetMapping("/{id}/update")
+    @GetMapping("/{id}/show-update-form")
     public String showUpdateForm(@PathVariable Long id, Model model) {
-        try {
             FleetDto fleet = fleetService.findById(id);
             model.addAttribute("add", false);
             model.addAttribute("fleet", fleet);
@@ -101,10 +97,6 @@ public class FleetController {
             model.addAttribute("validCommanderValues", officerService.findAvailableOfficersForFleet(fleet));
             model.addAttribute("validCountryValues", countryService.findAll());
             return "fleet-form";
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Nonexistent fleet!", e);
-        }
     }
 
     //todo: when rank requirement increased, check for commander eligibility, possibly removing him
@@ -126,10 +118,11 @@ public class FleetController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/{id}/ship/add")
+    @GetMapping("/{id}/ship/show-add-ship-form")
     public String showAddShipForm(
             @PathVariable Long id,
             Model model) {
+
         model.addAttribute("add", true);
         FleetDto fleet = fleetService.findById(id);
         model.addAttribute("fleet", fleet);
@@ -159,7 +152,7 @@ public class FleetController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("{fleetId}/ship/{shipId}/update")
+    @GetMapping("{fleetId}/ship/{shipId}/show-update-ship-form")
     public String showUpdateShipForm(
             @PathVariable long fleetId, @PathVariable long shipId,
             Model model) {
@@ -189,7 +182,7 @@ public class FleetController {
                 .filter(shipDto -> shipDto.getId().equals(ship.getId()))
                 .findAny().orElseThrow();
         fleetService.updateShipForAFleet(fleetId, shipId, newShip);
-        return ResponseEntity.ok().body("Ship switched with another.");
+        return ResponseEntity.ok().body("Ship in fleet was update.");
     }
 
     @DeleteMapping("/{fleetId}/ship/{shipId}")

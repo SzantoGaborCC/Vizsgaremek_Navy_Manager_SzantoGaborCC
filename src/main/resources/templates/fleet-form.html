@@ -3,13 +3,13 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet', addUrl='/fleet/add')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet', addUrl='/fleet/show-add-form', disableAddUrl = 'false')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Fleet' : 'Add New Fleet'}"></h2>
 <div class="container">
   <form id="fleetForm" th:object="${fleet}" novalidate>
     <input name="url" type="hidden" th:value="${add} == true ? '/fleet' : '/fleet/' + ${fleet.id}">
     <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
-    <input name="redirectTo" type="hidden" th:value="${add} == true ? '/fleet' : '/fleet/' + ${fleet.id}">
+
     <input type="hidden" id="id" th:field="*{id}">
     <div class="form-group">
       <label for="designation">Designation</label>
