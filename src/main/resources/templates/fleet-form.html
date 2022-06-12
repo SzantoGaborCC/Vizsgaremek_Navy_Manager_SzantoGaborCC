@@ -3,7 +3,7 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet', addUrl='/fleet/show-add-form', disableAddUrl = 'false')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet', addUrl='/fleet/show-add-form')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Fleet' : 'Add New Fleet'}"></h2>
 <div class="container">
   <form id="fleetForm" th:object="${fleet}" novalidate>

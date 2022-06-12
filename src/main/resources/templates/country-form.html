@@ -3,7 +3,7 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Countries')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Country', listUrl = '/country', addUrl='/country/show-add-form', disableAddUrl = 'false')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Country', listUrl = '/country', addUrl='/country/show-add-form')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Country' : 'Add New Country'}"></h2>
 <div class="container">
 
