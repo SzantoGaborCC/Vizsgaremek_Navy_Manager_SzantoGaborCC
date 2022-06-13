@@ -1,29 +1,31 @@
 package com.codecool.navymanager.controller.mvc;
 
 
-import com.codecool.navymanager.entity.Officer;
-import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.OfficerDto;
+import com.codecool.navymanager.response.Response;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.OfficerService;
 import com.codecool.navymanager.service.RankService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/officer-mvc")
-public class OfficerMvcController {
+@RequestMapping("/officer")
+public class OfficerController {
     private final OfficerService officerService;
     private final RankService rankService;
     private final CountryService countryService;
 
-    public OfficerMvcController(OfficerService officerService, RankService rankService, CountryService countryService) {
+    public OfficerController(OfficerService officerService, RankService rankService, CountryService countryService) {
         this.officerService = officerService;
         this.rankService = rankService;
         this.countryService = countryService;
@@ -35,15 +37,15 @@ public class OfficerMvcController {
         return "officer-list";
     }
 
-    @GetMapping("/details/{id}")
-    public String showDetails(@PathVariable Long id, Model model) {
+    @GetMapping("/{id}")
+    public String getDetails(@PathVariable Long id, Model model) {
         OfficerDto officer = officerService.findById(id);
         model.addAttribute("officer", officer);
         return "officer-details";
     }
 
-    @GetMapping("/add")
-    public String showCreateForm(Model model){
+    @GetMapping("/show-add-form")
+    public String showAddForm(Model model){
         model.addAttribute("officer", new OfficerDto());
         model.addAttribute("add", true);
         model.addAttribute("validRankValues", rankService.findAll());
@@ -51,55 +53,55 @@ public class OfficerMvcController {
         return "officer-form";
     }
 
-    @PostMapping("/add")
-    public String add(@ModelAttribute("officer") @Valid OfficerDto officer, BindingResult result, Model model) {
+    @PostMapping
+    public ResponseEntity<Response> add(@ModelAttribute("officer") @Valid OfficerDto officer, BindingResult result, Model model) {
+        Response response = new Response();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
-            return "officer-form";
+            response.setErrorMessages(result.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
+            response.setMessage("Invalid officer data!");
+            return ResponseEntity.badRequest().body(response);
         }
-        try {
-           officerService.add(officer);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Invalid officer data!", e);
-        }
-        return "redirect:/officer-mvc";
+        officerService.add(officer);
+        response.setMessage("Officer was added.");
+        return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteById(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
         officerService.deleteById(id);
-        return "redirect:/officer-mvc";
+        return ResponseEntity.ok().body("Officer was removed.");
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping("/{id}/show-update-form")
     public String showUpdateForm(@PathVariable Long id,Model model) {
-        try {
             OfficerDto officer = officerService.findById(id);
             model.addAttribute("add", false);
             model.addAttribute("officer", officer);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             return "officer-form";
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Nonexistent ship class!", e);
-        }
     }
 
     //todo: When rank reduced, check for fleet and ship position eligibility?
-    @PostMapping("/update/{id}")
-    public String update(@PathVariable long id, @ModelAttribute("officer") @Valid OfficerDto officer, BindingResult result, Model model) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("officer") @Valid OfficerDto officer, BindingResult result, Model model) {
+        Response response = new Response();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
-            return "officer-form";
+            response.setErrorMessages(result.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
+            response.setMessage("Invalid hull classification data!");
+            return ResponseEntity.badRequest().body(response);
         }
         officerService.update(officer, id);
-        return "redirect:/officer-mvc";
+        response.setMessage("Officer was updated.");
+        return ResponseEntity.ok().body(response);
     }
 }
 

@@ -34,7 +34,7 @@ public class GunController {
         return "gun-list";
     }
 
-    public String showDetails(@PathVariable Long id, Model model) {
+    public String getDetails(@PathVariable Long id, Model model) {
         GunDto gun = gunService.findById(id);
         model.addAttribute("gun", gun);
         return "gun-details";
@@ -71,7 +71,7 @@ public class GunController {
     }
 
     @GetMapping("/{id}/show-update-form")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
+    public String showUpdateForm(@PathVariable long id, Model model) {
             GunDto gun = gunService.findById(id);
             model.addAttribute("add", false);
             model.addAttribute("gun", gun);

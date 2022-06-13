@@ -9,7 +9,7 @@
     <h4 th:if="${#lists.isEmpty(validShipValues)}" class="text-danger">This country has no other available ship.</h4>
     <form th:unless="${#lists.isEmpty(validShipValues)}" id="shipInFleetForm" action="#" th:object="${ship}" novalidate>
       <input name="url" type="hidden" th:value="${add} == true ? '/fleet/'+${fleet.id}+'/ship' : '/fleet/'+${fleet.id}+'/ship/'+${ship.id}">
-      <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
+      <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'"><!-- Logic should be moved to ajax form -->
       <input name="redirectTo" type="hidden" th:value="'/fleet/'+${fleet.id}">
       <div class="form-group">
           <label for="ship">Choose ship: </label>

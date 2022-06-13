@@ -3,12 +3,12 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Hull Classifications')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', listUrl = '/hull-classification-mvc', addUrl='/hull-classification-mvc/add')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', listUrl = '/hull-classification', addUrl='/hull-classification/show-add-form')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Hull Classification' : 'Add New Hull Classification'}"></h2>
 <div class="container">
-
-  <form action="#" th:action="${add} == true ? @{/hull-classification-mvc/add} : @{/hull-classification-mvc/update/{id}(id=${hullClassification.id})}" th:object="${hullClassification}" method="post" novalidate>
-    <input name="add" type="hidden" th:value="${add}">
+  <form id="hullClassificationForm" th:object="${hullClassification}" novalidate>
+    <input name="url" type="hidden" th:value="${add} == true ? '/hull-classification' : '/hull-classification/' + ${hullClassification.id}">
+    <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
     <input type="hidden" id="id" th:field="*{id}">
     <div class="form-group">
       <label for="abbreviation">Abbreviation</label>
@@ -31,20 +31,14 @@
       </select>
       <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}" th:errors="*{minimumRank}"></span>
     </div>
-    <!--<div th:if="${create} == false" class="form-group">
-      <label for="status">Status</label>
-      <select id="status" name="status">
-        <option th:each="statusOpt : ${valid_status_values}"
-                th:value="${statusOpt}" th:text="${statusOpt}"
-                th:selected="${userStory.status == statusOpt}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
-      <div class="validationError" th:if="${#fields.detailedErrors('statusValid') != null}" th:each="err : ${#fields.detailedErrors('statusValid')}" th:text="${err.getMessage()}"></div>
-    </div>-->
     <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
   </form>
 </div>
-
+<script>
+  $("#hullClassificationForm").submit(function(e) {
+    ajaxFormSubmit(e, 'hullClassificationForm');
+  });
+</script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -4,11 +4,11 @@
 <body>
 
 <div th:replace="fragments/menu :: menu (entityName = 'Gun', listUrl = '/gun', createUrl='/gun/show-add-form')"></div>
-<h2 style="font-weight: bold;text-align:center;" th:text="${create == false ? 'Update Gun' : 'Create New Gun'}"></h2>
+<h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Gun' : 'Add New Gun'}"></h2>
 <div class="container">
 
   <form id="gunForm" th:object="${gun}" novalidate>
-    <input name="url" type="hidden" th:value="${add} == true ? '/gun' : '/gun/' + ${country.id}">
+    <input name="url" type="hidden" th:value="${add} == true ? '/gun' : '/gun/' + ${gun.id}">
     <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
     <input type="hidden" id="id" th:field="*{id}">
     <div class="form-group">
@@ -50,7 +50,7 @@
       <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
       <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
     </div>
-    <button type="submit" class="btn btn-primary" th:text="${create == false ? 'Update' : 'Submit'}">Submit</button>
+    <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
   </form>
 </div>
 <script>

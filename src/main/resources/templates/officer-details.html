@@ -3,7 +3,7 @@
 
 <div th:replace="fragments/header :: header (title='Navy Manager - Officers')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Officer', addUrl = '/officer-mvc/add', listUrl = '/officer-mvc')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Officer', listUrl = '/officer')"></div>
 <h2 style="font-weight: bold;text-align:center;"><span th:text="${officer.name} + ' - Details'"></span></h2>
 <div class="container">
     <table class="table table-bordered table-striped">
@@ -25,13 +25,11 @@
             <td th:text="${officer.rank.designation}"></td>
             <td th:text="${officer.country.name}"></td>
             <td class="text-center">
-                <a th:href="@{/officer-mvc/delete/{id}(id=${officer.id})}"><i class="fa fa-trash"></i></a>
-                <a th:href="@{/officer-mvc/update/{id}(id=${officer.id})}"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                <a th:href="@{/officer/{id}/show-update-form(id=${officer.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
     </table>
 </div>
-
 <div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>

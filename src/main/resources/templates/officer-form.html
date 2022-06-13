@@ -3,11 +3,12 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Officers')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Officer', listUrl = '/officer-mvc', addUrl='/officer-mvc/add')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Officer', listUrl = '/officer', addUrl='/officer/show-add-form')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Officer' : 'Add New Officer'}"></h2>
 <div class="container">
-  <form action="#" th:action="${add} == true ? @{/officer-mvc/add} : @{/officer-mvc/update/{id}(id=${officer.id})}" th:object="${officer}" method="post" novalidate>
-    <input name="add" type="hidden" th:value="${add}">
+  <form id="officerForm" th:object="${officer}" novalidate>
+    <input name="url" type="hidden" th:value="${add} == true ? '/officer' : '/officer/' + ${officer.id}">
+    <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
     <input type="hidden" id="id" th:field="*{id}">
     <div class="form-group">
       <label for="name">Name</label>
@@ -17,11 +18,6 @@
     <div class="form-group">
       <label for="dateOfBirth">Date of Birth <span style="font-weight: lighter">(for example: 1888-08-08)</span></label>
       <input type="text" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}">
-      <span class="validationError" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></span>
-      <!--<span class="validationError" th:if="${#fields.hasErrors()}">Errors!</span>
-      <div class="validationError"  th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
-      <div class="validationError"  th:each="err : ${#fields.allDetailedErrors()}" th:text="${err.getMessage()}"></div>-->
-
     </div>
     <div class="form-group">
       <label for="rank">Rank</label>
@@ -52,7 +48,11 @@
     <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
   </form>
 </div>
-
+<script>
+  $("#officerForm").submit(function(e) {
+    ajaxFormSubmit(e, 'officerForm');
+  });
+</script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>

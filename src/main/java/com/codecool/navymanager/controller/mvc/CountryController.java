@@ -30,7 +30,7 @@ public class CountryController {
     }
 
     @GetMapping("/{id}")
-    public String showDetails(@PathVariable Long id, Model model) {
+    public String getDetails(@PathVariable Long id, Model model) {
         CountryDto country = countryService.findById(id);
         model.addAttribute("country", country);
         return "country-details";
