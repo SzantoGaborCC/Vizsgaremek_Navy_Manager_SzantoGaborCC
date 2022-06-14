@@ -34,6 +34,7 @@ public class GunController {
         return "gun-list";
     }
 
+    @GetMapping("/{id}")
     public String getDetails(@PathVariable Long id, Model model) {
         GunDto gun = gunService.findById(id);
         model.addAttribute("gun", gun);
@@ -94,6 +95,5 @@ public class GunController {
         response.setMessage("Gun was updated.");
         return ResponseEntity.ok().body(response);
     }
-    //todo: gun controller and webpages were updated, tomorrow test them.
 }
 

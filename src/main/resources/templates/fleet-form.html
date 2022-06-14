@@ -3,65 +3,68 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet', addUrl='/fleet/show-add-form')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Fleet' : 'Add New Fleet'}"></h2>
 <div class="container">
-  <form id="fleetForm" th:object="${fleet}" novalidate>
-    <input name="url" type="hidden" th:value="${add} == true ? '/fleet' : '/fleet/' + ${fleet.id}">
-    <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
+    <form id="fleetForm" th:object="${fleet}" novalidate>
+        <input name="url" type="hidden" th:value="${add} == true ? '/fleet' : '/fleet/' + ${fleet.id}">
+        <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
 
-    <input type="hidden" id="id" th:field="*{id}">
-    <div class="form-group">
-      <label for="designation">Designation</label>
-      <input type="text" class="form-control" id="designation" th:field="*{designation}">
-      <span class="validationError"></span>
-    </div>
-    <div class="form-group">
-      <label for="minimumRank">Minimum rank required</label>
-      <select id="minimumRank" th:field="*{minimumRank}">
-        <option th:if="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"
-                th:selected="${fleet.minimumRank.id == rankOpt.id}"></option>
-        <option th:unless="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}" th:errors="*{minimumRank}"></span>
-      <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
-    </div>
-    <span th:if="${add == false}">
-    <div th:if="${#lists.size(validCommanderValues) == 1} and ${fleet.commander} == null" th:class="'text-danger'">No assignable officer found.</div>
-    <div th:unless="${#lists.size(validCommanderValues) == 1} and ${fleet.commander} == null" class="form-group">
-      <label for="commander">Commander</label>
-      <select id="commander" th:field="*{commander}">
-        <option th:if="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
-                th:value="${commanderOpt.id}" th:text="${commanderOpt.name}"
-                th:selected="${fleet.commander.id == commanderOpt.id}"></option>
-        <option th:unless="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
-                th:value="${commanderOpt.id}" th:text="${commanderOpt.name}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('commander')}" th:errors="*{commander}"></span>
-      <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
-    </div>
-    </span>
-    <div class="form-group">
-      <label for="country">Country</label>
-      <select id="country" th:field="*{country}">
-        <option th:if="${fleet.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.id}" th:text="${countryOpt.name}"
-                th:selected="${fleet.country.id == countryOpt.id}"></option>
-        <option th:unless="${fleet.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
-      <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
-    </div>
-    <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
-  </form>
+        <input type="hidden" id="id" th:field="*{id}">
+        <div class="form-group">
+            <label for="designation">Designation</label>
+            <input type="text" class="form-control" id="designation" th:field="*{designation}">
+            <span class="validationError"></span>
+        </div>
+        <div class="form-group">
+            <label for="minimumRank">Minimum rank required</label>
+            <select id="minimumRank" th:field="*{minimumRank}">
+                <option th:if="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
+                        th:value="${rankOpt.id}" th:text="${rankOpt.designation}"
+                        th:selected="${fleet.minimumRank.id == rankOpt.id}"></option>
+                <option th:unless="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
+                        th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
+            </select>
+            <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}" th:errors="*{minimumRank}"></span>
+            <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
+        </div>
+        <div th:if="${add == false}">
+            <div th:if="${#lists.size(validCommanderValues) == 1} and ${fleet.commander} == null"
+                 th:class="'text-danger'">No assignable officer found.
+            </div>
+            <div th:unless="${#lists.size(validCommanderValues) == 1} and ${fleet.commander} == null"
+                 class="form-group">
+                <label for="commander">Commander</label>
+                <select id="commander" th:field="*{commander}">
+                    <option th:if="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
+                            th:value="${commanderOpt.id}" th:text="${commanderOpt.name}"
+                            th:selected="${fleet.commander.id == commanderOpt.id}"></option>
+                    <option th:unless="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
+                            th:value="${commanderOpt.id}" th:text="${commanderOpt.name}"></option>
+                </select>
+                <span class="validationError" th:if="${#fields.hasErrors('commander')}" th:errors="*{commander}"></span>
+                <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="country">Country</label>
+            <select id="country" th:field="*{country}">
+                <option th:if="${fleet.country} != null" th:each="countryOpt : ${validCountryValues}"
+                        th:value="${countryOpt.id}" th:text="${countryOpt.name}"
+                        th:selected="${fleet.country.id == countryOpt.id}"></option>
+                <option th:unless="${fleet.country} != null" th:each="countryOpt : ${validCountryValues}"
+                        th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
+            </select>
+            <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+            <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
+    </form>
 </div>
 <script>
-  $("#fleetForm").submit(function(e) {
-    ajaxFormSubmit(e, 'fleetForm');
-  });
+    $("#fleetForm").submit(function (e) {
+        ajaxFormSubmit(e, 'fleetForm');
+    });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>

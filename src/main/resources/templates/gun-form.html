@@ -3,7 +3,7 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Guns')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Gun', listUrl = '/gun', createUrl='/gun/show-add-form')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Gun', listUrl = '/gun')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Gun' : 'Add New Gun'}"></h2>
 <div class="container">
 

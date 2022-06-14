@@ -3,7 +3,7 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Hull Classifications')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', listUrl = '/hull-classification', addUrl='/hull-classification/show-add-form')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', listUrl = '/hull-classification')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Hull Classification' : 'Add New Hull Classification'}"></h2>
 <div class="container">
   <form id="hullClassificationForm" th:object="${hullClassification}" novalidate>

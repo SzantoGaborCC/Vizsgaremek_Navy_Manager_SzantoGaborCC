@@ -3,7 +3,7 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Officers')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Officer', listUrl = '/officer', addUrl='/officer/show-add-form')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Officer', listUrl = '/officer')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Officer' : 'Add New Officer'}"></h2>
 <div class="container">
   <form id="officerForm" th:object="${officer}" novalidate>

@@ -3,12 +3,13 @@
 <div th:replace="fragments/header :: header (title='Navy Manager - Ranks')"></div>
 <body>
 
-<div th:replace="fragments/menu :: menu (entityName = 'Rank', listUrl = '/rank-mvc', addUrl='/rank-mvc/add')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Rank', listUrl = '/rank')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Rank' : 'Add New Rank'}"></h2>
 <div class="container">
 
-  <form action="#" th:action="${add} == true ? @{/rank-mvc/add} : @{/rank-mvc/update/{id}(id=${rank.id})}" th:object="${rank}" method="post" novalidate>
-    <input name="add" type="hidden" th:value="${add}">
+  <form id="rankForm" th:object="${rank}" novalidate>
+    <input name="url" type="hidden" th:value="${add} == true ? '/rank' : '/rank/' + ${rank.id}">
+    <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
     <input type="hidden" id="id" th:field="*{id}">
     <div class="form-group">
       <label for="precedence">Precedence</label>
@@ -20,20 +21,14 @@
       <input type="text" class="form-control" id="designation" th:field="*{designation}">
       <span class="validationError" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></span>
     </div>
-    <!--<div th:if="${create} == false" class="form-group">
-      <label for="status">Status</label>
-      <select id="status" name="status">
-        <option th:each="statusOpt : ${valid_status_values}"
-                th:value="${statusOpt}" th:text="${statusOpt}"
-                th:selected="${userStory.status == statusOpt}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
-      <div class="validationError" th:if="${#fields.detailedErrors('statusValid') != null}" th:each="err : ${#fields.detailedErrors('statusValid')}" th:text="${err.getMessage()}"></div>
-    </div>-->
     <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
   </form>
 </div>
-
+<script>
+  $("#rankForm").submit(function(e) {
+    ajaxFormSubmit(e, 'rankForm');
+  });
+</script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>
