@@ -3,7 +3,6 @@ package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Ship;
-import com.codecool.navymanager.entityDTO.CountryDto;
 import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 
@@ -13,7 +12,6 @@ import com.codecool.navymanager.repository.ShipRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -74,13 +72,13 @@ public class FleetService {
     }
 
     @Transactional
-    public void updateShipForAFleet(long fleetId, long shipId, ShipDto newShipDto) {
-            deleteShipFromFleet(fleetId, shipId);
+    public void updateShipInAFleet(long fleetId, long shipId, ShipDto newShipDto) {
+            removeShipFromFleet(fleetId, shipId);
             addShipToFleet(fleetId, newShipDto);
     }
 //todo: IllegalArgumentExceptions should be handled by ControllerAdvice
     @Transactional
-    public void deleteShipFromFleet(long fleetId, long shipId) {
+    public void removeShipFromFleet(long fleetId, long shipId) {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException("No such fleet!"));
             Ship shipToRemove = shipRepository.findById(shipId).orElseThrow(() -> new IllegalArgumentException("No such ship!"));
             shipToRemove.setFleet(null);

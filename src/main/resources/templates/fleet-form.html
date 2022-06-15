@@ -9,7 +9,6 @@
     <form id="fleetForm" th:object="${fleet}" novalidate>
         <input name="url" type="hidden" th:value="${add} == true ? '/fleet' : '/fleet/' + ${fleet.id}">
         <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
-
         <input type="hidden" id="id" th:field="*{id}">
         <div class="form-group">
             <label for="designation">Designation</label>

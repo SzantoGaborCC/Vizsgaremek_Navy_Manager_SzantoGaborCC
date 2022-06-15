@@ -36,7 +36,7 @@ public class HullClassificationController {
     public String getDetails(@PathVariable long id, Model model) {
         HullClassificationDto hullClassification = hullClassificationService.findById(id);
         model.addAttribute("hullClassification", hullClassification);
-        return "hull-classfication-details";
+        return "hull-classification-details";
     }
 
     @GetMapping("/show-add-form")

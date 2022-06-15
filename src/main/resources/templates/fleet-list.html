@@ -21,12 +21,12 @@
         <tr class="clickable-row" th:data-href="@{/fleet/{id}(id=${fleet.id})}" th:each="fleet: ${fleets}">
             <td th:text="${fleet.id}"></td>
             <td th:text="${fleet.designation}"></td>
-            <td><a th:href="@{/rank-mvc/details/{id}(id=${fleet.minimumRank.id})}" th:text="${fleet.minimumRank.designation}"/></td>
+            <td><a th:href="@{/rank/{id}(id=${fleet.minimumRank.id})}" th:text="${fleet.minimumRank.designation}"/></td>
             <td>
                 <span th:if="${fleet.commander} == null" class="text-danger">No commander was assigned</span>
-                <a th:unless="${fleet.commander} == null" th:href="@{/officer-mvc/details/{id}(id=${fleet.commander.id})}" th:text="${fleet.commander.name}"/>
+                <a th:unless="${fleet.commander} == null" th:href="@{/officer/{id}(id=${fleet.commander.id})}" th:text="${fleet.commander.name}"/>
             </td>
-            <td><a th:href="@{/country-mvc/details/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
+            <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
             <td class="text-center">
                 <button th:onclick="'showDialog(\'dialog-delete\',\'Delete fleet?\',\'/fleet/'+${fleet.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
                 <a th:href="@{/fleet/{id}/show-update-form(id=${fleet.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>

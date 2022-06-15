@@ -4,15 +4,12 @@ import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 import com.codecool.navymanager.response.Response;
 import com.codecool.navymanager.service.*;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.stream.Collectors;
@@ -64,7 +61,7 @@ public class FleetController {
         return "fleet-form";
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Response> add(@ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
         Response response = new Response();
         if (result.hasErrors()) {
@@ -83,7 +80,7 @@ public class FleetController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<String> removeShipFromFleet(@PathVariable Long id) {
         fleetService.deleteById(id);
         return ResponseEntity.ok().body("Fleet was removed.");
     }
@@ -122,9 +119,8 @@ public class FleetController {
     public String showAddShipForm(
             @PathVariable Long id,
             Model model) {
-
-        model.addAttribute("add", true);
         FleetDto fleet = fleetService.findById(id);
+        model.addAttribute("add", true);
         model.addAttribute("fleet", fleet);
         model.addAttribute("ship", new ShipDto());//
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
@@ -166,7 +162,7 @@ public class FleetController {
     }
 
     @PutMapping("/{fleetId}/ship/{shipId}")
-    public ResponseEntity<String> updateShip(
+    public ResponseEntity<String> updateShipInFleet(
             @PathVariable long fleetId, @PathVariable long shipId,
             @ModelAttribute("ship") @Valid ShipDto ship,//
             Model model, BindingResult result) {
@@ -180,17 +176,15 @@ public class FleetController {
 
         ShipDto newShip = shipService.findAll().stream()
                 .filter(shipDto -> shipDto.getId().equals(ship.getId()))
-                .findAny().orElseThrow();
-        fleetService.updateShipForAFleet(fleetId, shipId, newShip);
-        return ResponseEntity.ok().body("Ship in fleet was update.");
+                .findAny().orElse(null);
+        fleetService.updateShipInAFleet(fleetId, shipId, newShip);
+        return ResponseEntity.ok().body("Ship in fleet was updated.");
     }
 
     @DeleteMapping("/{fleetId}/ship/{shipId}")
-    public ResponseEntity<Response> deleteById(@PathVariable long fleetId, @PathVariable long shipId) {
-        fleetService.deleteShipFromFleet(fleetId, shipId);
-        Response response = new Response();
-        response.setMessage("Ship removed from fleet.");
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<String> removeShipFromFleet(@PathVariable long fleetId, @PathVariable long shipId) {
+        fleetService.removeShipFromFleet(fleetId, shipId);
+        return ResponseEntity.ok().body("Ship was removed from the fleet.");
     }
 }
 
