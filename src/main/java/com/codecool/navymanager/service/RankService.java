@@ -1,5 +1,7 @@
 package com.codecool.navymanager.service;
 
+import com.codecool.navymanager.entity.Rank;
+import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.entityDTO.GunDto;
 import com.codecool.navymanager.entityDTO.RankDto;
 import com.codecool.navymanager.repository.RankRepository;
@@ -24,7 +26,8 @@ public class RankService {
     }
 
     public RankDto findById(long id) {
-        return new RankDto(rankRepository.findById(id).orElse(null));
+        return new RankDto(rankRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No such rank!")));
     }
 
     @Transactional
@@ -37,7 +40,7 @@ public class RankService {
         if (rankRepository.existsById(id)) {
             rankRepository.save(rankDto.toEntity());
         } else {
-            throw new IllegalArgumentException("No such Rank to update!");
+            throw new IllegalArgumentException("No such rank!");
         }
     }
 

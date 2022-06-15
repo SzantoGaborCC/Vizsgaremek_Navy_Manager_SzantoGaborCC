@@ -22,7 +22,8 @@ public class HullClassificationService {
     }
 
     public HullClassificationDto findById(long id) {
-        return new HullClassificationDto(hullClassificationRepository.findById(id));
+        return new HullClassificationDto(hullClassificationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No such hull classification!")));
     }
 
     @Transactional
@@ -35,9 +36,10 @@ public class HullClassificationService {
         if (hullClassificationRepository.existsById(id)) {
             hullClassificationRepository.save(hullClassificationDto.toEntity());
         } else {
-            throw new IllegalArgumentException("No such Hull Classification to update!");
+            throw new IllegalArgumentException("No such hull classification!");
         }
     }
+
 
     @Transactional
     public void deleteById(long id) {

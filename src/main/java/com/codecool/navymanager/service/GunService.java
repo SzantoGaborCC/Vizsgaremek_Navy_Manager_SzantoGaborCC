@@ -40,7 +40,7 @@ public class GunService {
         if (gunRepository.existsById(id)) {
             gunRepository.save(gunDto.toEntity());
         } else {
-            throw new IllegalArgumentException("No such Gun to update!");
+            throw new IllegalArgumentException("No such gun!");
         }
     }
 

@@ -1,7 +1,10 @@
 package com.codecool.navymanager.service;
 
+import com.codecool.navymanager.entity.Officer;
+import com.codecool.navymanager.entity.Rank;
 import com.codecool.navymanager.entityDTO.FleetDto;
 import com.codecool.navymanager.entityDTO.OfficerDto;
+import com.codecool.navymanager.entityDTO.RankDto;
 import com.codecool.navymanager.entityDTO.ShipDto;
 import com.codecool.navymanager.repository.OfficerRepository;
 import org.springframework.stereotype.Service;
@@ -63,7 +66,7 @@ public class OfficerService {
         if (officerRepository.existsById(id)) {
             officerRepository.save(officerDto.toEntity());
         } else {
-            throw new IllegalArgumentException("No such Officer to update!");
+            throw new IllegalArgumentException("No such officer!");
         }
     }
 

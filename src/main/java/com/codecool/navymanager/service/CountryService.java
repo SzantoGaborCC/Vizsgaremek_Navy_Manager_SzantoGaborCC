@@ -36,7 +36,7 @@ public class CountryService {
         if (countryRepository.existsById(id)) {
             countryRepository.save(countryDto.toEntity());
         } else {
-            throw new IllegalArgumentException("No such Country to update!");
+            throw new IllegalArgumentException("No such country!");
         }
     }
 

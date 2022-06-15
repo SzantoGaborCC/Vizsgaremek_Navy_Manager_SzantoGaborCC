@@ -170,7 +170,7 @@ public class ShipClassMvcController {
 
     @GetMapping("/delete-gun/{shipClassId}/gun/{gunId}")
     public String deleteGunFromShipClass(@PathVariable long shipClassId, @PathVariable long gunId) {
-        shipClassService.deleteGunFromShipClass(shipClassId, gunId);
+        shipClassService.removeGunFromShipClass(shipClassId, gunId);
         return "redirect:/ship-class-mvc/details/" + shipClassId;
     }
 }

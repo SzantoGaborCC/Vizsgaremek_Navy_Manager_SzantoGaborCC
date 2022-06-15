@@ -44,7 +44,8 @@ public class ShipService {
 
     @Transactional
     public void update(ShipDto shipDto, long id) {
-        Ship oldShipData = shipRepository.findById(id).orElseThrow();
+        Ship oldShipData = shipRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No such ship!"));
         Ship newShipData = shipDto.toEntity();
         newShipData.setFleet(oldShipData.getFleet());
         shipRepository.save(newShipData);

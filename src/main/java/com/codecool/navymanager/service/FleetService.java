@@ -70,8 +70,7 @@ public class FleetService {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException("No such fleet!"));
             Ship shipToAdd = shipRepository.findById(shipDto.getId()).orElseThrow(() -> new IllegalArgumentException("No such ship!"));
             shipToAdd.setFleet(fleet);
-            fleet.getShips().add(shipToAdd);
-            fleetRepository.save(fleet);
+            shipRepository.save(shipToAdd);
     }
 
     @Transactional
@@ -83,9 +82,8 @@ public class FleetService {
     @Transactional
     public void deleteShipFromFleet(long fleetId, long shipId) {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException("No such fleet!"));
-            Ship shipToDelete = shipRepository.findById(shipId).orElseThrow(() -> new IllegalArgumentException("No such ship!"));
-            fleet.getShips().remove(shipToDelete);
-            shipToDelete.setFleet(null);
-            fleetRepository.save(fleet);
+            Ship shipToRemove = shipRepository.findById(shipId).orElseThrow(() -> new IllegalArgumentException("No such ship!"));
+            shipToRemove.setFleet(null);
+            shipRepository.save(shipToRemove);
     }
 }
