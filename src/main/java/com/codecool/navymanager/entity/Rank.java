@@ -21,7 +21,7 @@ public class Rank {
     @Column(name = "precedence", nullable = false, unique=true)
     private Integer precedence;
 
-    @Column(name = "designation", nullable = false, length = 100, unique=true)
+    @Column(name = "designation", nullable = false, length = 255, unique=true)
     private String designation;
 
     @Override

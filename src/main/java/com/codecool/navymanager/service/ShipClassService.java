@@ -1,13 +1,11 @@
 package com.codecool.navymanager.service;
 
 
-import com.codecool.navymanager.entity.GunAndQuantity;
+import com.codecool.navymanager.entity.GunInstallation;
 import com.codecool.navymanager.entity.ShipClass;
-import com.codecool.navymanager.entityDTO.GunAndQuantityDto;
+import com.codecool.navymanager.entityDTO.GunInstallationDto;
 import com.codecool.navymanager.entityDTO.GunDto;
 import com.codecool.navymanager.entityDTO.ShipClassDto;
-import com.codecool.navymanager.repository.GunAndQuantityRepository;
-import com.codecool.navymanager.repository.GunRepository;
 import com.codecool.navymanager.repository.ShipClassRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +31,8 @@ public class ShipClassService {
         return new ShipClassDto(shipClassRepository.findById(id).orElseThrow());
     }
 
-    public GunAndQuantityDto findGunAndQuantityByShipClassIdAndGunId(long shipClassId, long gunId) {
-        return new GunAndQuantityDto(shipClassRepository.findById(shipClassId).orElseThrow().getGuns().stream()
+    public GunInstallationDto findGunAndQuantityByShipClassIdAndGunId(long shipClassId, long gunId) {
+        return new GunInstallationDto(shipClassRepository.findById(shipClassId).orElseThrow().getGuns().stream()
                 .filter(gunAndQuantity -> gunAndQuantity.getGun().getId().equals(gunId)).findAny().orElseThrow());
     }
 
@@ -58,18 +56,18 @@ public class ShipClassService {
     }
 
     @Transactional
-    public void addGunToShipClass(long shipClassId, GunAndQuantityDto gunAndQuantityDto) {
+    public void addGunToShipClass(long shipClassId, GunInstallationDto gunInstallationDto) {
             ShipClass shipClass = shipClassRepository.findById(shipClassId)
                     .orElseThrow(() -> new IllegalArgumentException("No such ship!"));
-            GunAndQuantity oldGunAndQuantity = shipClass.getGuns().stream()
-                    .filter(gunAndQuantity -> gunAndQuantity.getGun().getId().equals(gunAndQuantityDto.getGun().getId()))
+            GunInstallation oldGunInstallation = shipClass.getGuns().stream()
+                    .filter(gunAndQuantity -> gunAndQuantity.getGun().getId().equals(gunInstallationDto.getGun().getId()))
                     .findAny().orElse(null);
-            if (oldGunAndQuantity != null) {
+            if (oldGunInstallation != null) {
                 throw new IllegalArgumentException("That gun was already added to the ship class!");
             } else {
-                GunAndQuantity gunAndQuantity = gunAndQuantityDto.toEntity();
-                gunAndQuantity.setShipClass(shipClass);
-                shipClass.getGuns().add(gunAndQuantity);
+                GunInstallation gunInstallation = gunInstallationDto.toEntity();
+                gunInstallation.setShipClass(shipClass);
+                shipClass.getGuns().add(gunInstallation);
                 shipClassRepository.save(shipClass);
             }
     }
@@ -78,13 +76,13 @@ public class ShipClassService {
     public void updateGunForShipClass(
             long shipClassId,
             long gunId,
-            GunAndQuantityDto newGunAndQuantityDto) {
+            GunInstallationDto newGunInstallationDto) {
         ShipClass shipClass = shipClassRepository.findById(shipClassId)
                 .orElseThrow(() -> new IllegalArgumentException("No such ship class!"));
-        GunAndQuantity gunAndQuantity = shipClass.getGuns().stream().filter(gQ -> gQ.getGun().getId() == gunId)
+        GunInstallation gunInstallation = shipClass.getGuns().stream().filter(gQ -> gQ.getGun().getId() == gunId)
                 .findAny().orElseThrow(() -> new IllegalArgumentException("Ship class has no such guns!"));
-        gunAndQuantity.setGun(newGunAndQuantityDto.getGun().toEntity());
-        gunAndQuantity.setGunQuantity(newGunAndQuantityDto.getQuantity());
+        gunInstallation.setGun(newGunInstallationDto.getGun().toEntity());
+        gunInstallation.setGunQuantity(newGunInstallationDto.getQuantity());
         shipClassRepository.save(shipClass);
     }
 
@@ -92,9 +90,9 @@ public class ShipClassService {
     public void removeGunFromShipClass(long shipClassId, long gunId) {
         ShipClass shipClass = shipClassRepository.findById(shipClassId)
                 .orElseThrow(() -> new IllegalArgumentException("No such ship class!"));
-        GunAndQuantity gunAndQuantity = shipClass.getGuns().stream().filter(gQ -> gQ.getGun().getId() == gunId)
+        GunInstallation gunInstallation = shipClass.getGuns().stream().filter(gQ -> gQ.getGun().getId() == gunId)
                 .findAny().orElseThrow(() -> new IllegalArgumentException("Ship class has no such guns!"));
-        shipClass.getGuns().remove(gunAndQuantity);
+        shipClass.getGuns().remove(gunInstallation);
         shipClassRepository.save(shipClass);
     }
 

@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -18,9 +21,14 @@ public class OfficerDto implements Serializable {
     public static final OfficerDto UNASSIGNED_OFFICER = new OfficerDto(-1L, "----Unassigned----");
 
     private Long id;
+    @NotNull(message = "Name must be specified and its length must be between 1 and 255!")
+    @Size(min = 1, max = 255, message = "Name length must be between 1 and 255!")
     private String name;
+    @Past
     private LocalDate dateOfBirth;
+    @NotNull(message = "You must specify the rank!")
     private RankDto rank;
+    @NotNull(message = "You must specify the country!")
     private CountryDto country;
 
     public OfficerDto(Officer officer) {

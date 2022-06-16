@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -21,7 +20,7 @@ public class ShipClass {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 255, unique = true)
     private String name;
 
     @Column(name = "displacement_in_tons", nullable = false)
@@ -48,7 +47,7 @@ public class ShipClass {
     private Country country;
 
     @OneToMany(mappedBy = "shipClass", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<GunAndQuantity> guns;
+    private Set<GunInstallation> guns;
 
     @Override
     public boolean equals(Object o) {

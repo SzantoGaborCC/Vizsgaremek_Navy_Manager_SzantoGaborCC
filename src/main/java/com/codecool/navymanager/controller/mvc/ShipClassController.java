@@ -1,7 +1,7 @@
 package com.codecool.navymanager.controller.mvc;
 
 
-import com.codecool.navymanager.entityDTO.GunAndQuantityDto;
+import com.codecool.navymanager.entityDTO.GunInstallationDto;
 import com.codecool.navymanager.entityDTO.GunDto;
 import com.codecool.navymanager.entityDTO.ShipClassDto;
 import com.codecool.navymanager.response.Response;
@@ -125,7 +125,7 @@ public class ShipClassController {
         ShipClassDto shipClass = shipClassService.findById(id);
         model.addAttribute("add", true);
         model.addAttribute("shipClass", shipClass);
-        model.addAttribute("gunAndQuantity", new GunAndQuantityDto());
+        model.addAttribute("gunAndQuantity", new GunInstallationDto());
         model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass));
         return "ship-class-gun-form";
     }
@@ -133,7 +133,7 @@ public class ShipClassController {
     @PostMapping("/{id}/gun")
     public ResponseEntity<Response> addGun(
             @PathVariable Long id,
-            @ModelAttribute("gunAndQuantity") @Valid GunAndQuantityDto gunAndQuantityDto,
+            @ModelAttribute("gunAndQuantity") @Valid GunInstallationDto gunInstallationDto,
             Model model, BindingResult result) {
         Response response = new Response();
         if (result.hasErrors()) {
@@ -146,7 +146,7 @@ public class ShipClassController {
             response.setMessage("Invalid gun data!");
             return ResponseEntity.badRequest().body(response);
         }
-        shipClassService.addGunToShipClass(id, gunAndQuantityDto);
+        shipClassService.addGunToShipClass(id, gunInstallationDto);
         response.setMessage("Gun was added to the ship class.");
         return ResponseEntity.ok().body(response);
     }
@@ -156,11 +156,11 @@ public class ShipClassController {
             @PathVariable long shipClassId, @PathVariable long gunId,
             Model model) {
         ShipClassDto shipClass = shipClassService.findById(shipClassId);
-        GunAndQuantityDto gunAndQuantityDto =
+        GunInstallationDto gunInstallationDto =
                 shipClassService.findGunAndQuantityByShipClassIdAndGunId(shipClassId, gunId);
         model.addAttribute("add", false);
         model.addAttribute("shipClass", shipClass);
-        model.addAttribute("gunAndQuantity", gunAndQuantityDto);
+        model.addAttribute("gunAndQuantity", gunInstallationDto);
         model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass));
         return "ship-class-gun-form";
     }
@@ -168,7 +168,7 @@ public class ShipClassController {
     @PutMapping("/{shipClassId}/gun/{gunId}")
     public ResponseEntity<String> updateGunForShipClass(
             @PathVariable long shipClassId, @PathVariable long gunId,
-            @ModelAttribute("gunAndQuantity") @Valid GunAndQuantityDto gunAndQuantity,
+            @ModelAttribute("gunAndQuantity") @Valid GunInstallationDto gunAndQuantity,
             Model model, BindingResult result) {
         if (result.hasErrors()) {
             ShipClassDto shipClass = shipClassService.findById(shipClassId);

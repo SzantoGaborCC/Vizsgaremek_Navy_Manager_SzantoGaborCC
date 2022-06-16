@@ -19,10 +19,10 @@ public class HullClassification {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "abbreviation", nullable = false, length = 3, unique=true)
+    @Column(name = "abbreviation", nullable = false, length = 4, unique=true)
     private String abbreviation;
 
-    @Column(name = "designation", nullable = false, length = 100, unique=true)
+    @Column(name = "designation", nullable = false, length = 255, unique=true)
     private String designation;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

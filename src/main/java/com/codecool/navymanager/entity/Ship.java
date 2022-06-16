@@ -19,7 +19,7 @@ public class Ship {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

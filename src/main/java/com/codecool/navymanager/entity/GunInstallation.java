@@ -9,13 +9,13 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ship_classes_and_guns",
+@Table(name = "gun_installation",
         uniqueConstraints = { @UniqueConstraint(columnNames = { "ship_class_id", "gun_id" }) })
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GunAndQuantity {
+public class GunInstallation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -36,7 +36,7 @@ public class GunAndQuantity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GunAndQuantity that = (GunAndQuantity) o;
+        GunInstallation that = (GunInstallation) o;
         return id != null && id.equals(that.id);
     }
 
@@ -45,7 +45,7 @@ public class GunAndQuantity {
         return getClass().hashCode();
     }
 
-    public GunAndQuantity(Long id, Gun gun, Integer gunQuantity) {
+    public GunInstallation(Long id, Gun gun, Integer gunQuantity) {
         this.id = id;
         this.gun = gun;
         this.gunQuantity = gunQuantity;

@@ -19,7 +19,7 @@ public class Country {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 255, unique = true)
     private String name;
 
     @Override

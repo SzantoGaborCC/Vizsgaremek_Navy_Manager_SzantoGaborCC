@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Getter
@@ -16,9 +18,14 @@ public class ShipDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    @NotNull(message = "Name must be specified and its length must be between 1 and 255!")
+    @Size(min = 1, max = 255, message = "Name length must be between 1 and 255!")
     private String name;
+    @NotNull(message = "Ship class must be specified!")
     private ShipClassDto shipClass;
+
     private OfficerDto captain;
+    @NotNull(message = "Country must be specified!")
     private CountryDto country;
 
     private FleetDto fleet;

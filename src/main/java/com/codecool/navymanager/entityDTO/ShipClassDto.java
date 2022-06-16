@@ -1,12 +1,11 @@
 package com.codecool.navymanager.entityDTO;
 
-import com.codecool.navymanager.entity.GunAndQuantity;
 import com.codecool.navymanager.entity.ShipClass;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.*;
 
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,15 +17,29 @@ import java.util.stream.Collectors;
 public class ShipClassDto implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
+    @NotNull(message = "Name must be specified and its length must be between 1 and 255!")
+    @Size(min = 1, max = 255, message = "name length must be between 1 and 255!")
     private String name;
+    @NotNull(message = "You must specify the displacement!")
+    @Min(value = 1, message = "Displacement must be at least 1 t!")
     private Integer displacementInTons;
+    @NotNull(message = "You must specify the hull classification!")
     private HullClassificationDto hullClassification;
+    @NotNull(message = "You must specify the armor belt thickness!")
+    @Min(value = 1, message = "Armor belt thickness must be at least 1 mm!")
     private Integer armorBeltInCms;
+    @NotNull(message = "You must specify the turret armor thickness!")
+    @Min(value = 1, message = "Turret armor thickness must be at least 1 mm!")
     private Integer armorTurretInCms;
+    @NotNull(message = "You must specify the armor deck thickness!")
+    @Min(value = 1, message = "Armor deck thickness must be at least 1 mm!")
     private Integer armorDeckInCms;
+    @NotNull(message = "You must specify the speed!")
+    @Min(value = 1, message = "Speed must be at least 1 km/h!")
     private Integer speedInKmh;
+    @NotNull(message = "You must specify the country!")
     private CountryDto country;
-    private Set<GunAndQuantityDto> guns;
+    private Set<GunInstallationDto> guns;
 
     public ShipClassDto(ShipClass shipClass) {
         this.id = shipClass.getId();
@@ -40,9 +53,9 @@ public class ShipClassDto implements Serializable {
         this.country = new CountryDto(shipClass.getCountry());
         this.guns = shipClass.getGuns().stream()
                 .map(gunAndQuantity -> {
-                    GunAndQuantityDto gunAndQuantityDto = new GunAndQuantityDto(gunAndQuantity);
-                    gunAndQuantityDto.setShipClass(this);
-                    return gunAndQuantityDto;
+                    GunInstallationDto gunInstallationDto = new GunInstallationDto(gunAndQuantity);
+                    gunInstallationDto.setShipClass(this);
+                    return gunInstallationDto;
                 })
                 .collect(Collectors.toSet());
     }
@@ -60,7 +73,7 @@ public class ShipClassDto implements Serializable {
                 country.toEntity(),
                 (guns == null) ? null :
                     guns.stream()
-                        .map(gunAndQuantityDto -> gunAndQuantityDto.toEntity())
+                        .map(gunInstallationDto -> gunInstallationDto.toEntity())
                         .collect(Collectors.toSet())
         );
     }

@@ -1,6 +1,6 @@
 CREATE TABLE public.country (
 	id BIGSERIAL PRIMARY KEY NOT NULL,
-	name VARCHAR(100) NOT NULL
+	name VARCHAR(255) UNIQUE NOT NULL CHECK (LENGTH(name) > 0)
 );
 ALTER TABLE public.gun ADD CONSTRAINT gun_country_fk FOREIGN KEY (country_id) REFERENCES public.country(id);
 ALTER TABLE public.ship_class ADD CONSTRAINT ship_class_country_fk FOREIGN KEY (country_id) REFERENCES public.country(id);
