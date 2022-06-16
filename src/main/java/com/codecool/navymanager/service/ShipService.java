@@ -46,6 +46,9 @@ public class ShipService {
     public void update(ShipDto shipDto, long id) {
         Ship oldShipData = shipRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No such ship!"));
+        if (!shipDto.getCountry().getId().equals(oldShipData.getCountry().getId())) {
+            shipDto.setCaptain(null);
+        }
         Ship newShipData = shipDto.toEntity();
         newShipData.setFleet(oldShipData.getFleet());
         shipRepository.save(newShipData);
@@ -53,6 +56,9 @@ public class ShipService {
 
     @Transactional
     public void deleteById(long id) {
+        if (!shipRepository.existsById(id)) {
+            throw new IllegalArgumentException("No such ship!");
+        }
         shipRepository.deleteById(id);
     }
 }

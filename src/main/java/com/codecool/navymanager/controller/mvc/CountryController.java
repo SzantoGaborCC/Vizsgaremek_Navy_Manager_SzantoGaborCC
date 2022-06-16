@@ -43,7 +43,7 @@ public class CountryController {
         return "country-form";
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Response> add(@ModelAttribute("country") @Valid CountryDto country, BindingResult result, Model model) {
         Response response = new Response();
         if (result.hasErrors()) {

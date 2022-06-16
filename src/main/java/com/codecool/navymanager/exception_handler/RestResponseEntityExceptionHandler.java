@@ -14,9 +14,8 @@ extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value
             = { IllegalArgumentException.class })
-    protected ResponseEntity<Object> handleConflict(
+    protected String handleIllegalArgument(
             RuntimeException ex, WebRequest request) {
-        return handleExceptionInternal(ex, null,
-                new HttpHeaders(), HttpStatus.CONFLICT, request);
+        return "error";
     }
 }

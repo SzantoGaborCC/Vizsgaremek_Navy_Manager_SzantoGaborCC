@@ -6,23 +6,22 @@
 <div th:replace="fragments/menu :: menu (entityName = 'Country', listUrl = '/country')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Country' : 'Add New Country'}"></h2>
 <div class="container">
-
-  <form id="countryForm" th:object="${country}" novalidate>
-    <input name="url" type="hidden" th:value="${add} == true ? '/country' : '/country/' + ${country.id}">
-    <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
-    <input type="hidden" id="id" th:field="*{id}">
-    <div class="form-group">
-      <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" th:field="*{name}">
-      <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-    </div>
-    <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
-  </form>
+    <form id="countryForm" th:object="${country}" novalidate>
+        <input name="url" type="hidden" th:value="${add} == true ? '/country' : '/country/' + ${country.id}">
+        <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
+        <input type="hidden" id="id" th:field="*{id}">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}">
+            <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
+    </form>
 </div>
 <script>
-  $("#countryForm").submit(function(e) {
-    ajaxFormSubmit(e, 'countryForm');
-  });
+    $("#countryForm").submit(function (e) {
+        ajaxFormSubmit(e, 'countryForm');
+    });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
