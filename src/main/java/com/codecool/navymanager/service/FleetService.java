@@ -33,7 +33,8 @@ public class FleetService {
     }
 
     public FleetDto findById(long id) {
-        return new FleetDto(fleetRepository.findById(id).orElseThrow());
+        return new FleetDto(fleetRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No such fleet!")));
     }
 
     public Set<ShipDto> findShips(long fleetId) {
@@ -73,15 +74,14 @@ public class FleetService {
     }
 
     @Transactional
-    public void updateShipInAFleet(long fleetId, long shipId, ShipDto newShipDto) {
+    public void updateShipInAFleet(long fleetId, long shipId, long newShipId) {
             removeShipFromFleet(fleetId, shipId);
-            addShipToFleet(fleetId, newShipDto.getId());
+            addShipToFleet(fleetId, newShipId);
     }
-//todo: IllegalArgumentExceptions should be handled by ControllerAdvice
+
     @Transactional
     public void removeShipFromFleet(long fleetId, long shipId) {
-            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException("No such fleet!"));
-            Ship shipToRemove = shipRepository.findById(shipId).orElseThrow(() -> new IllegalArgumentException("No such ship!"));
+            Ship shipToRemove = shipRepository.findById(shipId).orElseThrow();
             shipToRemove.setFleet(null);
             shipRepository.save(shipToRemove);
     }

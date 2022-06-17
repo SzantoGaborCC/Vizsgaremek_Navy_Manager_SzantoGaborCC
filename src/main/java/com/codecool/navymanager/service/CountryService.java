@@ -1,15 +1,24 @@
 package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.dto.CountryDto;
+import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.repository.CountryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional(readOnly = true)
 public class CountryService {
+    @Autowired
+    private MessageSource messageSource;
+
     private final CountryRepository countryRepository;
 
     public CountryService(CountryRepository countryRepository) {
@@ -22,8 +31,13 @@ public class CountryService {
                 .toList();
     }
 
-    public CountryDto findById(long id) {
-        return new CountryDto(countryRepository.findById(id).orElseThrow());
+    public CountryDto findById(long id, Locale locale) {
+        return new CountryDto(countryRepository.findById(id)
+                .orElseThrow(() ->  new NoSuchElementException(
+                        messageSource.getMessage(
+                                "no_such",
+                                new Object[] {Country.class.getSimpleName()},
+                                locale))));
     }
 
     @Transactional
@@ -32,16 +46,28 @@ public class CountryService {
     }
 
     @Transactional
-    public void update(CountryDto countryDto, long id) {
+    public void update(CountryDto countryDto, long id, Locale locale) {
         if (countryRepository.existsById(id)) {
             countryRepository.save(countryDto.toEntity());
         } else {
-            throw new IllegalArgumentException("No such country!");
+            throw new NoSuchElementException(
+                    messageSource.getMessage(
+                            "no_such",
+                            new Object[] {Country.class.getSimpleName()},
+                            locale));
         }
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        countryRepository.deleteById(id);
+    public void deleteById(Long id, Locale locale) {
+        if (countryRepository.existsById(id)) {
+            countryRepository.deleteById(id);
+        } else {
+            throw  new NoSuchElementException(
+                    messageSource.getMessage(
+                            "no_such",
+                            new Object[] {Country.class.getSimpleName()},
+                            locale));
+        }
     }
 }

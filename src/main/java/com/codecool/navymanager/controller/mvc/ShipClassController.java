@@ -4,7 +4,7 @@ package com.codecool.navymanager.controller.mvc;
 import com.codecool.navymanager.dto.GunInstallationDto;
 import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.dto.ShipClassDto;
-import com.codecool.navymanager.response.Response;
+import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.GunService;
 import com.codecool.navymanager.service.HullClassificationService;
@@ -63,16 +63,16 @@ public class ShipClassController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(@ModelAttribute("shipClass") @Valid ShipClassDto shipClass, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> add(@ModelAttribute("shipClass") @Valid ShipClassDto shipClass, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validCountryValues", countryService.findAll());
             model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid ship class data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid ship class data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         try {
             shipClassService.add(shipClass);
@@ -80,8 +80,8 @@ public class ShipClassController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Invalid ship class data!", e);
         }
-        response.setMessage("Ship class was added.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Ship class was added.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @DeleteMapping("/{id}")
@@ -101,20 +101,20 @@ public class ShipClassController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("shipClass") @Valid ShipClassDto shipClass, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("shipClass") @Valid ShipClassDto shipClass, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validCountryValues", countryService.findAll());
             model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid ship class data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid ship class data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         shipClassService.update(shipClass, id);
-        response.setMessage("Ship class was updated.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Ship class was updated.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
     //todo: adding the same gun should impossible, should check for ship displacement.
     // When ship displacement reduced, check for gun removal?
@@ -131,24 +131,24 @@ public class ShipClassController {
     }
 
     @PostMapping("/{id}/gun")
-    public ResponseEntity<Response> addGun(
+    public ResponseEntity<JsonResponse> addGun(
             @PathVariable Long id,
             @ModelAttribute("gunAndQuantity") @Valid GunInstallationDto gunInstallationDto,
             Model model, BindingResult result) {
-        Response response = new Response();
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             ShipClassDto shipClass = shipClassService.findById(id);
             model.addAttribute("add", true);
             model.addAttribute("shipClass", shipClass);
             model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass));
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid gun data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid gun data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         shipClassService.addGunToShipClass(id, gunInstallationDto);
-        response.setMessage("Gun was added to the ship class.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Gun was added to the ship class.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @GetMapping("{shipClassId}/gun/{gunId}/show-update-gun-form")
@@ -166,7 +166,7 @@ public class ShipClassController {
     }
 
     @PutMapping("/{shipClassId}/gun/{gunId}")
-    public ResponseEntity<String> updateGunForShipClass(
+    public ResponseEntity<JsonResponse> updateGunForShipClass(
             @PathVariable long shipClassId, @PathVariable long gunId,
             @ModelAttribute("gunAndQuantity") @Valid GunInstallationDto gunAndQuantity,
             Model model, BindingResult result) {
@@ -177,16 +177,19 @@ public class ShipClassController {
             model.addAttribute("shipClass", shipClass);
             model.addAttribute("gun", gun);
             model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass));
-            return ResponseEntity.badRequest().body("Invalid gun data!");
+            return ResponseEntity.badRequest()
+                    .body(JsonResponse.builder().message("Invalid gun data!").build());
         }
         shipClassService.updateGunForShipClass(shipClassId, gunId,  gunAndQuantity);
-        return ResponseEntity.ok().body("Gun for ship class was updated.");
+        return ResponseEntity.ok()
+                .body(JsonResponse.builder().message("Gun updated.").build());
     }
 
     @DeleteMapping("/{shipClassId}/gun/{gunId}")
-    public ResponseEntity<String> removeGunFromShipClass(@PathVariable long shipClassId, @PathVariable long gunId) {
+    public ResponseEntity<JsonResponse> removeGunFromShipClass(@PathVariable long shipClassId, @PathVariable long gunId) {
         shipClassService.removeGunFromShipClass(shipClassId, gunId);
-        return ResponseEntity.ok().body("Gun was removed from the ship class.");
+        return ResponseEntity.ok()
+                .body(JsonResponse.builder().message("Gun was removed from ship class.").build());
     }
 }
 

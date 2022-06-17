@@ -1,8 +1,9 @@
 package com.codecool.navymanager.controller.mvc;
 
 import com.codecool.navymanager.dto.RankDto;
-import com.codecool.navymanager.response.Response;
+import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.RankService;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,25 +44,26 @@ public class RankController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(@ModelAttribute("rank") @Valid RankDto rank, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> add(@ModelAttribute("rank") @Valid RankDto rank, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid rank data!");
-            System.out.println(response.getErrorMessages());
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid rank data!");
+            System.out.println(jsonResponse.getErrorMessages());
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         rankService.add(rank);
-        response.setMessage("Rank was added.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Rank was added.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable long id) {
+    public ResponseEntity<JsonResponse> deleteById(@PathVariable long id) {
         rankService.deleteById(id);
-        return ResponseEntity.ok().body("Rank was removed.");
+        return ResponseEntity.ok()
+                .body(JsonResponse.builder().message("Rank was removed.").build());
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -73,18 +75,18 @@ public class RankController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("rank") @Valid RankDto rank, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("rank") @Valid RankDto rank, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid rank data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid rank data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         rankService.update(rank, id);
-        response.setMessage("Rank was updated.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Rank was updated.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 }
 

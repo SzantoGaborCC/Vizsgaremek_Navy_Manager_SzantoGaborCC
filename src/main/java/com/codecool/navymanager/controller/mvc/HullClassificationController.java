@@ -1,9 +1,10 @@
 package com.codecool.navymanager.controller.mvc;
 
 import com.codecool.navymanager.dto.HullClassificationDto;
-import com.codecool.navymanager.response.Response;
+import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.HullClassificationService;
 import com.codecool.navymanager.service.RankService;
+import org.apache.el.util.JreCompat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,25 +49,26 @@ public class HullClassificationController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(@ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> add(@ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid hull classificaiton data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid hull classificaiton data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         hullClassificationService.add(hullClassification);
-        response.setMessage("Hull classification was added.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Hull classification was added.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable long id) {
+    public ResponseEntity<JsonResponse> deleteById(@PathVariable long id) {
         hullClassificationService.deleteById(id);
-        return ResponseEntity.ok().body("Hull classification was removed.");
+        return ResponseEntity.ok()
+                .body(JsonResponse.builder().message("Hull classification was removed.").build());
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -80,19 +82,19 @@ public class HullClassificationController {
 
     //todo: when rank requirement increased, check for captain eligibility
     @PutMapping("/{id}")
-    public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid hull classification data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid hull classification data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         hullClassificationService.update(hullClassification, id);
-        response.setMessage("Hull classification was updated.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Hull classification was updated.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 }
 

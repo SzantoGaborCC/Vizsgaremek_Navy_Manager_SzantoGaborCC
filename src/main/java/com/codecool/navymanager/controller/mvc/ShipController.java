@@ -2,7 +2,7 @@ package com.codecool.navymanager.controller.mvc;
 
 
 import com.codecool.navymanager.dto.ShipDto;
-import com.codecool.navymanager.response.Response;
+import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.OfficerService;
 import com.codecool.navymanager.service.ShipClassService;
@@ -59,28 +59,29 @@ public class ShipController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(@ModelAttribute("ship") @Valid ShipDto ship, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> add(@ModelAttribute("ship") @Valid ShipDto ship, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validCaptainValues", null);
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid country data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid country data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         shipService.add(ship);
-        response.setMessage("Ship was added.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Ship was added.");
+        return ResponseEntity.ok().body(jsonResponse);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id) {
         shipService.deleteById(id);
-        return ResponseEntity.ok().body("Ship was removed.");
+        return ResponseEntity.ok()
+                .body(JsonResponse.builder().message("Ship deleted.").build());
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -102,21 +103,21 @@ public class ShipController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("ship") @Valid ShipDto ship, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("ship") @Valid ShipDto ship, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid ship data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid ship data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         shipService.update(ship, id);
-        response.setMessage("Ship was updated.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Ship was updated.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 }
 

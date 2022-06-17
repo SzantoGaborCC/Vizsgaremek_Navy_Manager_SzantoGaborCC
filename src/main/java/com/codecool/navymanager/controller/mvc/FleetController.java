@@ -3,7 +3,7 @@ package com.codecool.navymanager.controller.mvc;
 import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.dto.IdentityDto;
 import com.codecool.navymanager.dto.ShipDto;
-import com.codecool.navymanager.response.Response;
+import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -63,29 +63,29 @@ public class FleetController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(@ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> add(@ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCommanderValues", null);
             model.addAttribute("validCountryValues", countryService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid fleet data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid fleet data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         fleetService.add(fleet);
-        response.setMessage("Fleet was added.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Fleet was added.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> removeShipFromFleet(@PathVariable Long id) {
+    public ResponseEntity<JsonResponse> removeShipFromFleet(@PathVariable Long id) {
         fleetService.deleteById(id);
-        return ResponseEntity.ok().body("Fleet was removed.");
+        return ResponseEntity.ok().body(JsonResponse.builder().message("Fleet was removed.").build());
     }
-//todo: when creating or updating ships, select options of ship classes and commanders should be based and changed upon country
+//todo: when creating or updating ships ajax should be used, select options of ship classes and commanders should be based and changed upon country
     @GetMapping("/{id}/show-update-form")
     public String showUpdateForm(@PathVariable Long id, Model model) {
             FleetDto fleet = fleetService.findById(id);
@@ -99,21 +99,21 @@ public class FleetController {
 
     //todo: when rank requirement increased, check for commander eligibility, possibly removing him
     @PutMapping("/{id}")
-    public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("fleet") @Valid FleetDto fleet, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCommanderValues", officerService.findAvailableOfficersForFleet(fleet));
             model.addAttribute("validCountryValues", countryService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid fleet data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid fleet data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         fleetService.update(fleet, id);
-        response.setMessage("Fleet was updated.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Fleet was updated.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @GetMapping("/{id}/ship/show-add-ship-form")
@@ -124,31 +124,29 @@ public class FleetController {
         model.addAttribute("add", true);
         model.addAttribute("fleet", fleet);
         model.addAttribute("chosenShip", new IdentityDto());
-        //model.addAttribute("ship", new ShipDto());
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
 
     @PostMapping("/{id}/ship")
-    public ResponseEntity<Response> addShip(
+    public ResponseEntity<JsonResponse> addShip(
             @PathVariable Long id,
-            //@ModelAttribute("ship") @Valid ShipDto ship,
             @ModelAttribute("chosenShip") @Valid IdentityDto chosenShip,
             Model model, BindingResult result) {
-        Response response = new Response();
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             FleetDto fleet = fleetService.findById(id);
             model.addAttribute("add", true);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid ship data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid ship data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         fleetService.addShipToFleet(id, chosenShip.getId());
-        response.setMessage("Ship was added to the fleet.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Ship was added to the fleet.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @GetMapping("{fleetId}/ship/{shipId}/show-update-ship-form")
@@ -156,40 +154,37 @@ public class FleetController {
             @PathVariable long fleetId, @PathVariable long shipId,
             Model model) {
         FleetDto fleet = fleetService.findById(fleetId);
-        //ShipDto ship = shipService.findById(shipId);
         model.addAttribute("add", false);
         model.addAttribute("fleet", fleet);
-        //model.addAttribute("ship", ship);
         model.addAttribute("chosenShip", new IdentityDto(shipId));
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
 
     @PutMapping("/{fleetId}/ship/{shipId}")
-    public ResponseEntity<String> updateShipInFleet(
+    public ResponseEntity<JsonResponse> updateShipInFleet(
             @PathVariable long fleetId, @PathVariable long shipId,
-            //@ModelAttribute("ship") @Valid ShipDto ship,
             @ModelAttribute("chosenShip") @Valid IdentityDto chosenShip,
             Model model, BindingResult result) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             FleetDto fleet = fleetService.findById(fleetId);
             model.addAttribute("add", false);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
-            return ResponseEntity.badRequest().body("Invalid ship data!");
+            return ResponseEntity.badRequest()
+                    .body(JsonResponse.builder().message("Invalid ship data!").build());
         }
-
-        ShipDto newShip = shipService.findAll().stream()
-                .filter(shipDto -> shipDto.getId().equals(chosenShip.getId()))
-                .findAny().orElse(null);
-        fleetService.updateShipInAFleet(fleetId, shipId, newShip);
-        return ResponseEntity.ok().body("Ship in fleet was updated.");
+        fleetService.updateShipInAFleet(fleetId, shipId, chosenShip.getId());
+        return ResponseEntity.ok()
+                .body(JsonResponse.builder().message("Ship updated.").build());
     }
 
     @DeleteMapping("/{fleetId}/ship/{shipId}")
-    public ResponseEntity<String> removeShipFromFleet(@PathVariable long fleetId, @PathVariable long shipId) {
+    public ResponseEntity<JsonResponse> removeShipFromFleet(@PathVariable long fleetId, @PathVariable long shipId) {
         fleetService.removeShipFromFleet(fleetId, shipId);
-        return ResponseEntity.ok().body("Ship was removed from the fleet.");
+        return ResponseEntity.ok()
+                .body(JsonResponse.builder().message("Ship removed from fleet.").build());
     }
 }
 

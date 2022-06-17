@@ -2,8 +2,11 @@ package com.codecool.navymanager.controller.mvc;
 
 
 import com.codecool.navymanager.dto.CountryDto;
-import com.codecool.navymanager.response.Response;
+import com.codecool.navymanager.entity.Country;
+import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +15,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/country")
 public class CountryController {
+    @Autowired
+    MessageSource messageSource;
     private final CountryService countryService;
 
     public CountryController(CountryService countryService) {
@@ -30,8 +36,8 @@ public class CountryController {
     }
 
     @GetMapping("/{id}")
-    public String getDetails(@PathVariable Long id, Model model) {
-        CountryDto country = countryService.findById(id);
+    public String getDetails(@PathVariable Long id, Model model, Locale locale) {
+        CountryDto country = countryService.findById(id, locale);
         model.addAttribute("country", country);
         return "country-details";
     }
@@ -44,47 +50,63 @@ public class CountryController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(@ModelAttribute("country") @Valid CountryDto country, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> add(@ModelAttribute("country") @Valid CountryDto country, BindingResult result, Model model, Locale locale) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid country data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage(messageSource.getMessage(
+                    "invalid_data",
+                    new Object[] {Country.class.getSimpleName()},
+                    locale));
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         countryService.add(country);
-        response.setMessage("Country was added.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage(messageSource.getMessage(
+                "added",
+                new Object[] {Country.class.getSimpleName()},
+                locale));
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        countryService.deleteById(id);
-        return ResponseEntity.ok().body("Country was removed.");
+    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
+        countryService.deleteById(id, locale);
+        return ResponseEntity.ok().body(JsonResponse.builder()
+                .message(messageSource.getMessage(
+                        "deleted",
+                        new Object[] {Country.class.getSimpleName()},
+                        locale)).build());
     }
 
     @GetMapping("/{id}/show-update-form")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
-            CountryDto country = countryService.findById(id);
+    public String showUpdateForm(@PathVariable Long id, Model model, Locale locale) {
+            CountryDto country = countryService.findById(id, locale);
             model.addAttribute("add", false);
             model.addAttribute("country", country);
             return "country-form";
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("country") @Valid CountryDto country, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("country") @Valid CountryDto country, BindingResult result, Model model, Locale locale) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid country data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage(messageSource.getMessage(
+                    "invalid_data",
+                    new Object[] {Country.class.getSimpleName()},
+                    locale));
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
-        countryService.update(country, id);
-        response.setMessage("Country was updated.");
-        return ResponseEntity.ok().body(response);
+        countryService.update(country, id, locale);
+        jsonResponse.setMessage(messageSource.getMessage(
+                "updated",
+                new Object[] {Country.class.getSimpleName()},
+                locale));
+        return ResponseEntity.ok().body(jsonResponse);
     }
 }
 

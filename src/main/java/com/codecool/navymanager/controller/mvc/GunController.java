@@ -1,7 +1,7 @@
 package com.codecool.navymanager.controller.mvc;
 
 import com.codecool.navymanager.dto.GunDto;
-import com.codecool.navymanager.response.Response;
+import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.GunService;
 import org.springframework.http.ResponseEntity;
@@ -47,25 +47,26 @@ public class GunController {
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(@ModelAttribute("gun") @Valid GunDto gun, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> add(@ModelAttribute("gun") @Valid GunDto gun, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validCountryValues", countryService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid gun data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid gun data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         gunService.add(gun);
-        response.setMessage("Gun was added.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Gun was added.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id) {
         gunService.deleteById(id);
-        return ResponseEntity.ok().body("Gun was removed.");
+        return ResponseEntity.ok()
+                .body(JsonResponse.builder().message("Gun was removed.").build());
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -78,19 +79,19 @@ public class GunController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response> update(@PathVariable long id, @ModelAttribute("gun") @Valid GunDto gun, BindingResult result, Model model) {
-        Response response = new Response();
+    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("gun") @Valid GunDto gun, BindingResult result, Model model) {
+        JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validCountryValues", countryService.findAll());
-            response.setErrorMessages(result.getFieldErrors().stream()
+            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            response.setMessage("Invalid gun data!");
-            return ResponseEntity.badRequest().body(response);
+            jsonResponse.setMessage("Invalid gun data!");
+            return ResponseEntity.badRequest().body(jsonResponse);
         }
         gunService.update(gun, id);
-        response.setMessage("Gun was updated.");
-        return ResponseEntity.ok().body(response);
+        jsonResponse.setMessage("Gun was updated.");
+        return ResponseEntity.ok().body(jsonResponse);
     }
 }
 
