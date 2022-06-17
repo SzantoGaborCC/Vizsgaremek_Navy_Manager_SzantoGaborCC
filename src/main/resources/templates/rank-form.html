@@ -6,7 +6,6 @@
 <div th:replace="fragments/menu :: menu (entityName = 'Rank', listUrl = '/rank')"></div>
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Rank' : 'Add New Rank'}"></h2>
 <div class="container">
-
   <form id="rankForm" th:object="${rank}" novalidate>
     <input name="url" type="hidden" th:value="${add} == true ? '/rank' : '/rank/' + ${rank.id}">
     <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">

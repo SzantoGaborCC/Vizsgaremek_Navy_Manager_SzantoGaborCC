@@ -5,9 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface RankRepository extends JpaRepository<Rank, Integer> {
-    Optional<Rank> findById(long id);
-
-    boolean existsById(long id);
-    void deleteById(long id);
+public interface RankRepository extends JpaRepository<Rank, Long> {
 }

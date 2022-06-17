@@ -9,5 +9,6 @@ import java.util.Map;
 @Setter
 public class Response {
     private String message;
+    private String errorDescription;
     private Map<String, String> errorMessages;
 }

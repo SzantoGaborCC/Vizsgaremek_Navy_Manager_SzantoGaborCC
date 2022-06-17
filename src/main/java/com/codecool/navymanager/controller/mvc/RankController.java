@@ -50,6 +50,7 @@ public class RankController {
             response.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
             response.setMessage("Invalid rank data!");
+            System.out.println(response.getErrorMessages());
             return ResponseEntity.badRequest().body(response);
         }
         rankService.add(rank);

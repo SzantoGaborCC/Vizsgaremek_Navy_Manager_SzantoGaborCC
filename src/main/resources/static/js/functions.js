@@ -51,6 +51,9 @@ function ajaxFormSubmit(e, formId) {
         },
         error: function(response)
         {
+            if (typeof response.responseJSON.errorDescription !== 'undefined' &&
+                response.responseJSON.errorDescription !== null)
+                $("[id$='Form']").before('<span class="validationError">' + response.responseJSON.errorDescription + '</span>');
             $.each(response.responseJSON.errorMessages, function (key, value) {
                 $('#' + key).after('<span class="validationError">' + value + '</span>');
             });

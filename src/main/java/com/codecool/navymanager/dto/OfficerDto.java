@@ -24,7 +24,7 @@ public class OfficerDto implements Serializable {
     @NotNull(message = "Name must be specified and its length must be between 1 and 255!")
     @Size(min = 1, max = 255, message = "Name length must be between 1 and 255!")
     private String name;
-    @Past
+    @Past(message = "The birthday must be in the past!")
     private LocalDate dateOfBirth;
     @NotNull(message = "You must specify the rank!")
     private RankDto rank;

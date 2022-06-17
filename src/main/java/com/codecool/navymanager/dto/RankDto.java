@@ -2,18 +2,21 @@ package com.codecool.navymanager.dto;
 
 
 import com.codecool.navymanager.entity.Rank;
+import com.codecool.navymanager.service.RankService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.catalina.core.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class RankDto implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -31,6 +34,12 @@ public class RankDto implements Serializable {
 
     public Rank toEntity() {
         return new Rank(id, precedence, designation);
+    }
+
+    public RankDto(Long id, Integer precedence, String designation) {
+        this.id = id;
+        this.precedence = precedence;
+        this.designation = designation;
     }
 
     @Override

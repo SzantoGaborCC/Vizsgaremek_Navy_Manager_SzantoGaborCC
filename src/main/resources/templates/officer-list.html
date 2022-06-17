@@ -26,7 +26,7 @@
             <td th:text="${officer.rank.designation}"></td>
             <td th:text="${officer.country.name}"></td>
             <td class="text-center">
-                <button th:onclick="'showDialog(\'dialog-delete\',\'Delete officer?\',\'/hull-classification/'+${officer.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
+                <button th:onclick="'showDialog(\'dialog-delete\',\'Delete officer?\',\'/officer/'+${officer.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
                 <a th:href="@{/officer/{id}/show-update-form(id=${officer.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
         </tr>
         </tbody>
