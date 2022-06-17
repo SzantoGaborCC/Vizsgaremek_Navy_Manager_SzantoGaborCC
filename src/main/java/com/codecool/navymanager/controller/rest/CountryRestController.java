@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.entityDTO.CountryDto;
+import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.service.CountryService;
 import org.springframework.web.bind.annotation.*;
 

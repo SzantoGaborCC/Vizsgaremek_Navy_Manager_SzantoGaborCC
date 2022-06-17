@@ -1,7 +1,7 @@
 package com.codecool.navymanager.spring_converters;
 
 
-import com.codecool.navymanager.entityDTO.RankDto;
+import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.service.RankService;
 
 import org.springframework.core.convert.converter.Converter;

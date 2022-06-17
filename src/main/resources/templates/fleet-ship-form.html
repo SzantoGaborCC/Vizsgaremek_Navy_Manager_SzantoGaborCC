@@ -7,17 +7,17 @@
 <h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Choose Another Ship for ' : 'Add New Ship to '} + ${fleet.designation}"></h2>
 <div class="container">
     <h4 th:if="${#lists.isEmpty(validShipValues)}" class="text-danger">This country has no other available ship.</h4>
-    <form th:unless="${#lists.isEmpty(validShipValues)}" id="shipInFleetForm" action="#" th:object="${ship}" novalidate>
-      <input name="url" type="hidden" th:value="${add} == true ? '/fleet/'+${fleet.id}+'/ship' : '/fleet/'+${fleet.id}+'/ship/'+${ship.id}">
+    <form th:unless="${#lists.isEmpty(validShipValues)}" id="shipInFleetForm" action="#" th:object="${chosenShip}" novalidate>
+      <input name="url" type="hidden" th:value="${add} == true ? '/fleet/'+${fleet.id}+'/ship' : '/fleet/'+${fleet.id}+'/ship/'+${chosenShip.id}">
       <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'"><!-- Logic should be moved to ajax form -->
       <input name="redirectTo" type="hidden" th:value="'/fleet/'+${fleet.id}">
       <div class="form-group">
           <label for="ship">Choose ship: </label>
           <select id="ship" th:field="*{id}">
-              <option th:if="${ship.id} != null" th:each="shipOpt : ${validShipValues}"
+              <option th:if="${chosenShip.id} != null" th:each="shipOpt : ${validShipValues}"
                       th:value="${shipOpt.id}" th:text="${shipOpt.name}"
-                      th:selected="${ship.id == shipOpt.id}"></option>
-              <option th:unless="${ship.id} != null" th:each="shipOpt : ${validShipValues}"
+                      th:selected="${chosenShip.id == shipOpt.id}"></option>
+              <option th:unless="${chosenShip.id} != null" th:each="shipOpt : ${validShipValues}"
                       th:value="${shipOpt.id}" th:text="${shipOpt.name}"></option>
           </select>
           <span class="validationError" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>

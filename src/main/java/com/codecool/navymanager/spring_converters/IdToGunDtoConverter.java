@@ -1,6 +1,6 @@
 package com.codecool.navymanager.spring_converters;
 
-import com.codecool.navymanager.entityDTO.GunDto;
+import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.service.GunService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

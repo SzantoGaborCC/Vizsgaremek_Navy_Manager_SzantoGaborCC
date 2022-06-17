@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.mvc;
 
-import com.codecool.navymanager.entityDTO.HullClassificationDto;
+import com.codecool.navymanager.dto.HullClassificationDto;
 import com.codecool.navymanager.response.Response;
 import com.codecool.navymanager.service.HullClassificationService;
 import com.codecool.navymanager.service.RankService;

@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.entityDTO.HullClassificationDto;
+import com.codecool.navymanager.dto.HullClassificationDto;
 import com.codecool.navymanager.service.HullClassificationService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,9 +1,6 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.entity.Rank;
-import com.codecool.navymanager.entity.Ship;
-import com.codecool.navymanager.entityDTO.GunDto;
-import com.codecool.navymanager.entityDTO.RankDto;
+import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.repository.RankRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

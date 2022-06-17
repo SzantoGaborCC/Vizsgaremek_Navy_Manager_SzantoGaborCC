@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.entityDTO.GunDto;
+import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.service.GunService;
 import org.springframework.web.bind.annotation.*;
 

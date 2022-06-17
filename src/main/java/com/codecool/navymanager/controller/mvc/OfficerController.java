@@ -1,19 +1,17 @@
 package com.codecool.navymanager.controller.mvc;
 
 
-import com.codecool.navymanager.entityDTO.OfficerDto;
+import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.response.Response;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.OfficerService;
 import com.codecool.navymanager.service.RankService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.stream.Collectors;

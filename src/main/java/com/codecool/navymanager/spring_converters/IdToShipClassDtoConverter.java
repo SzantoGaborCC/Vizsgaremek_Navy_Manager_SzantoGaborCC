@@ -1,7 +1,7 @@
 package com.codecool.navymanager.spring_converters;
 
 
-import com.codecool.navymanager.entityDTO.ShipClassDto;
+import com.codecool.navymanager.dto.ShipClassDto;
 import com.codecool.navymanager.service.ShipClassService;
 
 import org.springframework.core.convert.converter.Converter;

@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.entityDTO.RankDto;
+import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.service.RankService;
 import org.springframework.web.bind.annotation.*;
 

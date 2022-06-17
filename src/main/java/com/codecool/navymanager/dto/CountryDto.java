@@ -1,4 +1,4 @@
-package com.codecool.navymanager.entityDTO;
+package com.codecool.navymanager.dto;
 
 import com.codecool.navymanager.entity.Country;
 import lombok.AllArgsConstructor;

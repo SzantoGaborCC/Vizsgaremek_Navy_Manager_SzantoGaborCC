@@ -1,9 +1,9 @@
 package com.codecool.navymanager.controller.mvc;
 
 
-import com.codecool.navymanager.entityDTO.GunInstallationDto;
-import com.codecool.navymanager.entityDTO.GunDto;
-import com.codecool.navymanager.entityDTO.ShipClassDto;
+import com.codecool.navymanager.dto.GunInstallationDto;
+import com.codecool.navymanager.dto.GunDto;
+import com.codecool.navymanager.dto.ShipClassDto;
 import com.codecool.navymanager.response.Response;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.GunService;

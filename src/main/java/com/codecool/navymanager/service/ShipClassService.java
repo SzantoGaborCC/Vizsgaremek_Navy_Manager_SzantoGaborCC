@@ -3,9 +3,9 @@ package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.entity.GunInstallation;
 import com.codecool.navymanager.entity.ShipClass;
-import com.codecool.navymanager.entityDTO.GunInstallationDto;
-import com.codecool.navymanager.entityDTO.GunDto;
-import com.codecool.navymanager.entityDTO.ShipClassDto;
+import com.codecool.navymanager.dto.GunInstallationDto;
+import com.codecool.navymanager.dto.GunDto;
+import com.codecool.navymanager.dto.ShipClassDto;
 import com.codecool.navymanager.repository.ShipClassRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

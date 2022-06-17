@@ -1,6 +1,6 @@
 package com.codecool.navymanager.spring_converters;
 
-import com.codecool.navymanager.entityDTO.HullClassificationDto;
+import com.codecool.navymanager.dto.HullClassificationDto;
 import com.codecool.navymanager.service.HullClassificationService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

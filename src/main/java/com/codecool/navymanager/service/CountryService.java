@@ -1,6 +1,6 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.entityDTO.CountryDto;
+import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.repository.CountryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

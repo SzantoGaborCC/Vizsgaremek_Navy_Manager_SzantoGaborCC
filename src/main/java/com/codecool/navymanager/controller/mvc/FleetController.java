@@ -1,7 +1,8 @@
 package com.codecool.navymanager.controller.mvc;
 
-import com.codecool.navymanager.entityDTO.FleetDto;
-import com.codecool.navymanager.entityDTO.ShipDto;
+import com.codecool.navymanager.dto.FleetDto;
+import com.codecool.navymanager.dto.IdentityDto;
+import com.codecool.navymanager.dto.ShipDto;
 import com.codecool.navymanager.response.Response;
 import com.codecool.navymanager.service.*;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +85,7 @@ public class FleetController {
         fleetService.deleteById(id);
         return ResponseEntity.ok().body("Fleet was removed.");
     }
-
+//todo: when creating or updating ships, select options of ship classes and commanders should be based and changed upon country
     @GetMapping("/{id}/show-update-form")
     public String showUpdateForm(@PathVariable Long id, Model model) {
             FleetDto fleet = fleetService.findById(id);
@@ -122,7 +123,8 @@ public class FleetController {
         FleetDto fleet = fleetService.findById(id);
         model.addAttribute("add", true);
         model.addAttribute("fleet", fleet);
-        model.addAttribute("ship", new ShipDto());//
+        model.addAttribute("chosenShip", new IdentityDto());
+        //model.addAttribute("ship", new ShipDto());
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
@@ -130,7 +132,8 @@ public class FleetController {
     @PostMapping("/{id}/ship")
     public ResponseEntity<Response> addShip(
             @PathVariable Long id,
-            @ModelAttribute("ship") @Valid ShipDto ship,//
+            //@ModelAttribute("ship") @Valid ShipDto ship,
+            @ModelAttribute("chosenShip") @Valid IdentityDto chosenShip,
             Model model, BindingResult result) {
         Response response = new Response();
         if (result.hasErrors()) {
@@ -143,7 +146,7 @@ public class FleetController {
             response.setMessage("Invalid ship data!");
             return ResponseEntity.badRequest().body(response);
         }
-        fleetService.addShipToFleet(id, ship);
+        fleetService.addShipToFleet(id, chosenShip.getId());
         response.setMessage("Ship was added to the fleet.");
         return ResponseEntity.ok().body(response);
     }
@@ -153,10 +156,11 @@ public class FleetController {
             @PathVariable long fleetId, @PathVariable long shipId,
             Model model) {
         FleetDto fleet = fleetService.findById(fleetId);
-        ShipDto ship = shipService.findById(shipId);
+        //ShipDto ship = shipService.findById(shipId);
         model.addAttribute("add", false);
         model.addAttribute("fleet", fleet);
-        model.addAttribute("ship", ship);//
+        //model.addAttribute("ship", ship);
+        model.addAttribute("chosenShip", new IdentityDto(shipId));
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-ship-form";
     }
@@ -164,7 +168,8 @@ public class FleetController {
     @PutMapping("/{fleetId}/ship/{shipId}")
     public ResponseEntity<String> updateShipInFleet(
             @PathVariable long fleetId, @PathVariable long shipId,
-            @ModelAttribute("ship") @Valid ShipDto ship,//
+            //@ModelAttribute("ship") @Valid ShipDto ship,
+            @ModelAttribute("chosenShip") @Valid IdentityDto chosenShip,
             Model model, BindingResult result) {
         if (result.hasErrors()) {
             FleetDto fleet = fleetService.findById(fleetId);
@@ -175,7 +180,7 @@ public class FleetController {
         }
 
         ShipDto newShip = shipService.findAll().stream()
-                .filter(shipDto -> shipDto.getId().equals(ship.getId()))
+                .filter(shipDto -> shipDto.getId().equals(chosenShip.getId()))
                 .findAny().orElse(null);
         fleetService.updateShipInAFleet(fleetId, shipId, newShip);
         return ResponseEntity.ok().body("Ship in fleet was updated.");

@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.entityDTO.ShipDto;
+import com.codecool.navymanager.dto.ShipDto;
 import com.codecool.navymanager.service.ShipService;
 import org.springframework.web.bind.annotation.*;
 

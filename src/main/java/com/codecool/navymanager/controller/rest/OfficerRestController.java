@@ -1,6 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.entityDTO.OfficerDto;
+import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.service.OfficerService;
 import org.springframework.web.bind.annotation.*;
 
