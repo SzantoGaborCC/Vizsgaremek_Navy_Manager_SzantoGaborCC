@@ -33,8 +33,12 @@ public class ShipClassService {
         return shipClassRepository.findAll().stream().map(ShipClassDto::new).toList();
     }
 
-    public ShipClassDto findById(long id) {
-        return new ShipClassDto(shipClassRepository.findById(id).orElseThrow());
+    public ShipClassDto findById(long id, Locale locale) {
+        return new ShipClassDto(shipClassRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
+                        "no_such",
+                        new Object[] {ShipClass.class.getSimpleName()},
+                        locale))));
     }
 
     public GunInstallationDto findGunAndQuantityByShipClassIdAndGunId(long shipClassId, long gunId) {

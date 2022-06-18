@@ -52,7 +52,7 @@ public class ShipClassController {
 
     @GetMapping("/{id}")
     public String showDetails(@PathVariable Long id, Model model, Locale locale) {
-        ShipClassDto shipClass = shipClassService.findById(id);
+        ShipClassDto shipClass = shipClassService.findById(id, locale);
         model.addAttribute("shipClass", shipClass);
         model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
         return "ship-class-details";
@@ -104,8 +104,8 @@ public class ShipClassController {
     }
 
     @GetMapping("/{id}/show-update-form")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
-            ShipClassDto shipClass = shipClassService.findById(id);
+    public String showUpdateForm(@PathVariable Long id, Model model, Locale locale) {
+            ShipClassDto shipClass = shipClassService.findById(id, locale);
             model.addAttribute("add", false);
             model.addAttribute("shipClass", shipClass);
             model.addAttribute("validCountryValues", countryService.findAll());
@@ -147,7 +147,7 @@ public class ShipClassController {
             @PathVariable Long id,
             Model model,
             Locale locale) {
-        ShipClassDto shipClass = shipClassService.findById(id);
+        ShipClassDto shipClass = shipClassService.findById(id, locale);
         model.addAttribute("add", true);
         model.addAttribute("shipClass", shipClass);
         model.addAttribute("gunAndQuantity", new GunInstallationDto());
@@ -164,7 +164,7 @@ public class ShipClassController {
             Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
-            ShipClassDto shipClass = shipClassService.findById(id);
+            ShipClassDto shipClass = shipClassService.findById(id, locale);
             model.addAttribute("add", true);
             model.addAttribute("shipClass", shipClass);
             model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
@@ -190,7 +190,7 @@ public class ShipClassController {
             @PathVariable long gunId,
             Model model,
             Locale locale) {
-        ShipClassDto shipClass = shipClassService.findById(shipClassId);
+        ShipClassDto shipClass = shipClassService.findById(shipClassId, locale);
         GunInstallationDto gunInstallationDto =
                 shipClassService.findGunAndQuantityByShipClassIdAndGunId(shipClassId, gunId);
         model.addAttribute("add", false);
@@ -208,7 +208,7 @@ public class ShipClassController {
             BindingResult result,
             Locale locale) {
         if (result.hasErrors()) {
-            ShipClassDto shipClass = shipClassService.findById(shipClassId);
+            ShipClassDto shipClass = shipClassService.findById(shipClassId, locale);
             GunDto gun = gunService.findById(gunId, locale);
             model.addAttribute("add", false);
             model.addAttribute("shipClass", shipClass);
