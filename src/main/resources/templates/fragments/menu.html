@@ -6,9 +6,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav align-items-center">
-                <li th:if="${homePage} != null">
-                    <h2>Welcome to Navy Manager!</h2>
-                </li>
                 <li th:if="${listUrl} != null" class="nav-item">
                     <a class="btn btn-lg btn-primary"   th:href="@{${listUrl}}"><span th:text="${entityName} + ' Home'"></span></a>
                 </li>

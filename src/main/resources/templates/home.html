@@ -2,7 +2,24 @@
 <html lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Main Page')"></div>
 <body>
-<div th:replace="fragments/menu :: menu(homePage = 'true')"></div>
-
+<h1 style="text-align: center; margin: 2rem;">Welcome to Navy Manager!</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="list-group col-4">
+            <div class="header-side list-group-item-dark p-3">Categories</div>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Countries</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Ranks</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Officers</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Hull
+                Classifications</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Guns</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Ship Classes</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Ships</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Fleets</a>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>
 </body>
 </html>
