@@ -20,8 +20,8 @@ public class ExceptionToResponseEntity {
                 .body(jsonResponse);
     }
 
-    @ExceptionHandler({NoSuchElementException.class})
-    public ResponseEntity<?> handleNoSuchElementException(Exception e) {
+    @ExceptionHandler({NoSuchElementException.class, IllegalArgumentException.class})
+    public ResponseEntity<?> handleInvalidIds(Exception e) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         jsonResponse.setErrorDescription(e.getMessage());
         return ResponseEntity

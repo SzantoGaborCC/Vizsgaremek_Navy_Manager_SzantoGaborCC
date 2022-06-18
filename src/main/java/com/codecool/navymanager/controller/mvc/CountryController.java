@@ -50,7 +50,11 @@ public class CountryController {
     }
 
     @PostMapping
-    public ResponseEntity<JsonResponse> add(@ModelAttribute("country") @Valid CountryDto country, BindingResult result, Model model, Locale locale) {
+    public ResponseEntity<JsonResponse> add(
+            @ModelAttribute("country") @Valid CountryDto country,
+            BindingResult result,
+            Model model,
+            Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
@@ -75,7 +79,7 @@ public class CountryController {
         countryService.deleteById(id, locale);
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message(messageSource.getMessage(
-                        "deleted",
+                        "removed",
                         new Object[] {Country.class.getSimpleName()},
                         locale)).build());
     }
@@ -89,7 +93,12 @@ public class CountryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("country") @Valid CountryDto country, BindingResult result, Model model, Locale locale) {
+    public ResponseEntity<JsonResponse> update(
+            @PathVariable long id,
+            @ModelAttribute("country") @Valid CountryDto country,
+            BindingResult result,
+            Model model,
+            Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);

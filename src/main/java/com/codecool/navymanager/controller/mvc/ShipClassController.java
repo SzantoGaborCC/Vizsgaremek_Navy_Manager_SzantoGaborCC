@@ -1,29 +1,34 @@
 package com.codecool.navymanager.controller.mvc;
 
 
-import com.codecool.navymanager.dto.GunInstallationDto;
 import com.codecool.navymanager.dto.GunDto;
+import com.codecool.navymanager.dto.GunInstallationDto;
 import com.codecool.navymanager.dto.ShipClassDto;
+import com.codecool.navymanager.entity.Gun;
+import com.codecool.navymanager.entity.ShipClass;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.GunService;
 import com.codecool.navymanager.service.HullClassificationService;
 import com.codecool.navymanager.service.ShipClassService;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/ship-class")
 public class ShipClassController {
+    @Autowired
+    MessageSource messageSource;
     private final ShipClassService shipClassService;
 
     private final GunService gunService;
@@ -46,10 +51,10 @@ public class ShipClassController {
     }
 
     @GetMapping("/{id}")
-    public String showDetails(@PathVariable Long id, Model model) {
+    public String showDetails(@PathVariable Long id, Model model, Locale locale) {
         ShipClassDto shipClass = shipClassService.findById(id);
         model.addAttribute("shipClass", shipClass);
-        model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass));
+        model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
         return "ship-class-details";
     }
 
@@ -63,7 +68,11 @@ public class ShipClassController {
     }
 
     @PostMapping
-    public ResponseEntity<JsonResponse> add(@ModelAttribute("shipClass") @Valid ShipClassDto shipClass, BindingResult result, Model model) {
+    public ResponseEntity<JsonResponse> add(
+            @ModelAttribute("shipClass") @Valid ShipClassDto shipClass,
+            BindingResult result,
+            Model model,
+            Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
@@ -71,23 +80,27 @@ public class ShipClassController {
             model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage("Invalid ship class data!");
+            jsonResponse.setMessage(messageSource.getMessage(
+                    "invalid_data",
+                    new Object[] {ShipClass.class.getSimpleName()},
+                    locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        try {
-            shipClassService.add(shipClass);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Invalid ship class data!", e);
-        }
-        jsonResponse.setMessage("Ship class was added.");
+        shipClassService.add(shipClass);
+        jsonResponse.setMessage(messageSource.getMessage(
+                "added",
+                new Object[] {ShipClass.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        shipClassService.deleteById(id);
-        return ResponseEntity.ok().body("Fleet was removed.");
+    public ResponseEntity<String> deleteById(@PathVariable Long id, Locale locale) {
+        shipClassService.deleteById(id, locale);
+        return ResponseEntity.ok().body(messageSource.getMessage(
+                "removed",
+                new Object[] {ShipClass.class.getSimpleName()},
+                locale));
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -101,7 +114,12 @@ public class ShipClassController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("shipClass") @Valid ShipClassDto shipClass, BindingResult result, Model model) {
+    public ResponseEntity<JsonResponse> update(
+            @PathVariable long id,
+            @ModelAttribute("shipClass") @Valid ShipClassDto shipClass,
+            BindingResult result,
+            Model model,
+            Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
@@ -109,11 +127,17 @@ public class ShipClassController {
             model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage("Invalid ship class data!");
+            jsonResponse.setMessage(messageSource.getMessage(
+                    "invalid_data",
+                    new Object[] {ShipClass.class.getSimpleName()},
+                    locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        shipClassService.update(shipClass, id);
-        jsonResponse.setMessage("Ship class was updated.");
+        shipClassService.update(shipClass, id, locale);
+        jsonResponse.setMessage(messageSource.getMessage(
+                "updated",
+                new Object[] {ShipClass.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
     //todo: adding the same gun should impossible, should check for ship displacement.
@@ -121,12 +145,13 @@ public class ShipClassController {
     @GetMapping("/{id}/gun/show-add-gun-form")
     public String showAddGunForm(
             @PathVariable Long id,
-            Model model) {
+            Model model,
+            Locale locale) {
         ShipClassDto shipClass = shipClassService.findById(id);
         model.addAttribute("add", true);
         model.addAttribute("shipClass", shipClass);
         model.addAttribute("gunAndQuantity", new GunInstallationDto());
-        model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass));
+        model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
         return "ship-class-gun-form";
     }
 
@@ -134,34 +159,44 @@ public class ShipClassController {
     public ResponseEntity<JsonResponse> addGun(
             @PathVariable Long id,
             @ModelAttribute("gunAndQuantity") @Valid GunInstallationDto gunInstallationDto,
-            Model model, BindingResult result) {
+            Model model,
+            BindingResult result,
+            Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             ShipClassDto shipClass = shipClassService.findById(id);
             model.addAttribute("add", true);
             model.addAttribute("shipClass", shipClass);
-            model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass));
+            model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage("Invalid gun data!");
+            jsonResponse.setMessage(messageSource.getMessage(
+                    "invalid_data",
+                    new Object[] {Gun.class.getSimpleName()},
+                    locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        shipClassService.addGunToShipClass(id, gunInstallationDto);
-        jsonResponse.setMessage("Gun was added to the ship class.");
+        shipClassService.addGunToShipClass(id, gunInstallationDto, locale);
+        jsonResponse.setMessage(messageSource.getMessage(
+                "param0_added_to_param1",
+                new Object[] {Gun.class.getSimpleName(), ShipClass.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
 
     @GetMapping("{shipClassId}/gun/{gunId}/show-update-gun-form")
     public String showUpdateGunForm(
-            @PathVariable long shipClassId, @PathVariable long gunId,
-            Model model) {
+            @PathVariable long shipClassId,
+            @PathVariable long gunId,
+            Model model,
+            Locale locale) {
         ShipClassDto shipClass = shipClassService.findById(shipClassId);
         GunInstallationDto gunInstallationDto =
                 shipClassService.findGunAndQuantityByShipClassIdAndGunId(shipClassId, gunId);
         model.addAttribute("add", false);
         model.addAttribute("shipClass", shipClass);
         model.addAttribute("gunAndQuantity", gunInstallationDto);
-        model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass));
+        model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
         return "ship-class-gun-form";
     }
 
@@ -169,27 +204,41 @@ public class ShipClassController {
     public ResponseEntity<JsonResponse> updateGunForShipClass(
             @PathVariable long shipClassId, @PathVariable long gunId,
             @ModelAttribute("gunAndQuantity") @Valid GunInstallationDto gunAndQuantity,
-            Model model, BindingResult result) {
+            Model model,
+            BindingResult result,
+            Locale locale) {
         if (result.hasErrors()) {
             ShipClassDto shipClass = shipClassService.findById(shipClassId);
-            GunDto gun = gunService.findById(gunId);
+            GunDto gun = gunService.findById(gunId, locale);
             model.addAttribute("add", false);
             model.addAttribute("shipClass", shipClass);
             model.addAttribute("gun", gun);
-            model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass));
+            model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
             return ResponseEntity.badRequest()
-                    .body(JsonResponse.builder().message("Invalid gun data!").build());
+                    .body(JsonResponse.builder().message(messageSource.getMessage(
+                            "invalid_data",
+                            new Object[] {Gun.class.getSimpleName(), ShipClass.class.getSimpleName()},
+                            locale)).build());
         }
-        shipClassService.updateGunForShipClass(shipClassId, gunId,  gunAndQuantity);
+        shipClassService.updateGunForShipClass(shipClassId, gunId,  gunAndQuantity, locale);
         return ResponseEntity.ok()
-                .body(JsonResponse.builder().message("Gun updated.").build());
+                .body(JsonResponse.builder().message(messageSource.getMessage(
+                        "updated",
+                        new Object[] {Gun.class.getSimpleName(), ShipClass.class.getSimpleName()},
+                        locale)).build());
     }
 
     @DeleteMapping("/{shipClassId}/gun/{gunId}")
-    public ResponseEntity<JsonResponse> removeGunFromShipClass(@PathVariable long shipClassId, @PathVariable long gunId) {
-        shipClassService.removeGunFromShipClass(shipClassId, gunId);
+    public ResponseEntity<JsonResponse> removeGunFromShipClass(
+            @PathVariable long shipClassId,
+            @PathVariable long gunId,
+            Locale locale) {
+        shipClassService.removeGunFromShipClass(shipClassId, gunId, locale);
         return ResponseEntity.ok()
-                .body(JsonResponse.builder().message("Gun was removed from ship class.").build());
+                .body(JsonResponse.builder().message(messageSource.getMessage(
+                        "removed",
+                        new Object[] {Gun.class.getSimpleName()},
+                        locale)).build());
     }
 }
 

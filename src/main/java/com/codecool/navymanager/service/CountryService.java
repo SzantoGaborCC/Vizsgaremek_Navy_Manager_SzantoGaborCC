@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.List;
 import java.util.Locale;
@@ -63,7 +62,7 @@ public class CountryService {
         if (countryRepository.existsById(id)) {
             countryRepository.deleteById(id);
         } else {
-            throw  new NoSuchElementException(
+            throw new NoSuchElementException(
                     messageSource.getMessage(
                             "no_such",
                             new Object[] {Country.class.getSimpleName()},

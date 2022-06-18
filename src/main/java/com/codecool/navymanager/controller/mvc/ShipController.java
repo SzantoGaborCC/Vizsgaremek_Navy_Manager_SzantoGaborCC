@@ -2,26 +2,31 @@ package com.codecool.navymanager.controller.mvc;
 
 
 import com.codecool.navymanager.dto.ShipDto;
+import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.OfficerService;
 import com.codecool.navymanager.service.ShipClassService;
 import com.codecool.navymanager.service.ShipService;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/ship")
 public class ShipController {
+    @Autowired
+    MessageSource messageSource;
+
     private final ShipService shipService;
     private final ShipClassService shipClassService;
     private final OfficerService officerService;
@@ -42,8 +47,8 @@ public class ShipController {
     }
 
     @GetMapping("/{id}")
-    public String getDetails(@PathVariable Long id, Model model) {
-        ShipDto ship = shipService.findById(id);
+    public String getDetails(@PathVariable Long id, Model model, Locale locale) {
+        ShipDto ship = shipService.findById(id, locale);
         model.addAttribute("ship", ship);
         return "ship-details";
     }
@@ -59,7 +64,11 @@ public class ShipController {
     }
 
     @PostMapping
-    public ResponseEntity<JsonResponse> add(@ModelAttribute("ship") @Valid ShipDto ship, BindingResult result, Model model) {
+    public ResponseEntity<JsonResponse> add(
+            @ModelAttribute("ship") @Valid ShipDto ship,
+            BindingResult result,
+            Model model,
+            Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
@@ -68,42 +77,49 @@ public class ShipController {
             model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage("Invalid country data!");
+            jsonResponse.setMessage(messageSource.getMessage(
+                    "invalid_data",
+                    new Object[] {Ship.class.getSimpleName()},
+                    locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
         shipService.add(ship);
-        jsonResponse.setMessage("Ship was added.");
+        jsonResponse.setMessage(messageSource.getMessage(
+                "added",
+                new Object[] {Ship.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok().body(jsonResponse);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id) {
-        shipService.deleteById(id);
+    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
+        shipService.deleteById(id, locale);
         return ResponseEntity.ok()
-                .body(JsonResponse.builder().message("Ship deleted.").build());
+                .body(JsonResponse.builder().message(messageSource.getMessage(
+                        "removed",
+                        new Object[] {Ship.class.getSimpleName()},
+                        locale)).build());
     }
 
     @GetMapping("/{id}/show-update-form")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
-        try {
-            ShipDto ship = shipService.findById(id);
+    public String showUpdateForm(@PathVariable Long id, Model model, Locale locale) {
+            ShipDto ship = shipService.findById(id, locale);
             model.addAttribute("add", false);
             model.addAttribute("ship", ship);
             model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             return "ship-form";
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Nonexistent ship!", e);
-
-        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JsonResponse> update(@PathVariable long id, @ModelAttribute("ship") @Valid ShipDto ship, BindingResult result, Model model) {
+    public ResponseEntity<JsonResponse> update(
+            @PathVariable long id,
+            @ModelAttribute("ship") @Valid ShipDto ship,
+            BindingResult result,
+            Model model,
+            Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
@@ -112,11 +128,17 @@ public class ShipController {
             model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage("Invalid ship data!");
+            jsonResponse.setMessage(messageSource.getMessage(
+                    "invalid_data",
+                    new Object[] {Ship.class.getSimpleName()},
+                    locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        shipService.update(ship, id);
-        jsonResponse.setMessage("Ship was updated.");
+        shipService.update(ship, id, locale);
+        jsonResponse.setMessage(messageSource.getMessage(
+                "updated",
+                new Object[] {Ship.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
 }

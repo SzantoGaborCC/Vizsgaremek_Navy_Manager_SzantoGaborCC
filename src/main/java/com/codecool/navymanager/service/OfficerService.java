@@ -3,16 +3,24 @@ package com.codecool.navymanager.service;
 import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.dto.ShipDto;
+import com.codecool.navymanager.entity.Country;
+import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.repository.OfficerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional(readOnly = true)
 public class OfficerService {
+    @Autowired
+    MessageSource messageSource;
     private final OfficerRepository officerRepository;
 
     public OfficerService(OfficerRepository officerRepository) {
@@ -23,8 +31,13 @@ public class OfficerService {
         return officerRepository.findAll().stream().map(OfficerDto::new).toList();
     }
 
-    public OfficerDto findById(long id) {
-        return new OfficerDto(officerRepository.findById(id).orElseThrow());
+    public OfficerDto findById(long id, Locale locale) {
+        return new OfficerDto(officerRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException(messageSource.getMessage(
+                        "no_such",
+                        new Object[] {Officer.class.getSimpleName()},
+                        locale))
+        ));
     }
 
     public List<OfficerDto> findAvailableOfficersForShip(ShipDto shipDto)  {
@@ -59,16 +72,27 @@ public class OfficerService {
     }
 
     @Transactional
-    public void update(OfficerDto officerDto, long id) {
+    public void update(OfficerDto officerDto, long id, Locale locale) {
         if (officerRepository.existsById(id)) {
             officerRepository.save(officerDto.toEntity());
         } else {
-            throw new IllegalArgumentException("No such officer!");
+            throw new NoSuchElementException(messageSource.getMessage(
+                    "no_such",
+                    new Object[] {Officer.class.getSimpleName()},
+                    locale));
         }
     }
 
     @Transactional
-    public void deleteById(long id) {
-        officerRepository.deleteById(id);
+    public void deleteById(long id, Locale locale) {
+        if (officerRepository.existsById(id)) {
+            officerRepository.deleteById(id);
+        } else {
+            throw  new NoSuchElementException(
+                    messageSource.getMessage(
+                            "no_such",
+                            new Object[] {Officer.class.getSimpleName()},
+                            locale));
+        }
     }
 }
