@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <div th:replace="fragments/header :: header (title='Navy Manager - Countries')"></div>
 <body>
-
 <div th:replace="fragments/menu :: menu (entityName = 'Country', addUrl = '/country/show-add-form', listUrl = '/country')"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="fragments/sidebar :: sidebar (active = 'Country')"></div>
         <div class="col">
-            <h2 style="font-weight: bold;text-align:center;">List of Countries</h2>
+            <h2>List of Countries</h2>
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-dark">
                 <tr>
@@ -19,7 +17,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="country: ${countries}">
+                <tr class="clickable-row" th:data-href="@{/country/{id}(id=${country.id})}" th:each="country: ${countries}">
                     <td th:text="${country.id}"></td>
                     <td th:text="${country.name}"></td>
                     <td class="text-center">

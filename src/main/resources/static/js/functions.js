@@ -33,8 +33,8 @@ function ajaxFormSubmit(e, formId) {
     $("#" + formId).serializeArray().map(function(x){data[x.name] = x.value;});
     const url = data['url'];
     delete data['url'];
-    const method = data['method'];
-    delete data['method'];
+    const method = data['add'] === 'true' ? 'POST' : 'PUT';
+    delete data['add'];
     const redirectTo = data['redirectTo'];
     delete data['redirectTo'];
     $('span.validationError').remove()

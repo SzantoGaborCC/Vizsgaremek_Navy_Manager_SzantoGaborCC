@@ -1,45 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
 <div th:replace="fragments/menu :: menu (entityName = 'Fleet', addUrl = '/fleet/show-add-form', listUrl = '/fleet')"></div>
-<h2 style="font-weight: bold;text-align:center;">List of Fleets</h2>
-<div class="container">
-    <table class="table table-bordered table-hover text-center">
-        <thead class="table-dark">
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Designation</th>
-            <th scope="col">Minimum rank required</th>
-            <th scope="col">Commander</th>
-            <th scope="col">Country</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="clickable-row" th:data-href="@{/fleet/{id}(id=${fleet.id})}" th:each="fleet: ${fleets}">
-            <td th:text="${fleet.id}"></td>
-            <td th:text="${fleet.designation}"></td>
-            <td><a th:href="@{/rank/{id}(id=${fleet.minimumRank.id})}" th:text="${fleet.minimumRank.designation}"/></td>
-            <td>
-                <span th:if="${fleet.commander} == null" class="text-danger">No commander was assigned</span>
-                <a th:unless="${fleet.commander} == null" th:href="@{/officer/{id}(id=${fleet.commander.id})}" th:text="${fleet.commander.name}"/>
-            </td>
-            <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
-            <td class="text-center">
-                <button th:onclick="'showDialog(\'dialog-delete\',\'Delete fleet?\',\'/fleet/'+${fleet.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
-                <a th:href="@{/fleet/{id}/show-update-form(id=${fleet.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Fleet')"></div>
+        <div class="col">
+            <h2 style="font-weight: bold;text-align:center;">List of Fleets</h2>
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Designation</th>
+                    <th scope="col">Minimum rank required</th>
+                    <th scope="col">Commander</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="clickable-row" th:data-href="@{/fleet/{id}(id=${fleet.id})}" th:each="fleet: ${fleets}">
+                    <td th:text="${fleet.id}"></td>
+                    <td th:text="${fleet.designation}"></td>
+                    <td><a th:href="@{/rank/{id}(id=${fleet.minimumRank.id})}"
+                           th:text="${fleet.minimumRank.designation}"/></td>
+                    <td>
+                        <span th:if="${fleet.commander} == null" class="text-danger">No commander was assigned</span>
+                        <a th:unless="${fleet.commander} == null" th:href="@{/officer/{id}(id=${fleet.commander.id})}"
+                           th:text="${fleet.commander.name}"/>
+                    </td>
+                    <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
+                    <td class="text-center">
+                        <button th:onclick="'showDialog(\'dialog-delete\',\'Delete fleet?\',\'/fleet/'+${fleet.id}+'\',\'DELETE\');event.stopPropagation();'"
+                                class="btn btn-link"><i class="fa fa-trash"></i></button>
+                        <a th:href="@{/fleet/{id}/show-update-form(id=${fleet.id})}" class="btn btn-link"><i
+                                class="fa-solid fa-pen-to-square"></i></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-
-
 <div id="dialog-delete" title="Delete fleet?"></div>
 <script>
-    jQuery(document).ready(function($) {
-        $(".clickable-row").click(function() {
+    jQuery(document).ready(function ($) {
+        $(".clickable-row").click(function () {
             window.location = $(this).data("href");
         });
     });
