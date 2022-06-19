@@ -15,11 +15,9 @@
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name" th:field="*{name}">
-                    <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-                </div>
+                    </div>
                 <div class="form-group">
-                    <label for="dateOfBirth">Date of Birth <span
-                            style="font-weight: lighter">(for example: 1888-08-08)</span></label>
+                    <label for="dateOfBirth">Date of Birth</label>
                     <input type="text" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}">
                 </div>
                 <div class="form-group">
@@ -31,8 +29,7 @@
                         <option th:unless="${officer.rank} != null" th:each="rankOpt : ${validRankValues}"
                                 th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
                     </select>
-                    <span class="validationError" th:if="${#fields.hasErrors('rank')}" th:errors="*{rank}"></span>
-                </div>
+                    </div>
                 <div class="form-group">
                     <label for="country">Country</label>
                     <select id="country" th:field="*{country}">
@@ -42,8 +39,7 @@
                         <option th:unless="${officer.country} != null" th:each="countryOpt : ${validCountryValues}"
                                 th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
                     </select>
-                    <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
-                </div>
+                    </div>
                 <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
                 </button>
             </form>
@@ -54,6 +50,9 @@
     $("#officerForm").submit(function (e) {
         ajaxFormSubmit(e, 'officerForm');
     });
+    $( function() {
+        $( "#dateOfBirth" ).datepicker(({ dateFormat: 'yy-mm-dd' }));
+    } );
 </script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
