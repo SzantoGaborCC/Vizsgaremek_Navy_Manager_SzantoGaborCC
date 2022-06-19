@@ -7,7 +7,7 @@
     <div class="row">
         <div th:replace="fragments/sidebar :: sidebar (active = 'Fleet')"></div>
         <div class="col">
-            <h2 style="font-weight: bold;text-align:center;">List of Fleets</h2>
+            <h2>List of Fleets</h2>
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-dark">
                 <tr>
@@ -23,12 +23,13 @@
                 <tr class="clickable-row" th:data-href="@{/fleet/{id}(id=${fleet.id})}" th:each="fleet: ${fleets}">
                     <td th:text="${fleet.id}"></td>
                     <td th:text="${fleet.designation}"></td>
-                    <td><a th:href="@{/rank/{id}(id=${fleet.minimumRank.id})}"
-                           th:text="${fleet.minimumRank.designation}"/></td>
+                    <td>
+                        <a th:href="@{/rank/{id}(id=${fleet.minimumRank.id})}"
+                           th:text="${fleet.minimumRank.designation}"></a>
                     <td>
                         <span th:if="${fleet.commander} == null" class="text-danger">No commander was assigned</span>
                         <a th:unless="${fleet.commander} == null" th:href="@{/officer/{id}(id=${fleet.commander.id})}"
-                           th:text="${fleet.commander.name}"/>
+                           th:text="${fleet.commander.name}"></a>
                     </td>
                     <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
                     <td class="text-center">

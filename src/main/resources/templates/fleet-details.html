@@ -7,7 +7,7 @@
     <div class="row">
         <div th:replace="fragments/sidebar :: sidebar (active = 'Fleet')"></div>
         <div class="col">
-            <h2 style="font-weight: bold;text-align:center;"><span th:text="${fleet.designation} + ' - Details'"></span>
+            <h2><span th:text="${fleet.designation} + ' - Details'"></span>
             </h2>
             <table class="table table-bordered text-center">
                 <thead class="table-dark">
@@ -24,7 +24,8 @@
                 <tr th:object="${fleet}">
                     <td th:text="${fleet.id}"></td>
                     <td th:text="${fleet.designation}"></td>
-                    <td><a th:href="@{/rank/{id}(id=${fleet.minimumRank.id})}"
+                    <td>
+                        <a th:href="@{/rank/{id}(id=${fleet.minimumRank.id})}"
                            th:text="${fleet.minimumRank.designation}"></a>
                     </td>
                     <td>

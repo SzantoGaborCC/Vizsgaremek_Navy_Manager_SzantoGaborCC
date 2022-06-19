@@ -1,34 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <div th:replace="fragments/header :: header (title='Navy Manager - Officers')"></div>
 <body>
 <div th:replace="fragments/menu :: menu (entityName = 'Officer', listUrl = '/officer')"></div>
-<h2 style="font-weight: bold;text-align:center;"><span th:text="${officer.name} + ' - Details'"></span></h2>
-<div class="container">
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Date of Birth</th>
-            <th scope="col">Rank</th>
-            <th scope="col">Country</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:object="${officer}">
-            <td th:text="${officer.id}"></td>
-            <td th:text="${officer.name}"></td>
-            <td th:text="${officer.dateOfBirth}"></td>
-            <td th:text="${officer.rank.designation}"></td>
-            <td th:text="${officer.country.name}"></td>
-            <td class="text-center">
-                <a th:href="@{/officer/{id}/show-update-form(id=${officer.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Officer')"></div>
+        <div class="col">
+            <h2><span th:text="${officer.name} + ' - Details'"></span></h2>
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Date of Birth</th>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:object="${officer}">
+                    <td th:text="${officer.id}"></td>
+                    <td th:text="${officer.name}"></td>
+                    <td th:text="${officer.dateOfBirth}"></td>
+                    <td>
+                        <a th:href="@{/rank/{id}(id=${officer.rank.id})}"
+                           th:text="${officer.rank.designation}"></a>
+                    </td>
+                    <td><a th:href="@{/country/{id}(id=${officer.country.id})}" th:text="${officer.country.name}"></a></td>
+                    <td class="text-center">
+                        <a th:href="@{/officer/{id}/show-update-form(id=${officer.id})}" class="btn btn-link"><i
+                                class="fa-solid fa-pen-to-square"></i></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 <div th:insert="fragments/footer :: footer"></div>
 </body>

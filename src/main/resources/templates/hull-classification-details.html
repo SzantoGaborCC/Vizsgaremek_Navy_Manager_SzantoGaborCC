@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <div th:replace="fragments/header :: header (title='Navy Manager - Hull Classifications')"></div>
 <body>
 <div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', listUrl = '/hull-classification')"></div>
-<h2 style="font-weight: bold;text-align:center;"><span th:text="${hullClassification.designation} + ' - Details'"></span></h2>
-<div class="container">
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Abbreviation</th>
-            <th scope="col">Name</th>
-            <th scope="col">Minimum rank required</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:object="${hullClassification}">
-            <td th:text="${hullClassification.id}"></td>
-            <td th:text="${hullClassification.abbreviation}"></td>
-            <td th:text="${hullClassification.designation}"></td>
-            <td th:text="${hullClassification.minimumRank.designation}"></td>
-            <td class="text-center">
-                <a th:href="@{/hull-classification/{id}/show-update-form(id=${hullClassification.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Hull Classification')"></div>
+        <div class="col">
+            <h2><span th:text="${hullClassification.designation} + ' - Details'"></span></h2>
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Abbreviation</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Minimum rank required</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:object="${hullClassification}">
+                    <td th:text="${hullClassification.id}"></td>
+                    <td th:text="${hullClassification.abbreviation}"></td>
+                    <td th:text="${hullClassification.designation}"></td>
+                    <td>
+                        <a th:href="@{/rank/{id}(id=${hullClassification.minimumRank.id})}"
+                           th:text="${hullClassification.minimumRank.designation}"></a>
+                    </td>
+                    <td class="text-center">
+                        <a th:href="@{/hull-classification/{id}/show-update-form(id=${hullClassification.id})}"
+                           class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 <div th:insert="fragments/footer :: footer"></div>
 </body>

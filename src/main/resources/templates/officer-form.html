@@ -2,56 +2,58 @@
 <html lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Officers')"></div>
 <body>
-
 <div th:replace="fragments/menu :: menu (entityName = 'Officer', listUrl = '/officer')"></div>
-<h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Officer' : 'Add New Officer'}"></h2>
-<div class="container">
-  <form id="officerForm" th:object="${officer}" novalidate>
-    <input name="url" type="hidden" th:value="${add} == true ? '/officer' : '/officer/' + ${officer.id}">
-    <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
-    <input type="hidden" id="id" th:field="*{id}">
-    <div class="form-group">
-      <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" th:field="*{name}">
-      <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Officer')"></div>
+        <div class="col">
+            <h2 th:text="${add == false ? 'Update Officer' : 'Add New Officer'}"></h2>
+            <form id="officerForm" th:object="${officer}" novalidate>
+                <input name="url" type="hidden" th:value="${add} == true ? '/officer' : '/officer/' + ${officer.id}">
+                <input name="add" type="hidden"  th:value="${add}">
+                <input type="hidden" id="id" th:field="*{id}">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}">
+                    <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth <span
+                            style="font-weight: lighter">(for example: 1888-08-08)</span></label>
+                    <input type="text" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}">
+                </div>
+                <div class="form-group">
+                    <label for="rank">Rank</label>
+                    <select id="rank" th:field="*{rank}">
+                        <option th:if="${officer.rank} != null" th:each="rankOpt : ${validRankValues}"
+                                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"
+                                th:selected="${officer.rank.id == rankOpt.id}"></option>
+                        <option th:unless="${officer.rank} != null" th:each="rankOpt : ${validRankValues}"
+                                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
+                    </select>
+                    <span class="validationError" th:if="${#fields.hasErrors('rank')}" th:errors="*{rank}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" th:field="*{country}">
+                        <option th:if="${officer.country} != null" th:each="countryOpt : ${validCountryValues}"
+                                th:value="${countryOpt.id}" th:text="${countryOpt.name}"
+                                th:selected="${officer.country.id == countryOpt.id}"></option>
+                        <option th:unless="${officer.country} != null" th:each="countryOpt : ${validCountryValues}"
+                                th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
+                    </select>
+                    <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+                </div>
+                <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
+                </button>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-      <label for="dateOfBirth">Date of Birth <span style="font-weight: lighter">(for example: 1888-08-08)</span></label>
-      <input type="text" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}">
-    </div>
-    <div class="form-group">
-      <label for="rank">Rank</label>
-      <select id="rank" th:field="*{rank}">
-        <option th:if="${officer.rank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"
-                th:selected="${officer.rank.id == rankOpt.id}"></option>
-        <option th:unless="${officer.rank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('rank')}" th:errors="*{rank}"></span>
-      <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
-    </div>
-    <div class="form-group">
-      <label for="country">Country</label>
-      <select id="country" th:field="*{country}">
-        <option th:if="${officer.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.id}" th:text="${countryOpt.name}"
-                th:selected="${officer.country.id == countryOpt.id}"></option>
-        <option th:unless="${officer.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
-      <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
-    </div>
-
-
-    <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
-  </form>
 </div>
 <script>
-  $("#officerForm").submit(function(e) {
-    ajaxFormSubmit(e, 'officerForm');
-  });
+    $("#officerForm").submit(function (e) {
+        ajaxFormSubmit(e, 'officerForm');
+    });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>

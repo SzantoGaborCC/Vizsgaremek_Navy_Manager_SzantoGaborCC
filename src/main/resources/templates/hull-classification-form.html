@@ -2,42 +2,52 @@
 <html lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Hull Classifications')"></div>
 <body>
-
 <div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', listUrl = '/hull-classification')"></div>
-<h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Hull Classification' : 'Add New Hull Classification'}"></h2>
-<div class="container">
-  <form id="hullClassificationForm" th:object="${hullClassification}" novalidate>
-    <input name="url" type="hidden" th:value="${add} == true ? '/hull-classification' : '/hull-classification/' + ${hullClassification.id}">
-    <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
-    <input type="hidden" id="id" th:field="*{id}">
-    <div class="form-group">
-      <label for="abbreviation">Abbreviation</label>
-      <input type="text" class="form-control" id="abbreviation" th:field="*{abbreviation}">
-      <span class="validationError" th:if="${#fields.hasErrors('abbreviation')}" th:errors="*{abbreviation}"></span>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Hull Classification')"></div>
+        <div class="col">
+            <h2 th:text="${add == false ? 'Update Hull Classification' : 'Add New Hull Classification'}"></h2>
+            <form id="hullClassificationForm" th:object="${hullClassification}" novalidate>
+                <input name="url" type="hidden"
+                       th:value="${add} == true ? '/hull-classification' : '/hull-classification/' + ${hullClassification.id}">
+                <input name="add" type="hidden"  th:value="${add}">
+                <input type="hidden" id="id" th:field="*{id}">
+                <div class="form-group">
+                    <label for="abbreviation">Abbreviation</label>
+                    <input type="text" class="form-control" id="abbreviation" th:field="*{abbreviation}">
+                    <span class="validationError" th:if="${#fields.hasErrors('abbreviation')}"
+                          th:errors="*{abbreviation}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="designation">Designation</label>
+                    <input type="text" class="form-control" id="designation" th:field="*{designation}">
+                    <span class="validationError" th:if="${#fields.hasErrors('designation')}"
+                          th:errors="*{designation}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="minimumRank">Minimum rank required</label>
+                    <select id="minimumRank" th:field="*{minimumRank}">
+                        <option th:if="${hullClassification.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
+                                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"
+                                th:selected="${hullClassification.minimumRank.id == rankOpt.id}"></option>
+                        <option th:unless="${hullClassification.minimumRank} != null"
+                                th:each="rankOpt : ${validRankValues}"
+                                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
+                    </select>
+                    <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}"
+                          th:errors="*{minimumRank}"></span>
+                </div>
+                <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
+                </button>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-      <label for="designation">Designation</label>
-      <input type="text" class="form-control" id="designation" th:field="*{designation}">
-      <span class="validationError" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></span>
-    </div>
-    <div class="form-group">
-      <label for="minimumRank">Minimum rank required</label>
-      <select id="minimumRank" th:field="*{minimumRank}">
-        <option th:if="${hullClassification.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"
-                th:selected="${hullClassification.minimumRank.id == rankOpt.id}"></option>
-        <option th:unless="${hullClassification.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}" th:errors="*{minimumRank}"></span>
-    </div>
-    <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
-  </form>
 </div>
 <script>
-  $("#hullClassificationForm").submit(function(e) {
-    ajaxFormSubmit(e, 'hullClassificationForm');
-  });
+    $("#hullClassificationForm").submit(function (e) {
+        ajaxFormSubmit(e, 'hullClassificationForm');
+    });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>
