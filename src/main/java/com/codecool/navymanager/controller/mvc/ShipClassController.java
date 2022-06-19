@@ -140,7 +140,7 @@ public class ShipClassController {
                 locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
-    //todo: adding the same gun should impossible, should check for ship displacement.
+    //todo:  should check for ship displacement.
     // When ship displacement reduced, check for gun removal?
     @GetMapping("/{id}/gun/show-add-gun-form")
     public String showAddGunForm(
@@ -150,7 +150,7 @@ public class ShipClassController {
         ShipClassDto shipClass = shipClassService.findById(id, locale);
         model.addAttribute("add", true);
         model.addAttribute("shipClass", shipClass);
-        model.addAttribute("gunAndQuantity", new GunInstallationDto());
+        model.addAttribute("gunInstallation", new GunInstallationDto());
         model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
         return "ship-class-gun-form";
     }
@@ -158,7 +158,7 @@ public class ShipClassController {
     @PostMapping("/{id}/gun")
     public ResponseEntity<JsonResponse> addGun(
             @PathVariable Long id,
-            @ModelAttribute("gunAndQuantity") @Valid GunInstallationDto gunInstallationDto,
+            @ModelAttribute("gunInstallation") @Valid GunInstallationDto gunInstallation,
             Model model,
             BindingResult result,
             Locale locale) {
@@ -176,7 +176,7 @@ public class ShipClassController {
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        shipClassService.addGunToShipClass(id, gunInstallationDto, locale);
+        shipClassService.addGunToShipClass(id, gunInstallation, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "param0_added_to_param1",
                 new Object[] {Gun.class.getSimpleName(), ShipClass.class.getSimpleName()},
@@ -195,7 +195,7 @@ public class ShipClassController {
                 shipClassService.findGunAndQuantityByShipClassIdAndGunId(shipClassId, gunId);
         model.addAttribute("add", false);
         model.addAttribute("shipClass", shipClass);
-        model.addAttribute("gunAndQuantity", gunInstallationDto);
+        model.addAttribute("gunInstallation", gunInstallationDto);
         model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
         return "ship-class-gun-form";
     }
@@ -203,7 +203,7 @@ public class ShipClassController {
     @PutMapping("/{shipClassId}/gun/{gunId}")
     public ResponseEntity<JsonResponse> updateGunForShipClass(
             @PathVariable long shipClassId, @PathVariable long gunId,
-            @ModelAttribute("gunAndQuantity") @Valid GunInstallationDto gunAndQuantity,
+            @ModelAttribute("gunInstallation") @Valid GunInstallationDto gunInstallation,
             Model model,
             BindingResult result,
             Locale locale) {
@@ -220,7 +220,7 @@ public class ShipClassController {
                             new Object[] {Gun.class.getSimpleName(), ShipClass.class.getSimpleName()},
                             locale)).build());
         }
-        shipClassService.updateGunForShipClass(shipClassId, gunId,  gunAndQuantity, locale);
+        shipClassService.updateGunForShipClass(shipClassId, gunId,  gunInstallation, locale);
         return ResponseEntity.ok()
                 .body(JsonResponse.builder().message(messageSource.getMessage(
                         "updated",

@@ -84,8 +84,8 @@ public class ShipClassService {
                             new Object[] {ShipClass.class.getSimpleName()},
                             locale)));
             if (shipClass.getGuns().stream()
-                    .noneMatch(gunAndQuantity ->
-                            gunAndQuantity.getGun().getId().equals(gunInstallationDto.getGun().getId()))) {
+                    .noneMatch(gunInstallation ->
+                            gunInstallation.getGun().getId().equals(gunInstallationDto.getGun().getId()))) {
                 GunInstallation gunInstallation = gunInstallationDto.toEntity();
                 gunInstallation.setShipClass(shipClass);
                 shipClass.getGuns().add(gunInstallation);

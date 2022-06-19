@@ -18,8 +18,6 @@ public class GunInstallationDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    @NotNull(message = "You must choose a valid ship class!")
-    private ShipClassDto shipClass;
     @NotNull(message = "You must choose a valid gun!")
     private GunDto gun;
     @NotNull(message = "You must specify the quantity!")
@@ -53,7 +51,6 @@ public class GunInstallationDto implements Serializable {
     public String toString() {
         return "GunAndQuantityDto{" +
                 "id=" + id +
-                ", shipClass=" + shipClass +
                 ", gun=" + gun +
                 ", quantity=" + quantity +
                 '}';

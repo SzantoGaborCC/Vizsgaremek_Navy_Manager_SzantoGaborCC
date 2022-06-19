@@ -1,34 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <div th:replace="fragments/header :: header (title='Navy Manager - Ships')"></div>
 <body>
 <div th:replace="fragments/menu :: menu (entityName = 'Ship', listUrl = '/ship')"></div>
-<h2 style="font-weight: bold;text-align:center;"><span th:text="${ship.name} + ' - Details'"></span></h2>
-<div class="container">
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Ship Class</th>
-            <th scope="col">Captain</th>
-            <th scope="col">Country</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:object ="${ship}">
-            <td th:text="${ship.id}"></td>
-            <td th:text="${ship.name}"></td>
-            <td th:text="${ship.shipClass.name}"></td>
-            <td th:text="${ship.captain} == null ? 'No captain was assigned' : ${ship.captain.name}" th:class="${ship.captain} == null ? 'text-danger' : ''"></td>
-            <td th:text="${ship.country.name}"></td>
-            <td class="text-center">
-                <a th:href="@{/ship/{id}/show-update-form(id=${ship.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Ship')"></div>
+        <div class="col">
+            <h2><span th:text="${ship.name} + ' - Details'"></span></h2>
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Ship Class</th>
+                    <th scope="col">Captain</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:object="${ship}">
+                    <td th:text="${ship.id}"></td>
+                    <td th:text="${ship.name}"></td>
+                    <td>
+                        <a th:href="@{/ship-class/{id}(id=${ship.shipClass.id})}"
+                           th:text="${ship.shipClass.name}"></a>
+                    </td>
+                    <td>
+                        <span th:if="${ship.captain} == null" class="text-danger">No commander was assigned</span>
+                        <a th:unless="${ship.captain} == null" th:href="@{/officer/{id}(id=${ship.captain.id})}"
+                           th:text="${ship.captain.name}"></a>
+                    </td>
+                    <td><a th:href="@{/country/{id}(id=${ship.country.id})}" th:text="${ship.country.name}"></a></td>
+                    <td class="text-center">
+                        <a th:href="@{/ship/{id}/show-update-form(id=${ship.id})}" class="btn btn-link"><i
+                                class="fa-solid fa-pen-to-square"></i></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 <div th:insert="fragments/footer :: footer"></div>
 </body>

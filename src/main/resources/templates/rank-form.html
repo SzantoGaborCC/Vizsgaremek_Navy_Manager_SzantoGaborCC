@@ -2,31 +2,38 @@
 <html lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Ranks')"></div>
 <body>
-
 <div th:replace="fragments/menu :: menu (entityName = 'Rank', listUrl = '/rank')"></div>
-<h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Rank' : 'Add New Rank'}"></h2>
-<div class="container">
-  <form id="rankForm" th:object="${rank}" novalidate>
-    <input name="url" type="hidden" th:value="${add} == true ? '/rank' : '/rank/' + ${rank.id}">
-    <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
-    <input type="hidden" id="id" th:field="*{id}">
-    <div class="form-group">
-      <label for="precedence">Precedence</label>
-      <input type="text" class="form-control" id="precedence" th:field="*{precedence}">
-      <span class="validationError" th:if="${#fields.hasErrors('precedence')}" th:errors="*{precedence}"></span>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Rank')"></div>
+        <div class="col">
+            <h2 th:text="${add == false ? 'Update Rank' : 'Add New Rank'}"></h2>
+            <form id="rankForm" th:object="${rank}" novalidate>
+                <input name="url" type="hidden" th:value="${add} == true ? '/rank' : '/rank/' + ${rank.id}">
+                <input name="add" type="hidden"  th:value="${add}">
+                <input id="id" type="hidden" th:field="*{id}">
+                <div class="form-group">
+                    <label for="precedence">Precedence</label>
+                    <input type="text" class="form-control" id="precedence" th:field="*{precedence}">
+                    <span class="validationError" th:if="${#fields.hasErrors('precedence')}"
+                          th:errors="*{precedence}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="designation">Designation</label>
+                    <input type="text" class="form-control" id="designation" th:field="*{designation}">
+                    <span class="validationError" th:if="${#fields.hasErrors('designation')}"
+                          th:errors="*{designation}"></span>
+                </div>
+                <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
+                </button>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-      <label for="designation">Designation</label>
-      <input type="text" class="form-control" id="designation" th:field="*{designation}">
-      <span class="validationError" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></span>
-    </div>
-    <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
-  </form>
 </div>
 <script>
-  $("#rankForm").submit(function(e) {
-    ajaxFormSubmit(e, 'rankForm');
-  });
+    $("#rankForm").submit(function (e) {
+        ajaxFormSubmit(e, 'rankForm');
+    });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>

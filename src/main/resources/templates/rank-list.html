@@ -1,37 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <div th:replace="fragments/header :: header (title='Navy Manager - Ranks')"></div>
 <body>
-
 <div th:replace="fragments/menu :: menu (entityName = 'Rank', addUrl = '/rank/show-add-form', listUrl = '/rank')"></div>
-<h2 style="font-weight: bold;text-align:center;">List of Ranks</h2>
-<div class="container">
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Precedence</th>
-            <th scope="col">Designation</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="rank: ${ranks}">
-            <td th:text="${rank.id}"></td>
-            <td th:text="${rank.precedence}"></td>
-            <td th:text="${rank.designation}"></td>
-            <td class="text-center">
-                <button th:onclick="'showDialog(\'dialog-delete\',\'Delete rank?\',\'/rank/'+${rank.id}+'\',\'DELETE\');event.stopPropagation();'" class="btn btn-link"><i class="fa fa-trash"></i></button>
-                <a th:href="@{/rank/{id}/show-update-form(id=${rank.id})}" class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Rank')"></div>
+        <div class="col">
+            <h2>List of Ranks</h2>
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Precedence</th>
+                    <th scope="col">Designation</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="clickable-row" th:data-href="@{/rank/{id}(id=${rank.id})}" th:each="rank: ${ranks}">
+                    <td th:text="${rank.id}"></td>
+                    <td th:text="${rank.precedence}"></td>
+                    <td th:text="${rank.designation}"></td>
+                    <td class="text-center">
+                        <button th:onclick="'showDialog(\'dialog-delete\',\'Delete rank?\',\'/rank/'+${rank.id}+'\',\'DELETE\');event.stopPropagation();'"
+                                class="btn btn-link"><i class="fa fa-trash"></i></button>
+                        <a th:href="@{/rank/{id}/show-update-form(id=${rank.id})}" class="btn btn-link"><i
+                                class="fa-solid fa-pen-to-square"></i></a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 <div id="dialog-delete"></div>
 <script>
-    jQuery(document).ready(function($) {
-        $(".clickable-row").click(function() {
+    jQuery(document).ready(function ($) {
+        $(".clickable-row").click(function () {
             window.location = $(this).data("href");
         });
     });

@@ -2,61 +2,62 @@
 <html lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Ships')"></div>
 <body>
-
 <div th:replace="fragments/menu :: menu (entityName = 'Ship', listUrl = '/ship')"></div>
-<h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Ship' : 'Add New Ship'}"></h2>
-<div class="container">
-    <form id="shipForm" th:object="${ship}" novalidate>
-        <input name="url" type="hidden" th:value="${add} == true ? '/ship' : '/ship/' + ${ship.id}">
-        <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
-        <input type="hidden" id="id" th:field="*{id}">
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" th:field="*{name}">
-            <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Ship')"></div>
+        <div class="col">
+            <h2 th:text="${add == false ? 'Update Ship' : 'Add New Ship'}"></h2>
+            <form id="shipForm" th:object="${ship}" novalidate>
+                <input name="url" type="hidden" th:value="${add} == true ? '/ship' : '/ship/' + ${ship.id}">
+                <input name="add" type="hidden" th:value="${add}">
+                <input id="id" type="hidden" th:field="*{id}">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}">
+                </div>
+                <div class="form-group">
+                    <label for="shipClass">Ship Class</label>
+                    <select id="shipClass" th:field="*{shipClass}">
+                        <option th:if="${ship.shipClass} != null" th:each="shipClassOpt : ${validShipClassValues}"
+                                th:value="${shipClassOpt.id}" th:text="${shipClassOpt.name}"
+                                th:selected="${ship.shipClass.id == shipClassOpt.id}"></option>
+                        <option th:unless="${ship.id} != null" th:each="shipClassOpt : ${validShipClassValues}"
+                                th:value="${shipClassOpt.id}" th:text="${shipClassOpt.name}"></option>
+                    </select>
+                </div>
+                <div th:if="${add == false}">
+                    <div th:if="${#lists.size(validCaptainValues) == 1} and ${ship.captain} == null"
+                         th:class="'text-danger'">No
+                        assignable officer found.
+                    </div>
+                    <div th:unless="${#lists.size(validCaptainValues) == 1} and ${ship.captain} == null"
+                         class="form-group">
+                        <label for="captain">Captain</label>
+                        <select id="captain" th:field="*{captain}">
+                            <option th:if="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
+                                    th:value="${captainOpt.id}" th:text="${captainOpt.name}"
+                                    th:selected="${ship.captain.id == captainOpt.id}"></option>
+                            <option th:unless="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
+                                    th:value="${captainOpt.id}" th:text="${captainOpt.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" th:field="*{country}">
+                        <option th:if="${ship.country} != null" th:each="countryOpt : ${validCountryValues}"
+                                th:value="${countryOpt.id}" th:text="${countryOpt.name}"
+                                th:selected="${ship.country.id == countryOpt.id}"></option>
+                        <option th:unless="${ship.country} != null" th:each="countryOpt : ${validCountryValues}"
+                                th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
+                </button>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="shipClass">Ship Class</label>
-            <select id="shipClass" th:field="*{shipClass}">
-                <option th:if="${ship.shipClass} != null" th:each="shipClassOpt : ${validShipClassValues}"
-                        th:value="${shipClassOpt.id}" th:text="${shipClassOpt.name}"
-                        th:selected="${ship.shipClass.id == shipClassOpt.id}"></option>
-                <option th:unless="${ship.id} != null" th:each="shipClassOpt : ${validShipClassValues}"
-                        th:value="${shipClassOpt.id}" th:text="${shipClassOpt.name}"></option>
-            </select>
-            <span class="validationError" th:if="${#fields.hasErrors('shipClass')}" th:errors="*{shipClass}"></span>
-            <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
-        </div>
-        <div th:if="${add == false}">
-            <div th:if="${#lists.size(validCaptainValues) == 1} and ${ship.captain} == null" th:class="'text-danger'">No
-                assignable officer found.
-            </div>
-            <div th:unless="${#lists.size(validCaptainValues) == 1} and ${ship.captain} == null" class="form-group">
-                <label for="captain">Captain</label>
-                <select id="captain" th:field="*{captain}">
-                    <option th:if="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
-                            th:value="${captainOpt.id}" th:text="${captainOpt.name}"
-                            th:selected="${ship.captain.id == captainOpt.id}"></option>
-                    <option th:unless="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
-                            th:value="${captainOpt.id}" th:text="${captainOpt.name}"></option>
-                </select>
-                <span class="validationError" th:if="${#fields.hasErrors('captain')}" th:errors="*{captain}"></span>
-                <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="country">Country</label>
-            <select id="country" th:field="*{country}">
-                <option th:if="${ship.country} != null" th:each="countryOpt : ${validCountryValues}"
-                        th:value="${countryOpt.id}" th:text="${countryOpt.name}"
-                        th:selected="${ship.country.id == countryOpt.id}"></option>
-                <option th:unless="${ship.country} != null" th:each="countryOpt : ${validCountryValues}"
-                        th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
-            </select>
-            <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
-        </div>
-        <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
-    </form>
+    </div>
 </div>
 <script>
     $("#shipForm").submit(function (e) {

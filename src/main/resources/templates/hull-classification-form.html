@@ -12,7 +12,7 @@
                 <input name="url" type="hidden"
                        th:value="${add} == true ? '/hull-classification' : '/hull-classification/' + ${hullClassification.id}">
                 <input name="add" type="hidden"  th:value="${add}">
-                <input type="hidden" id="id" th:field="*{id}">
+                <input id="id" type="hidden" th:field="*{id}">
                 <div class="form-group">
                     <label for="abbreviation">Abbreviation</label>
                     <input type="text" class="form-control" id="abbreviation" th:field="*{abbreviation}">

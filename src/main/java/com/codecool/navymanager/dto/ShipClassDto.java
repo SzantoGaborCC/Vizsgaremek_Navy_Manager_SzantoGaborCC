@@ -52,11 +52,7 @@ public class ShipClassDto implements Serializable {
         this.speedInKmh = shipClass.getSpeedInKmh();
         this.country = new CountryDto(shipClass.getCountry());
         this.guns = shipClass.getGuns().stream()
-                .map(gunAndQuantity -> {
-                    GunInstallationDto gunInstallationDto = new GunInstallationDto(gunAndQuantity);
-                    gunInstallationDto.setShipClass(this);
-                    return gunInstallationDto;
-                })
+                .map(GunInstallationDto::new)
                 .collect(Collectors.toSet());
     }
 
@@ -73,7 +69,7 @@ public class ShipClassDto implements Serializable {
                 country.toEntity(),
                 (guns == null) ? null :
                     guns.stream()
-                        .map(gunInstallationDto -> gunInstallationDto.toEntity())
+                        .map(GunInstallationDto::toEntity)
                         .collect(Collectors.toSet())
         );
     }

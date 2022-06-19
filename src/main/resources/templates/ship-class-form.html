@@ -2,70 +2,82 @@
 <html lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Ship Classes')"></div>
 <body>
-
 <div th:replace="fragments/menu :: menu (entityName = 'Ship Class', listUrl = '/ship-class')"></div>
-<h2 style="font-weight: bold;text-align:center;" th:text="${add == false ? 'Update Ship Class' : 'Add New Ship Class'}"></h2>
-<div class="container">
-    <form id="shipClassForm" th:object="${shipClass}" novalidate>
-        <input name="url" type="hidden" th:value="${add} == true ? '/ship-class' : '/ship-class/' + ${shipClass.id}">
-        <input name="method" type="hidden" th:value="${add} == true ? 'POST' : 'PUT'">
-        <input type="hidden" id="id" th:field="*{id}">
-    <div class="form-group">
-      <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" th:field="*{name}">
-      <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/sidebar :: sidebar (active = 'Ship Class')"></div>
+        <div class="col">
+            <h2 th:text="${add == false ? 'Update Ship Class' : 'Add New Ship Class'}"></h2>
+            <form id="shipClassForm" th:object="${shipClass}" novalidate>
+                <input name="url" type="hidden" th:value="${add} == true ? '/ship-class' : '/ship-class/' + ${shipClass.id}">
+                <input name="add" type="hidden" th:value="${add}">
+                <input id="id" type="hidden" th:field="*{id}">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}">
+                    <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="hullClassification">Hull Classification</label>
+                    <select id="hullClassification" th:field="*{hullClassification}">
+                        <option th:if="${shipClass.hullClassification} != null"
+                                th:each="hullClassificationOpt : ${validHullClassificationValues}"
+                                th:value="${hullClassificationOpt.id}" th:text="${hullClassificationOpt.designation}"
+                                th:selected="${shipClass.hullClassification.id == hullClassificationOpt.id}"></option>
+                        <option th:unless="${shipClass.hullClassification} != null"
+                                th:each="hullClassificationOpt : ${validHullClassificationValues}"
+                                th:value="${hullClassificationOpt.id}"
+                                th:text="${hullClassificationOpt.designation}"></option>
+                    </select>
+                    <span class="validationError" th:if="${#fields.hasErrors('hullClassification')}"
+                          th:errors="*{hullClassification}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="displacementInTons">Displacement in tons</label>
+                    <input type="text" class="form-control" id="displacementInTons" th:field="*{displacementInTons}">
+                    <span class="validationError" th:if="${#fields.hasErrors('displacementInTons')}"
+                          th:errors="*{displacementInTons}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="armorBeltInCms">Belt armor in centimeters</label>
+                    <input type="text" class="form-control" id="armorBeltInCms" th:field="*{armorBeltInCms}">
+                    <span class="validationError" th:if="${#fields.hasErrors('armorBeltInCms')}"
+                          th:errors="*{armorBeltInCms}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="armorTurretInCms">Turret armor in centimeters</label>
+                    <input type="text" class="form-control" id="armorTurretInCms" th:field="*{armorTurretInCms}">
+                    <span class="validationError" th:if="${#fields.hasErrors('armorTurretInCms')}"
+                          th:errors="*{armorTurretInCms}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="armorDeckInCms">Deck armor in centimeters</label>
+                    <input type="text" class="form-control" id="armorDeckInCms" th:field="*{armorDeckInCms}">
+                    <span class="validationError" th:if="${#fields.hasErrors('armorDeckInCms')}"
+                          th:errors="*{armorDeckInCms}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="speedInKmh">Speed in km/h</label>
+                    <input type="text" class="form-control" id="speedInKmh" th:field="*{speedInKmh}">
+                    <span class="validationError" th:if="${#fields.hasErrors('speedInKmh')}"
+                          th:errors="*{speedInKmh}"></span>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" th:field="*{country}">
+                        <option th:if="${shipClass.country} != null" th:each="countryOpt : ${validCountryValues}"
+                                th:value="${countryOpt.id}" th:text="${countryOpt.name}"
+                                th:selected="${shipClass.country.id == countryOpt.id}"></option>
+                        <option th:unless="${shipClass.country} != null" th:each="countryOpt : ${validCountryValues}"
+                                th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
+                    </select>
+                    <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+                </div>
+                <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
+                </button>
+            </form>
+        </div>
     </div>
-   <div class="form-group">
-    <label for="hullClassification">Hull Classification</label>
-    <select id="hullClassification" th:field="*{hullClassification}">
-      <option th:if="${shipClass.hullClassification} != null" th:each="hullClassificationOpt : ${validHullClassificationValues}"
-              th:value="${hullClassificationOpt.id}" th:text="${hullClassificationOpt.designation}"
-              th:selected="${shipClass.hullClassification.id == hullClassificationOpt.id}"></option>
-      <option th:unless="${shipClass.hullClassification} != null" th:each="hullClassificationOpt : ${validHullClassificationValues}"
-              th:value="${hullClassificationOpt.id}" th:text="${hullClassificationOpt.designation}"></option>
-    </select>
-    <span class="validationError" th:if="${#fields.hasErrors('hullClassification')}" th:errors="*{hullClassification}"></span>
-    <!--<div class="validationError" th:if="${#fields.detailedErrors('rankValid') != null}" th:each="err : ${#fields.detailedErrors('rankValid')}" th:text="${err.getMessage()}"></div>-->
-</div>
-    <div class="form-group">
-      <label for="displacementInTons">Displacement in tons</label>
-      <input type="text" class="form-control" id="displacementInTons" th:field="*{displacementInTons}">
-      <span class="validationError" th:if="${#fields.hasErrors('displacementInTons')}" th:errors="*{displacementInTons}"></span>
-    </div>
-    <div class="form-group">
-      <label for="armorBeltInCms">Belt armor in centimeters</label>
-      <input type="text" class="form-control" id="armorBeltInCms" th:field="*{armorBeltInCms}">
-      <span class="validationError" th:if="${#fields.hasErrors('armorBeltInCms')}" th:errors="*{armorBeltInCms}"></span>
-    </div>
-    <div class="form-group">
-      <label for="armorTurretInCms">Turret armor in centimeters</label>
-      <input type="text" class="form-control" id="armorTurretInCms" th:field="*{armorTurretInCms}">
-      <span class="validationError" th:if="${#fields.hasErrors('armorTurretInCms')}" th:errors="*{armorTurretInCms}"></span>
-    </div>
-    <div class="form-group">
-      <label for="armorDeckInCms">Deck armor in centimeters</label>
-      <input type="text" class="form-control" id="armorDeckInCms" th:field="*{armorDeckInCms}">
-      <span class="validationError" th:if="${#fields.hasErrors('armorDeckInCms')}" th:errors="*{armorDeckInCms}"></span>
-    </div>
-    <div class="form-group">
-      <label for="speedInKmh">Speed in km/h</label>
-      <input type="text" class="form-control" id="speedInKmh" th:field="*{speedInKmh}">
-      <span class="validationError" th:if="${#fields.hasErrors('speedInKmh')}" th:errors="*{speedInKmh}"></span>
-    </div>
-    <div class="form-group">
-      <label for="country">Country</label>
-      <select id="country" th:field="*{country}">
-        <option th:if="${shipClass.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.id}" th:text="${countryOpt.name}"
-                th:selected="${shipClass.country.id == countryOpt.id}"></option>
-        <option th:unless="${shipClass.country} != null" th:each="countryOpt : ${validCountryValues}"
-                th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
-      </select>
-      <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
-      <!--<div class="validationError" th:if="${#fields.detailedErrors('countryValid') != null}" th:each="err : ${#fields.detailedErrors('countryValid')}" th:text="${err.getMessage()}"></div>-->
-    </div>
-    <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit</button>
-  </form>
 </div>
 <script>
     $("#shipClassForm").submit(function (e) {
