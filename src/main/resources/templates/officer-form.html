@@ -51,7 +51,7 @@
         ajaxFormSubmit(e, 'officerForm');
     });
     $( function() {
-        $( "#dateOfBirth" ).datepicker(({ dateFormat: 'yy-mm-dd' }));
+        $("#dateOfBirth").datepicker(({ dateFormat: 'yy-mm-dd' })).val('1900-10-10');
     } );
 </script>
 <div th:insert="fragments/footer :: footer"></div>
