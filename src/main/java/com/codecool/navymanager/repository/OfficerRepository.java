@@ -17,4 +17,12 @@ public interface OfficerRepository extends JpaRepository<Officer, Long> {
             " AND" +
             " o.country = ?1")
     List<Officer> findAvailableOfficersByCountry(Country country);
+
+    @Query("SELECT o FROM Officer o WHERE" +
+            " NOT EXISTS (" +
+            "   SELECT s.captain FROM Ship s WHERE s.captain = o)" +
+            " AND" +
+            " NOT EXISTS (" +
+            "   SELECT f.commander FROM Fleet f WHERE f.commander = o)")
+    List<Officer> findAvailableOfficers();
 }

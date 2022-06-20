@@ -20,28 +20,32 @@
                     <label for="shipClass">Ship Class</label>
                     <select id="shipClass" th:field="*{shipClass}">
                         <option th:if="${ship.shipClass} != null" th:each="shipClassOpt : ${validShipClassValues}"
-                                th:value="${shipClassOpt.id}" th:text="${shipClassOpt.country.name} + ': ' + ${shipClassOpt.name}"
+                                th:value="${shipClassOpt.id}"
+                                th:text="${shipClassOpt.country.name} + ': ' + ${shipClassOpt.name}"
                                 th:selected="${ship.shipClass.id == shipClassOpt.id}"></option>
                         <option th:unless="${ship.id} != null" th:each="shipClassOpt : ${validShipClassValues}"
-                                th:value="${shipClassOpt.id}" th:text="${shipClassOpt.country.name} + ': ' + ${shipClassOpt.name}"></option>
+                                th:value="${shipClassOpt.id}"
+                                th:text="${shipClassOpt.country.name} + ': ' + ${shipClassOpt.name}"></option>
                     </select>
                 </div>
-              <!--  <div th:if="${add == false}"> -->
-                    <div th:if="${#lists.size(validCaptainValues) == 1} and ${ship.captain} == null"
-                         th:class="'text-danger'">No assignable officer found.
-                    </div>
-                    <div th:unless="${#lists.size(validCaptainValues) == 1} and ${ship.captain} == null"
-                         class="form-group">
-                        <label for="captain">Captain</label>
-                        <select id="captain" th:field="*{captain}">
-                            <option th:if="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
-                                    th:value="${captainOpt.id}" th:text="${captainOpt.country.name} + ': ' + ${captainOpt.name}"
-                                    th:selected="${ship.captain.id == captainOpt.id}"></option>
-                            <option th:unless="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
-                                    th:value="${captainOpt.id}" th:text="${captainOpt.country.name} + ': ' + ${captainOpt.name}"></option>
-                        </select>
-                    </div>
-             <!--   </div> -->
+                <!--  <div th:if="${add == false}"> -->
+                <div th:if="${#lists.size(validCaptainValues) == 0} and ${ship.captain} == null"
+                     th:class="'text-danger'">No assignable officer found.
+                </div>
+                <div th:unless="${#lists.size(validCaptainValues) == 0} and ${ship.captain} == null"
+                     class="form-group">
+                    <label for="captain">Captain</label>
+                    <select id="captain" th:field="*{captain}">
+                        <option th:if="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
+                                th:value="${captainOpt.id}"
+                                th:text="${captainOpt.country.name} + ': ' + ${captainOpt.name}"
+                                th:selected="${ship.captain.id == captainOpt.id}"></option>
+                        <option th:unless="${ship.captain} != null" th:each="captainOpt : ${validCaptainValues}"
+                                th:value="${captainOpt.id}"
+                                th:text="${captainOpt.country.name} + ': ' + ${captainOpt.name}"></option>
+                    </select>
+                </div>
+                <!--   </div> -->
                 <div class="form-group">
                     <label for="country">Country</label>
                     <select id="country" th:field="*{country}">
@@ -59,8 +63,34 @@
     </div>
 </div>
 <script>
+    let shipClassOriginalValues;
+    let captainOriginalValues;
     $("#shipForm").submit(function (e) {
-        ajaxFormSubmit(e, 'shipForm');
+        ajaxFormSubmit(e, '#shipForm');
+    });
+    $(function() {
+        shipClassOriginalValues = filterOptionsConflictingWith("#shipClass", "#country");
+        captainOriginalValues = filterOptionsConflictingWith("#captain", "#country");
+        $("#captain").prepend($('<option></option>').val(-1).html('------Unassigned------'));
+        $("#captain").val($("#captain option:first").val());
+    });
+    $("#country").change(function() {
+        $("#shipClass").empty();
+        $.each(shipClassOriginalValues, function (val, text) {
+            $("#shipClass").append(
+                $('<option></option>').val(val).html(text)
+            );
+        });
+        $("#captain").empty();
+        $.each(captainOriginalValues, function (val, text) {
+            $("#captain").append(
+                $('<option></option>').val(val).html(text)
+            );
+        });
+        filterOptionsConflictingWith("#shipClass", "#country");
+        filterOptionsConflictingWith("#captain", "#country");
+        $("#captain").prepend($('<option></option>').val(-1).html('------Unassigned------'));
+        $("#captain").val($("#captain option:first").val());
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>

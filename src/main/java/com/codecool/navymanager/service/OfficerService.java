@@ -3,7 +3,6 @@ package com.codecool.navymanager.service;
 import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.dto.ShipDto;
-import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.repository.OfficerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +38,13 @@ public class OfficerService {
                         locale))
         ));
     }
+    public List<OfficerDto> findAvailableOfficers() {
+        return officerRepository.findAvailableOfficers().stream()
+                .map(OfficerDto::new).toList();
+    }
 
     public List<OfficerDto> findAvailableOfficersForShip(ShipDto shipDto)  {
         List<OfficerDto> foundOfficers = new ArrayList<>();
-        foundOfficers.add(OfficerDto.UNASSIGNED_OFFICER);
         if (shipDto.getCaptain() != null) {
             foundOfficers.add(shipDto.getCaptain());
         }
@@ -55,7 +57,6 @@ public class OfficerService {
 
     public List<OfficerDto> findAvailableOfficersForFleet(FleetDto fleetDto)  {
         List<OfficerDto> foundOfficers = new ArrayList<>();
-        foundOfficers.add(OfficerDto.UNASSIGNED_OFFICER);
         if (fleetDto.getCommander() != null) {
             foundOfficers.add(fleetDto.getCommander());
         }

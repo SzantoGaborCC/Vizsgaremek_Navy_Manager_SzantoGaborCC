@@ -1,10 +1,7 @@
 package com.codecool.navymanager.dto;
 
 import com.codecool.navymanager.entity.Officer;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -16,9 +13,9 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class OfficerDto implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final OfficerDto UNASSIGNED_OFFICER = new OfficerDto(-1L, "----Unassigned----");
 
     private Long id;
     @NotNull(message = "Name must be specified and its length must be between 1 and 255!")
@@ -39,9 +36,10 @@ public class OfficerDto implements Serializable {
         country = new CountryDto(officer.getCountry());
     }
 
-    public OfficerDto(Long id, String name) {
+    public OfficerDto(Long id, String name, CountryDto country) {
         this.id = id;
         this.name = name;
+        this.country = country;
     }
 
 

@@ -27,17 +27,21 @@ function showDialog(dialogId, title,  url, method, data) {
     });
 }
 
-function ajaxFormSubmit(e, formId) {
+function ajaxFormSubmit(e, form) {
     e.preventDefault();
     let data = {};
-    $("#" + formId).serializeArray().map(function(x){data[x.name] = x.value;});
+    $(form).serializeArray().map(function(x){data[x.name] = x.value;});
     const url = data['url'];
     delete data['url'];
     const method = data['add'] === 'true' ? 'POST' : 'PUT';
     delete data['add'];
     const redirectTo = data['redirectTo'];
     delete data['redirectTo'];
-    $('span.validationError').remove()
+    $('span.validationError').remove();
+    console.log('url: ' + url);
+    console.log('method: ' + method);
+    console.log('redirectTo: ' + redirectTo);
+
     $.ajax({
         method: method,
         url : url,
@@ -59,4 +63,15 @@ function ajaxFormSubmit(e, formId) {
             });
         }
     });
+}
+
+function filterOptionsConflictingWith(filtered, filterer) {
+    let savedBeforeFiltering = {};
+    $(filtered +  " option").each(function()
+    {
+        savedBeforeFiltering[$(this).val()] = $(this).html();
+    });
+    const filterText = $(filterer +  " :selected").html();
+    $(filtered  + " option:not(:contains(" + filterText + "))").remove();
+    return savedBeforeFiltering;
 }

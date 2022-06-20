@@ -57,7 +57,7 @@ public class ShipController {
     public String showCreateForm(Model model){
         model.addAttribute("add", true);
         model.addAttribute("ship", new ShipDto());
-        model.addAttribute("validCaptainValues", officerService.findAll());
+        model.addAttribute("validCaptainValues", officerService.findAvailableOfficers());
         model.addAttribute("validShipClassValues", shipClassService.findAll());
         model.addAttribute("validCountryValues", countryService.findAll());
         return "ship-form";
@@ -72,7 +72,7 @@ public class ShipController {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
-            model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
+            model.addAttribute("validCaptainValues", officerService.findAvailableOfficers());
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
