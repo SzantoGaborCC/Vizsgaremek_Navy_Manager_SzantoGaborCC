@@ -27,21 +27,17 @@ function showDialog(dialogId, title,  url, method, data) {
     });
 }
 
-function ajaxFormSubmit(e, form) {
+function ajaxFormSubmit(e, formId) {
     e.preventDefault();
     let data = {};
-    $(form).serializeArray().map(function(x){data[x.name] = x.value;});
+    $("#" + formId).serializeArray().map(function(x){data[x.name] = x.value;});
     const url = data['url'];
     delete data['url'];
     const method = data['add'] === 'true' ? 'POST' : 'PUT';
     delete data['add'];
     const redirectTo = data['redirectTo'];
     delete data['redirectTo'];
-    $('span.validationError').remove();
-    console.log('url: ' + url);
-    console.log('method: ' + method);
-    console.log('redirectTo: ' + redirectTo);
-
+    $('span.validationError').remove()
     $.ajax({
         method: method,
         url : url,
