@@ -63,7 +63,7 @@ public class FleetController {
         model.addAttribute("add", true);
         model.addAttribute("fleet", new FleetDto());
         model.addAttribute("validRankValues", rankService.findAll());
-        model.addAttribute("validCommanderValues", null);
+        model.addAttribute("validCommanderValues", officerService.findAvailableOfficers());
         model.addAttribute("validCountryValues", countryService.findAll());
         return "fleet-form";
     }
@@ -78,7 +78,7 @@ public class FleetController {
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
-            model.addAttribute("validCommanderValues", null);
+            model.addAttribute("validCommanderValues", officerService.findAvailableOfficers());
             model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
@@ -104,7 +104,7 @@ public class FleetController {
                 new Object[] {Fleet.class.getSimpleName()},
                 locale)).build());
     }
-//todo: when creating or updating ships ajax should be used, select options of ship classes and commanders should be based and changed upon country
+
     @GetMapping("/{id}/show-update-form")
     public String showUpdateForm(@PathVariable Long id, Model model, Locale locale) {
             FleetDto fleet = fleetService.findById(id, locale);
@@ -116,7 +116,6 @@ public class FleetController {
             return "fleet-form";
     }
 
-    //todo: when rank requirement increased, check for commander eligibility, possibly removing him
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,

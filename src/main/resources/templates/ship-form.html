@@ -28,7 +28,6 @@
                                 th:text="${shipClassOpt.country.name} + ': ' + ${shipClassOpt.name}"></option>
                     </select>
                 </div>
-                <!--  <div th:if="${add == false}"> -->
                 <div th:if="${#lists.size(validCaptainValues) == 0} and ${ship.captain} == null"
                      th:class="'text-danger'">No assignable officer found.
                 </div>
@@ -45,7 +44,6 @@
                                 th:text="${captainOpt.country.name} + ': ' + ${captainOpt.name}"></option>
                     </select>
                 </div>
-                <!--   </div> -->
                 <div class="form-group">
                     <label for="country">Country</label>
                     <select id="country" th:field="*{country}">

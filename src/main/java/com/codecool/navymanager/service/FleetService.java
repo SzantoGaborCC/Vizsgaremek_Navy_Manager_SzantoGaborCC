@@ -74,7 +74,6 @@ public class FleetService {
             for (Ship ship : fleet.getShips()) {
                 ship.setFleet(null);
             }
-            fleetDto.setCommander(null);
         }
         fleetRepository.save(fleetDto.toEntity());
     }

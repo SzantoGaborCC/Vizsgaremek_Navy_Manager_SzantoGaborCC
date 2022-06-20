@@ -65,6 +65,7 @@ function filterOptionsConflictingWith(filtered, filterer) {
     let savedBeforeFiltering = {};
     $(filtered +  " option").each(function()
     {
+        console.log('val: ' + $(this).val() + " html: " + $(this).html());
         savedBeforeFiltering[$(this).val()] = $(this).html();
     });
     const filterText = $(filterer +  " :selected").html();

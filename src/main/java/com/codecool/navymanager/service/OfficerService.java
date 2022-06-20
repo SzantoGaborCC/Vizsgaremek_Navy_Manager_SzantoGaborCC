@@ -48,7 +48,7 @@ public class OfficerService {
         if (shipDto.getCaptain() != null) {
             foundOfficers.add(shipDto.getCaptain());
         }
-        foundOfficers.addAll(officerRepository.findAvailableOfficersByCountry(shipDto.getCountry().toEntity()).stream()
+        foundOfficers.addAll(officerRepository.findAvailableOfficers().stream()
                 .filter(officer -> officer.getRank().getPrecedence() >=
                         shipDto.getShipClass().getHullClassification().getMinimumRank().getPrecedence())
                 .map(OfficerDto::new).toList());
@@ -60,7 +60,7 @@ public class OfficerService {
         if (fleetDto.getCommander() != null) {
             foundOfficers.add(fleetDto.getCommander());
         }
-        foundOfficers.addAll(officerRepository.findAvailableOfficersByCountry(fleetDto.getCountry().toEntity()).stream()
+        foundOfficers.addAll(officerRepository.findAvailableOfficers().stream()
                 .filter(officer -> officer.getRank().getPrecedence() >= fleetDto.getMinimumRank().getPrecedence())
                 .map(OfficerDto::new)
                 .toList());

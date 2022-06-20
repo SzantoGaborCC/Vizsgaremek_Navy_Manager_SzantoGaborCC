@@ -61,9 +61,6 @@ public class ShipService {
                         "no_such",
                         new Object[] {Ship.class.getSimpleName()},
                         locale)));
-        if (!shipDto.getCountry().getId().equals(oldShipData.getCountry().getId())) {
-            shipDto.setCaptain(null);
-        }
         Ship newShipData = shipDto.toEntity();
         newShipData.setFleet(oldShipData.getFleet());
         shipRepository.save(newShipData);

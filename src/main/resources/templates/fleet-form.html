@@ -15,7 +15,6 @@
                 <div class="form-group">
                     <label for="designation">Designation</label>
                     <input type="text" class="form-control" id="designation" th:field="*{designation}">
-                    <span class="validationError"></span>
                 </div>
                 <div class="form-group">
                     <label for="minimumRank">Minimum rank required</label>
@@ -26,27 +25,22 @@
                         <option th:unless="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
                                 th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
                     </select>
-                    <span class="validationError" th:if="${#fields.hasErrors('minimumRank')}"
-                          th:errors="*{minimumRank}"></span>
                 </div>
-                <div th:if="${add == false}">
-                    <div th:if="${#lists.size(validCommanderValues) == 1} and ${fleet.commander} == null"
-                         th:class="'text-danger'">No assignable officer found.
-                    </div>
-                    <div th:unless="${#lists.size(validCommanderValues) == 1} and ${fleet.commander} == null"
-                         class="form-group">
-                        <label for="commander">Commander</label>
-                        <select id="commander" th:field="*{commander}">
-                            <option th:if="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
-                                    th:value="${commanderOpt.id}" th:text="${commanderOpt.name}"
-                                    th:selected="${fleet.commander.id == commanderOpt.id}"></option>
-                            <option th:unless="${fleet.commander} != null"
-                                    th:each="commanderOpt : ${validCommanderValues}"
-                                    th:value="${commanderOpt.id}" th:text="${commanderOpt.name}"></option>
-                        </select>
-                        <span class="validationError" th:if="${#fields.hasErrors('commander')}"
-                              th:errors="*{commander}"></span>
-                    </div>
+                <div th:if="${#lists.size(validCommanderValues) == 0} and ${fleet.commander} == null"
+                     th:class="'text-danger'">No assignable officer found.
+                </div>
+                <div th:unless="${#lists.size(validCommanderValues) == 0} and ${fleet.commander} == null"
+                     class="form-group">
+                    <label for="commander">Commander</label>
+                    <select id="commander" th:field="*{commander}">
+                        <option th:if="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
+                                th:value="${commanderOpt.id}"
+                                th:text="${commanderOpt.country.name} + ': ' + ${commanderOpt.name}"
+                                th:selected="${fleet.commander.id == commanderOpt.id}"></option>
+                        <option th:unless="${fleet.commander} != null" th:each="commanderOpt : ${validCommanderValues}"
+                                th:value="${commanderOpt.id}"
+                                th:text="${commanderOpt.country.name} + ': ' + ${commanderOpt.name}"></option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="country">Country</label>
@@ -57,7 +51,6 @@
                         <option th:unless="${fleet.country} != null" th:each="countryOpt : ${validCountryValues}"
                                 th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
                     </select>
-                    <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
                 </div>
                 <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
                 </button>
@@ -66,8 +59,29 @@
     </div>
 </div>
 <script>
+    let commanderOriginalValues;
     $("#fleetForm").submit(function (e) {
         ajaxFormSubmit(e, 'fleetForm');
+    });
+    $(function() {
+        commanderOriginalValues = filterOptionsConflictingWith("#commander", "#country");
+        console.log('commanderOriginalValues:');
+        for (const [key, val] of Object.entries(commanderOriginalValues)) {
+            console.log(key, val);
+        }
+        $("#commander").prepend($('<option></option>').val(-1).html('------Unassigned------'));
+        $("#commander").val($("#commander option:first").val());
+    });
+    $("#country").change(function() {
+        $("#commander").empty();
+        $.each(commanderOriginalValues, function (val, text) {
+            $("#commander").append(
+                $('<option></option>').val(val).html(text)
+            );
+        });
+        filterOptionsConflictingWith("#commander", "#country");
+        $("#commander").prepend($('<option></option>').val(-1).html('------Unassigned------'));
+        $("#commander").val($("#commander option:first").val());
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
