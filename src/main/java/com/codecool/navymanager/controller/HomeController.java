@@ -1,4 +1,4 @@
-package com.codecool.navymanager.controller.mvc;
+package com.codecool.navymanager.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

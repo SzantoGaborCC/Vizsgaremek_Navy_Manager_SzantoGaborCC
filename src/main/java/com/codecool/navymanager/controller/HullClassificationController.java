@@ -1,10 +1,10 @@
-package com.codecool.navymanager.controller.mvc;
+package com.codecool.navymanager.controller;
 
-import com.codecool.navymanager.dto.RankDto;
-import com.codecool.navymanager.entity.Rank;
+import com.codecool.navymanager.dto.HullClassificationDto;
+import com.codecool.navymanager.entity.HullClassification;
 import com.codecool.navymanager.response.JsonResponse;
+import com.codecool.navymanager.service.HullClassificationService;
 import com.codecool.navymanager.service.RankService;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
@@ -19,101 +19,109 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/rank")
-public class RankController {
+@RequestMapping("/hull-classification")
+public class HullClassificationController {
     @Autowired
     MessageSource messageSource;
+    private final HullClassificationService hullClassificationService;
+
     private final RankService rankService;
 
-    public RankController(RankService rankService) {
+    public HullClassificationController(HullClassificationService hullClassificationService, RankService rankService) {
+        this.hullClassificationService = hullClassificationService;
         this.rankService = rankService;
     }
 
     @GetMapping
-    public String listRanks(Model model) {
-        model.addAttribute("ranks", rankService.findAll());
-        return "rank-list";
+    public String listHullClassifications(Model model) {
+        model.addAttribute("hullClassifications", hullClassificationService.findAll());
+        return "hull-classification-list";
     }
 
     @GetMapping("/{id}")
-    public String getDetails(@PathVariable Long id, Model model, Locale locale) {
-        RankDto rank = rankService.findById(id, locale);
-        model.addAttribute("rank", rank);
-        return "rank-details";
+    public String getDetails(@PathVariable long id, Model model, Locale locale) {
+        HullClassificationDto hullClassification = hullClassificationService.findById(id, locale);
+        model.addAttribute("hullClassification", hullClassification);
+        return "hull-classification-details";
     }
 
     @GetMapping("/show-add-form")
     public String showAddForm(Model model){
         model.addAttribute("add", true);
-        model.addAttribute("rank", new RankDto());
-        return "rank-form";
+        model.addAttribute("hullClassification", new HullClassificationDto());
+        model.addAttribute("validRankValues", rankService.findAll());
+        return "hull-classification-form";
     }
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("rank") @Valid RankDto rank,
+            @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification,
             BindingResult result,
             Model model,
             Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
+            model.addAttribute("validRankValues", rankService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
             jsonResponse.setMessage(messageSource.getMessage(
                     "invalid_data",
-                    new Object[] {Rank.class.getSimpleName()},
+                    new Object[] {HullClassification.class.getSimpleName()},
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        rankService.add(rank);
+        hullClassificationService.add(hullClassification);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
-                new Object[] {Rank.class.getSimpleName()},
+                new Object[] {HullClassification.class.getSimpleName()},
                 locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<JsonResponse> deleteById(@PathVariable long id, Locale locale) {
-        rankService.deleteById(id, locale);
+        hullClassificationService.deleteById(id, locale);
         return ResponseEntity.ok()
                 .body(JsonResponse.builder().message(messageSource.getMessage(
                         "removed",
-                        new Object[] {Rank.class.getSimpleName()},
+                        new Object[] {HullClassification.class.getSimpleName()},
                         locale)).build());
     }
 
     @GetMapping("/{id}/show-update-form")
     public String showUpdateForm(@PathVariable long id, Model model, Locale locale) {
-        RankDto rank = rankService.findById(id, locale);
-        model.addAttribute("add", false);
-        model.addAttribute("rank", rank);
-        return "rank-form";
+            HullClassificationDto hullClassification = hullClassificationService.findById(id, locale);
+            model.addAttribute("add", false);
+            model.addAttribute("hullClassification", hullClassification);
+            model.addAttribute("validRankValues", rankService.findAll());
+            return "hull-classification-form";
     }
 
+    //todo: when rank requirement increased, check for captain eligibility
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("rank") @Valid RankDto rank,
+            @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification,
             BindingResult result,
             Model model,
             Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
+            model.addAttribute("validRankValues", rankService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
             jsonResponse.setMessage(messageSource.getMessage(
                     "invalid_data",
-                    new Object[] {Rank.class.getSimpleName()},
+                    new Object[] {HullClassification.class.getSimpleName()},
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        rankService.update(rank, id, locale);
+        hullClassificationService.update(hullClassification, id, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "updated",
-                new Object[] {Rank.class.getSimpleName()},
+                new Object[] {HullClassification.class.getSimpleName()},
                 locale));
         return ResponseEntity.ok().body(jsonResponse);
     }

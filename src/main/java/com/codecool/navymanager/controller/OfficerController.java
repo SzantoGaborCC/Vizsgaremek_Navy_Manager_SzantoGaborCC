@@ -1,9 +1,11 @@
-package com.codecool.navymanager.controller.mvc;
+package com.codecool.navymanager.controller;
 
-import com.codecool.navymanager.dto.HullClassificationDto;
-import com.codecool.navymanager.entity.HullClassification;
+
+import com.codecool.navymanager.dto.OfficerDto;
+import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.response.JsonResponse;
-import com.codecool.navymanager.service.HullClassificationService;
+import com.codecool.navymanager.service.CountryService;
+import com.codecool.navymanager.service.OfficerService;
 import com.codecool.navymanager.service.RankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -19,43 +21,46 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/hull-classification")
-public class HullClassificationController {
+@RequestMapping("/officer")
+public class OfficerController {
     @Autowired
     MessageSource messageSource;
-    private final HullClassificationService hullClassificationService;
 
+    private final OfficerService officerService;
     private final RankService rankService;
+    private final CountryService countryService;
 
-    public HullClassificationController(HullClassificationService hullClassificationService, RankService rankService) {
-        this.hullClassificationService = hullClassificationService;
+    public OfficerController(OfficerService officerService, RankService rankService, CountryService countryService) {
+        this.officerService = officerService;
         this.rankService = rankService;
+        this.countryService = countryService;
     }
 
     @GetMapping
-    public String listHullClassifications(Model model) {
-        model.addAttribute("hullClassifications", hullClassificationService.findAll());
-        return "hull-classification-list";
+    public String listOfficers(Model model) {
+        model.addAttribute("officers", officerService.findAll());
+        return "officer-list";
     }
 
     @GetMapping("/{id}")
-    public String getDetails(@PathVariable long id, Model model, Locale locale) {
-        HullClassificationDto hullClassification = hullClassificationService.findById(id, locale);
-        model.addAttribute("hullClassification", hullClassification);
-        return "hull-classification-details";
+    public String getDetails(@PathVariable Long id, Model model, Locale locale) {
+        OfficerDto officer = officerService.findById(id, locale);
+        model.addAttribute("officer", officer);
+        return "officer-details";
     }
 
     @GetMapping("/show-add-form")
     public String showAddForm(Model model){
+        model.addAttribute("officer", new OfficerDto());
         model.addAttribute("add", true);
-        model.addAttribute("hullClassification", new HullClassificationDto());
         model.addAttribute("validRankValues", rankService.findAll());
-        return "hull-classification-form";
+        model.addAttribute("validCountryValues", countryService.findAll());
+        return "officer-form";
     }
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification,
+            @ModelAttribute("officer") @Valid OfficerDto officer,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -63,46 +68,48 @@ public class HullClassificationController {
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
+            model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
             jsonResponse.setMessage(messageSource.getMessage(
                     "invalid_data",
-                    new Object[] {HullClassification.class.getSimpleName()},
+                    new Object[] {Officer.class.getSimpleName()},
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        hullClassificationService.add(hullClassification);
+        officerService.add(officer);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
-                new Object[] {HullClassification.class.getSimpleName()},
+                new Object[] {Officer.class.getSimpleName()},
                 locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<JsonResponse> deleteById(@PathVariable long id, Locale locale) {
-        hullClassificationService.deleteById(id, locale);
+    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
+        officerService.deleteById(id, locale);
         return ResponseEntity.ok()
                 .body(JsonResponse.builder().message(messageSource.getMessage(
                         "removed",
-                        new Object[] {HullClassification.class.getSimpleName()},
+                        new Object[] {Officer.class.getSimpleName()},
                         locale)).build());
     }
 
     @GetMapping("/{id}/show-update-form")
-    public String showUpdateForm(@PathVariable long id, Model model, Locale locale) {
-            HullClassificationDto hullClassification = hullClassificationService.findById(id, locale);
+    public String showUpdateForm(@PathVariable Long id,Model model, Locale locale) {
+            OfficerDto officer = officerService.findById(id, locale);
             model.addAttribute("add", false);
-            model.addAttribute("hullClassification", hullClassification);
+            model.addAttribute("officer", officer);
             model.addAttribute("validRankValues", rankService.findAll());
-            return "hull-classification-form";
+            model.addAttribute("validCountryValues", countryService.findAll());
+            return "officer-form";
     }
 
-    //todo: when rank requirement increased, check for captain eligibility
+    //todo: When rank reduced, check for fleet and ship position eligibility?
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification,
+            @ModelAttribute("officer") @Valid OfficerDto officer,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -110,18 +117,19 @@ public class HullClassificationController {
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
+            model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
             jsonResponse.setMessage(messageSource.getMessage(
                     "invalid_data",
-                    new Object[] {HullClassification.class.getSimpleName()},
+                    new Object[] {Officer.class.getSimpleName()},
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        hullClassificationService.update(hullClassification, id, locale);
+        officerService.update(officer, id, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "updated",
-                new Object[] {HullClassification.class.getSimpleName()},
+                new Object[] {Officer.class.getSimpleName()},
                 locale));
         return ResponseEntity.ok().body(jsonResponse);
     }

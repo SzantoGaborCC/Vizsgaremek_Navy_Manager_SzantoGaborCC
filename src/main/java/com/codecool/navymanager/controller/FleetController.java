@@ -1,4 +1,4 @@
-package com.codecool.navymanager.controller.mvc;
+package com.codecool.navymanager.controller;
 
 import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.dto.IdentityDto;
