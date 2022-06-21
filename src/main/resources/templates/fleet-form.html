@@ -64,24 +64,13 @@
         ajaxFormSubmit(e, 'fleetForm');
     });
     $(function() {
-        commanderOriginalValues = filterOptionsConflictingWith("#commander", "#country");
-        console.log('commanderOriginalValues:');
-        for (const [key, val] of Object.entries(commanderOriginalValues)) {
-            console.log(key, val);
-        }
-        $("#commander").prepend($('<option></option>').val(-1).html('------Unassigned------'));
-        $("#commander").val($("#commander option:first").val());
+        commanderOriginalValues = saveOriginalOptions("#commander");
+        $("#commander").empty();
+        fillWithOptionsAccordingTo("#commander", "#country", commanderOriginalValues, 'prependWithUnassigned');
     });
     $("#country").change(function() {
         $("#commander").empty();
-        $.each(commanderOriginalValues, function (val, text) {
-            $("#commander").append(
-                $('<option></option>').val(val).html(text)
-            );
-        });
-        filterOptionsConflictingWith("#commander", "#country");
-        $("#commander").prepend($('<option></option>').val(-1).html('------Unassigned------'));
-        $("#commander").val($("#commander option:first").val());
+        fillWithOptionsAccordingTo("#commander", "#country", commanderOriginalValues, 'prependWithUnassigned');
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>

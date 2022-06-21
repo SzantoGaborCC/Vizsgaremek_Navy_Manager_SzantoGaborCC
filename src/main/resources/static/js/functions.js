@@ -61,14 +61,27 @@ function ajaxFormSubmit(e, formId) {
     });
 }
 
-function filterOptionsConflictingWith(filtered, filterer) {
-    let savedBeforeFiltering = {};
-    $(filtered +  " option").each(function()
+function fillWithOptionsAccordingTo(selectToBeFilled, filterer, originalValues, prependWithUnassigned) {
+    const filterText = $(filterer +  " :selected").html();
+    $.each(originalValues, function (key, value) {
+        if (value.includes(filterText)) {
+            $(selectToBeFilled).append($('<option></option>').val(key).html(value));
+        }
+    });
+    if (prependWithUnassigned === 'prependWithUnassigned') {
+        $(selectToBeFilled).prepend($('<option></option>').val(-1).html('-------------Unassigned-------------'));
+        $(selectToBeFilled).val($(selectToBeFilled + " option:first").val());
+    }
+}
+
+function saveOriginalOptions(selectToBeSaved) {
+    let saved = {};
+    console.log('Saving select options:');
+    $(selectToBeSaved +  " option").each(function()
     {
         console.log('val: ' + $(this).val() + " html: " + $(this).html());
-        savedBeforeFiltering[$(this).val()] = $(this).html();
+        saved[$(this).val()] = $(this).html();
     });
-    const filterText = $(filterer +  " :selected").html();
-    $(filtered  + " option:not(:contains(" + filterText + "))").remove();
-    return savedBeforeFiltering;
+    console.log('Saved select options.');
+    return saved;
 }

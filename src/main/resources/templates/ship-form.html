@@ -67,28 +67,18 @@
         ajaxFormSubmit(e, 'shipForm');
     });
     $(function() {
-        shipClassOriginalValues = filterOptionsConflictingWith("#shipClass", "#country");
-        captainOriginalValues = filterOptionsConflictingWith("#captain", "#country");
-        $("#captain").prepend($('<option></option>').val(-1).html('------Unassigned------'));
-        $("#captain").val($("#captain option:first").val());
+        shipClassOriginalValues = saveOriginalOptions("#shipClass");
+        captainOriginalValues = saveOriginalOptions("#captain");
+        $("#shipClass").empty();
+        fillWithOptionsAccordingTo("#shipClass", "#country", shipClassOriginalValues);
+        $("#captain").empty();
+        fillWithOptionsAccordingTo("#captain", "#country", captainOriginalValues, 'prependWithUnassigned');
     });
     $("#country").change(function() {
         $("#shipClass").empty();
-        $.each(shipClassOriginalValues, function (val, text) {
-            $("#shipClass").append(
-                $('<option></option>').val(val).html(text)
-            );
-        });
+        fillWithOptionsAccordingTo("#shipClass", "#country", shipClassOriginalValues);
         $("#captain").empty();
-        $.each(captainOriginalValues, function (val, text) {
-            $("#captain").append(
-                $('<option></option>').val(val).html(text)
-            );
-        });
-        filterOptionsConflictingWith("#shipClass", "#country");
-        filterOptionsConflictingWith("#captain", "#country");
-        $("#captain").prepend($('<option></option>').val(-1).html('------Unassigned------'));
-        $("#captain").val($("#captain option:first").val());
+        fillWithOptionsAccordingTo("#captain", "#country", captainOriginalValues, 'prependWithUnassigned');
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
