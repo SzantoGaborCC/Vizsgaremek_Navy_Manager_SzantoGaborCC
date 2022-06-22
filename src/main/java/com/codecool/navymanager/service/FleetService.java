@@ -60,6 +60,8 @@ public class FleetService {
 
     @Transactional
     public void add(FleetDto fleetDto) {
+        if (fleetDto.getCommander().getId() == -1)
+            fleetDto.setCommander(null);
         fleetRepository.save(fleetDto.toEntity());
     }
 
@@ -75,6 +77,8 @@ public class FleetService {
                 ship.setFleet(null);
             }
         }
+        if (fleetDto.getCommander().getId() == -1)
+            fleetDto.setCommander(null);
         fleetRepository.save(fleetDto.toEntity());
     }
 

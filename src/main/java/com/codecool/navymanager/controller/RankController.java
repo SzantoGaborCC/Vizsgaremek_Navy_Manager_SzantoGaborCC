@@ -51,7 +51,7 @@ public class RankController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("rank") @Valid RankDto rank,
+            @RequestBody @Valid RankDto rank,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -95,7 +95,7 @@ public class RankController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("rank") @Valid RankDto rank,
+            @RequestBody @Valid RankDto rank,
             BindingResult result,
             Model model,
             Locale locale) {

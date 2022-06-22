@@ -23,7 +23,7 @@ public class ShipClassDto implements Serializable {
 
     private Long id;
     @NotNull(message = "Name must be specified and its length must be between 1 and 255!")
-    @Size(min = 1, max = 255, message = "name length must be between 1 and 255!")
+    @Size(min = 1, max = 255, message = "Name length must be between 1 and 255!")
     private String name;
     @NotNull(message = "You must specify the displacement!")
     @Min(value = 1, message = "Displacement must be at least 1 t!")

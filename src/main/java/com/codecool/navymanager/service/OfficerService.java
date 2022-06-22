@@ -41,10 +41,11 @@ public class OfficerService {
         return new OfficerDto(officerRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException(messageSource.getMessage(
                         "no_such",
-                        new Object[] {Officer.class.getSimpleName()},
+                        new Object[]{Officer.class.getSimpleName()},
                         locale))
         ));
     }
+
     public List<OfficerDto> findAvailableOfficers() {
         return officerRepository.findAvailableOfficers().stream()
                 .map(OfficerDto::new).toList();
@@ -55,7 +56,7 @@ public class OfficerService {
                 .map(OfficerDto::new).toList();
     }
 
-    public List<OfficerDto> findAvailableOfficersForShip(ShipDto shipDto)  {
+    public List<OfficerDto> findAvailableOfficersForShip(ShipDto shipDto) {
         List<OfficerDto> foundOfficers = new ArrayList<>();
         if (shipDto.getCaptain() != null) {
             foundOfficers.add(shipDto.getCaptain());
@@ -67,7 +68,7 @@ public class OfficerService {
         return foundOfficers;
     }
 
-    public List<OfficerDto> findAvailableOfficersForFleet(FleetDto fleetDto)  {
+    public List<OfficerDto> findAvailableOfficersForFleet(FleetDto fleetDto) {
         List<OfficerDto> foundOfficers = new ArrayList<>();
         if (fleetDto.getCommander() != null) {
             foundOfficers.add(fleetDto.getCommander());
@@ -89,35 +90,32 @@ public class OfficerService {
         if (officerDto.getId() != id) {
             throw new IllegalArgumentException(messageSource.getMessage(
                     "invalid_data",
-                    new Object[] {Officer.class.getSimpleName()},
+                    new Object[]{Officer.class.getSimpleName()},
                     locale));
         }
         if (officerRepository.existsById(id)) {
-            checkIfDemotedAndPossiblyRemoveFromCommand(officerDto);
-            officerRepository.save(officerDto.toEntity());
+            Officer officer = officerRepository.save(officerDto.toEntity());
+            checkIfNotEligibleForCommand(officer);
         } else {
             throw new NoSuchElementException(messageSource.getMessage(
                     "no_such",
-                    new Object[] {Officer.class.getSimpleName()},
+                    new Object[]{Officer.class.getSimpleName()},
                     locale));
         }
     }
 
-    private void checkIfDemotedAndPossiblyRemoveFromCommand(OfficerDto officer) {
-        Officer originalOfficerData = officerRepository.findById(officer.getId()).orElseThrow();
-        if (originalOfficerData.getRank().getPrecedence() > officer.getRank().getPrecedence()) {
-            Fleet fleet = officerRepository.findFleetPost(originalOfficerData);
-            Ship ship = officerRepository.findShipPost(originalOfficerData);
-            if (fleet != null && fleet.getMinimumRank().getPrecedence() > officer.getRank().getPrecedence()) {
-                fleet.setCommander(null);
-                fleetRepository.save(fleet);
-            } else if (
-                    ship != null &&
-                    ship.getShipClass().getHullClassification().getMinimumRank().getPrecedence() > officer.getRank().getPrecedence()
-            ) {
-                ship.setCaptain(null);
-                shipRepository.save(ship);
-            }
+    private void checkIfNotEligibleForCommand(Officer officer) {
+        Fleet fleet = officerRepository.findFleetPost(officer);
+        Ship ship = officerRepository.findShipPost(officer);
+        if (fleet != null && fleet.getMinimumRank().getPrecedence() > officer.getRank().getPrecedence()) {
+            fleet.setCommander(null);
+            fleetRepository.save(fleet);
+        } else if (
+                ship != null &&
+                        ship.getShipClass().getHullClassification().getMinimumRank().getPrecedence() > officer.getRank().getPrecedence()
+        ) {
+            ship.setCaptain(null);
+            shipRepository.save(ship);
         }
     }
 
@@ -126,10 +124,10 @@ public class OfficerService {
         if (officerRepository.existsById(id)) {
             officerRepository.deleteById(id);
         } else {
-            throw  new NoSuchElementException(
+            throw new NoSuchElementException(
                     messageSource.getMessage(
                             "no_such",
-                            new Object[] {Officer.class.getSimpleName()},
+                            new Object[]{Officer.class.getSimpleName()},
                             locale));
         }
     }

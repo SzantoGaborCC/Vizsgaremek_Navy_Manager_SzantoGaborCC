@@ -3,6 +3,7 @@ package com.codecool.navymanager.exception_handler;
 import com.codecool.navymanager.response.JsonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -28,5 +29,14 @@ public class ExceptionToResponseEntity {
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(jsonResponse);
     }
+  //
+  @ExceptionHandler({HttpMessageNotReadableException.class})
+  public ResponseEntity<?> handleJsonSerializationErrors(Exception e) {
+      JsonResponse jsonResponse = JsonResponse.builder().build();
+      jsonResponse.setErrorDescription(e.getMessage());
+      return ResponseEntity
+              .status(HttpStatus.BAD_REQUEST)
+              .body(jsonResponse);
+  }
 }
 

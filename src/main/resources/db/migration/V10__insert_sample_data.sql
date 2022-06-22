@@ -179,7 +179,7 @@ VALUES('Lothringen', 2, 2);
 
 INSERT INTO fleet
 (designation, commander_id, country_id, minimum_rank_id)
-VALUES('1st Battleship Fleet Pula', 2, 1, 8);
+VALUES('1st Battleship Fleet Pula', 1, 1, 8);
 
 INSERT INTO fleet
 (designation, commander_id, country_id, minimum_rank_id)

@@ -69,7 +69,7 @@ public class ShipClassController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("shipClass") @Valid ShipClassDto shipClass,
+            @RequestBody @Valid ShipClassDto shipClass,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -116,7 +116,7 @@ public class ShipClassController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("shipClass") @Valid ShipClassDto shipClass,
+            @RequestBody @Valid ShipClassDto shipClass,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -158,7 +158,7 @@ public class ShipClassController {
     @PostMapping("/{id}/gun")
     public ResponseEntity<JsonResponse> addGun(
             @PathVariable Long id,
-            @ModelAttribute("gunInstallation") @Valid GunInstallationDto gunInstallation,
+            @RequestBody @Valid GunInstallationDto gunInstallation,
             Model model,
             BindingResult result,
             Locale locale) {
@@ -203,7 +203,7 @@ public class ShipClassController {
     @PutMapping("/{shipClassId}/gun/{gunId}")
     public ResponseEntity<JsonResponse> updateGunForShipClass(
             @PathVariable long shipClassId, @PathVariable long gunId,
-            @ModelAttribute("gunInstallation") @Valid GunInstallationDto gunInstallation,
+            @RequestBody @Valid GunInstallationDto gunInstallation,
             Model model,
             BindingResult result,
             Locale locale) {

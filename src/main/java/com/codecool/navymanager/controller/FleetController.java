@@ -70,7 +70,7 @@ public class FleetController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("fleet") @Valid FleetDto fleet,
+            @RequestBody @Valid FleetDto fleet,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -119,7 +119,7 @@ public class FleetController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("fleet") @Valid FleetDto fleet,
+            @RequestBody @Valid FleetDto fleet,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -161,7 +161,7 @@ public class FleetController {
     @PostMapping("/{id}/ship")
     public ResponseEntity<JsonResponse> addShip(
             @PathVariable Long id,
-            @ModelAttribute("chosenShip") @Valid IdentityDto chosenShip,
+            @RequestBody @Valid IdentityDto chosenShip,
             Model model, BindingResult result,
             Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
@@ -203,7 +203,7 @@ public class FleetController {
     @PutMapping("/{fleetId}/ship/{shipId}")
     public ResponseEntity<JsonResponse> updateShipInFleet(
             @PathVariable long fleetId, @PathVariable long shipId,
-            @ModelAttribute("chosenShip") @Valid IdentityDto chosenShip,
+            @RequestBody @Valid IdentityDto chosenShip,
             Model model, BindingResult result,
             Locale locale) {
         if (result.hasErrors()) {

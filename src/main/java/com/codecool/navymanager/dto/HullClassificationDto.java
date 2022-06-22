@@ -27,6 +27,10 @@ public class HullClassificationDto implements Serializable {
     @NotNull(message = "You must specify the minimum rank!")
     private RankDto minimumRank;
 
+    public HullClassificationDto(Long id) {
+        this.id = id;
+    }
+
     public HullClassificationDto(HullClassification hullClassification) {
         id = hullClassification.getId();
         abbreviation = hullClassification.getAbbreviation();

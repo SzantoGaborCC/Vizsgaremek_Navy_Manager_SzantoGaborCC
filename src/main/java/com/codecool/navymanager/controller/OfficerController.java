@@ -60,7 +60,7 @@ public class OfficerController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("officer") @Valid OfficerDto officer,
+            @RequestBody @Valid OfficerDto officer,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -108,7 +108,7 @@ public class OfficerController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("officer") @Valid OfficerDto officer,
+            @RequestBody @Valid OfficerDto officer,
             BindingResult result,
             Model model,
             Locale locale) {

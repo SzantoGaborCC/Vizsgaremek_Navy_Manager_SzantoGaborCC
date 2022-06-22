@@ -51,7 +51,7 @@ public class CountryController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("country") @Valid CountryDto country,
+            @RequestBody @Valid CountryDto country,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -95,7 +95,7 @@ public class CountryController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("country") @Valid CountryDto country,
+            @RequestBody @Valid CountryDto country,
             BindingResult result,
             Model model,
             Locale locale) {

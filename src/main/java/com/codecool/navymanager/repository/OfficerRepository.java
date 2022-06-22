@@ -28,11 +28,9 @@ public interface OfficerRepository extends JpaRepository<Officer, Long> {
             "   SELECT f.commander FROM Fleet f WHERE f.commander = o)")
     List<Officer> findAvailableOfficers();
 
-    @Query("SELECT o FROM Officer o JOIN FETCH Ship s" +
-            " WHERE s.captain = o")
+    @Query("SELECT f FROM Fleet f JOIN FETCH Officer o ON f.commander = o WHERE f.commander = ?1")
     Fleet findFleetPost(Officer officer);
 
-    @Query("SELECT o FROM Officer o JOIN FETCH Fleet f" +
-            " WHERE f.commander = o")
+    @Query("SELECT s FROM Ship s JOIN FETCH Officer o ON s.captain = o WHERE s.captain = ?1")
     Ship findShipPost(Officer officer);
 }

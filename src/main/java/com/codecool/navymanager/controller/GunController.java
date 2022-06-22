@@ -55,7 +55,7 @@ public class GunController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("gun") @Valid GunDto gun,
+            @RequestBody @Valid GunDto gun,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -101,7 +101,7 @@ public class GunController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("gun") @Valid GunDto gun,
+            @RequestBody @Valid GunDto gun,
             BindingResult result,
             Model model,
             Locale locale) {

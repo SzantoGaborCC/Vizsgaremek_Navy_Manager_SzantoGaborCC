@@ -55,7 +55,7 @@ public class HullClassificationController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification,
+            @RequestBody @Valid HullClassificationDto hullClassification,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -102,7 +102,7 @@ public class HullClassificationController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("hullClassification") @Valid HullClassificationDto hullClassification,
+            @RequestBody @Valid HullClassificationDto hullClassification,
             BindingResult result,
             Model model,
             Locale locale) {

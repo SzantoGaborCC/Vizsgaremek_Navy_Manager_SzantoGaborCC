@@ -65,7 +65,6 @@ public class ShipController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            //@ModelAttribute("ship") @Valid ShipDto ship,
             @RequestBody @Valid ShipDto ship,
             BindingResult result,
             Model model,
@@ -117,7 +116,6 @@ public class ShipController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            //@ModelAttribute("ship") @Valid ShipDto ship,
             @RequestBody @Valid ShipDto ship,
             BindingResult result,
             Model model,
