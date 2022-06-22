@@ -1,6 +1,7 @@
 package com.codecool.navymanager.dto;
 
 import com.codecool.navymanager.entity.Ship;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,10 @@ public class ShipDto implements Serializable {
 
     private FleetDto fleet;
 
+    public ShipDto(Long id) {
+        this.id = id;
+    }
+
     public ShipDto(Ship ship) {
         id = ship.getId();
         name = ship.getName();
@@ -39,7 +44,12 @@ public class ShipDto implements Serializable {
     }
 
     public Ship toEntity() {
-        return new Ship(id, name, shipClass != null ? shipClass.toEntity() : null, captain != null ? captain.toEntity() : null, country.toEntity());
+        return new Ship(
+                id,
+                name,
+                shipClass != null ? shipClass.toEntity() : null,
+                captain != null ? captain.toEntity() : null,
+                country != null ? country.toEntity() : null);
     }
 
     @Override

@@ -37,6 +37,10 @@ public class GunDto implements Serializable {
     @NotNull(message = "You must specify the country!")
     private CountryDto country;
 
+    public GunDto(Long id) {
+        this.id = id;
+    }
+
     public GunDto(Gun gun) {
         id = gun.getId();
         designation = gun.getDesignation();
@@ -55,7 +59,7 @@ public class GunDto implements Serializable {
                 projectileWeightInKgs,
                 rangeInMeters,
                 minimumShipDisplacementInTons,
-                country.toEntity()
+                country != null ? country.toEntity() : null
         );
     }
 

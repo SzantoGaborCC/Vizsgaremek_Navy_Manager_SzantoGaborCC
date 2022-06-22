@@ -1,10 +1,13 @@
 package com.codecool.navymanager.service;
 
+import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.dto.ShipDto;
-import com.codecool.navymanager.entity.Officer;
+import com.codecool.navymanager.entity.*;
+import com.codecool.navymanager.repository.FleetRepository;
 import com.codecool.navymanager.repository.OfficerRepository;
+import com.codecool.navymanager.repository.ShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -21,9 +24,13 @@ public class OfficerService {
     @Autowired
     MessageSource messageSource;
     private final OfficerRepository officerRepository;
+    private final FleetRepository fleetRepository;
+    private final ShipRepository shipRepository;
 
-    public OfficerService(OfficerRepository officerRepository) {
+    public OfficerService(OfficerRepository officerRepository, FleetRepository fleetRepository, ShipRepository shipRepository) {
         this.officerRepository = officerRepository;
+        this.fleetRepository = fleetRepository;
+        this.shipRepository = shipRepository;
     }
 
     public List<OfficerDto> findAll() {
@@ -40,6 +47,11 @@ public class OfficerService {
     }
     public List<OfficerDto> findAvailableOfficers() {
         return officerRepository.findAvailableOfficers().stream()
+                .map(OfficerDto::new).toList();
+    }
+
+    public List<OfficerDto> findAvailableOfficersByCountry(CountryDto country) {
+        return officerRepository.findAvailableOfficersByCountry(country.toEntity()).stream()
                 .map(OfficerDto::new).toList();
     }
 
@@ -74,13 +86,38 @@ public class OfficerService {
 
     @Transactional
     public void update(OfficerDto officerDto, long id, Locale locale) {
+        if (officerDto.getId() != id) {
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "invalid_data",
+                    new Object[] {Officer.class.getSimpleName()},
+                    locale));
+        }
         if (officerRepository.existsById(id)) {
+            checkIfDemotedAndPossiblyRemoveFromCommand(officerDto);
             officerRepository.save(officerDto.toEntity());
         } else {
             throw new NoSuchElementException(messageSource.getMessage(
                     "no_such",
                     new Object[] {Officer.class.getSimpleName()},
                     locale));
+        }
+    }
+
+    private void checkIfDemotedAndPossiblyRemoveFromCommand(OfficerDto officer) {
+        Officer originalOfficerData = officerRepository.findById(officer.getId()).orElseThrow();
+        if (originalOfficerData.getRank().getPrecedence() > officer.getRank().getPrecedence()) {
+            Fleet fleet = officerRepository.findFleetPost(originalOfficerData);
+            Ship ship = officerRepository.findShipPost(originalOfficerData);
+            if (fleet != null && fleet.getMinimumRank().getPrecedence() > officer.getRank().getPrecedence()) {
+                fleet.setCommander(null);
+                fleetRepository.save(fleet);
+            } else if (
+                    ship != null &&
+                    ship.getShipClass().getHullClassification().getMinimumRank().getPrecedence() > officer.getRank().getPrecedence()
+            ) {
+                ship.setCaptain(null);
+                shipRepository.save(ship);
+            }
         }
     }
 

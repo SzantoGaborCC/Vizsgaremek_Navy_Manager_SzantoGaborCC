@@ -65,7 +65,8 @@ public class ShipController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> add(
-            @ModelAttribute("ship") @Valid ShipDto ship,
+            //@ModelAttribute("ship") @Valid ShipDto ship,
+            @RequestBody @Valid ShipDto ship,
             BindingResult result,
             Model model,
             Locale locale) {
@@ -83,7 +84,7 @@ public class ShipController {
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        shipService.add(ship);
+        shipService.add(ship, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
                 new Object[] {Ship.class.getSimpleName()},
@@ -116,7 +117,8 @@ public class ShipController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
-            @ModelAttribute("ship") @Valid ShipDto ship,
+            //@ModelAttribute("ship") @Valid ShipDto ship,
+            @RequestBody @Valid ShipDto ship,
             BindingResult result,
             Model model,
             Locale locale) {

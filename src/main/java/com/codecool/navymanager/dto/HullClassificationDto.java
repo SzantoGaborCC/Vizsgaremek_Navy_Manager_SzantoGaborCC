@@ -36,7 +36,7 @@ public class HullClassificationDto implements Serializable {
 
     public HullClassification toEntity() {
         return new HullClassification(
-                id, abbreviation, designation, minimumRank.toEntity()
+                id, abbreviation, designation, minimumRank != null ? minimumRank.toEntity() : null
         );
     }
 
@@ -51,5 +51,14 @@ public class HullClassificationDto implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "HullClassificationDto{" +
+                "id=" + id +
+                ", designation='" + designation + '\'' +
+                ", minimumRank=" + minimumRank +
+                '}';
     }
 }

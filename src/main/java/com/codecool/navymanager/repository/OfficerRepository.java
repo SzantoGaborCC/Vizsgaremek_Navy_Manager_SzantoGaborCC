@@ -1,7 +1,9 @@
 package com.codecool.navymanager.repository;
 
 import com.codecool.navymanager.entity.Country;
+import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Officer;
+import com.codecool.navymanager.entity.Ship;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -25,4 +27,12 @@ public interface OfficerRepository extends JpaRepository<Officer, Long> {
             " NOT EXISTS (" +
             "   SELECT f.commander FROM Fleet f WHERE f.commander = o)")
     List<Officer> findAvailableOfficers();
+
+    @Query("SELECT o FROM Officer o JOIN FETCH Ship s" +
+            " WHERE s.captain = o")
+    Fleet findFleetPost(Officer officer);
+
+    @Query("SELECT o FROM Officer o JOIN FETCH Fleet f" +
+            " WHERE f.commander = o")
+    Ship findShipPost(Officer officer);
 }

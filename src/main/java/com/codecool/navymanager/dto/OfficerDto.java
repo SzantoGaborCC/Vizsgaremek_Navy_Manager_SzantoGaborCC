@@ -36,6 +36,10 @@ public class OfficerDto implements Serializable {
         country = new CountryDto(officer.getCountry());
     }
 
+    public OfficerDto(Long id) {
+        this.id = id;
+    }
+
     public OfficerDto(Long id, String name, CountryDto country) {
         this.id = id;
         this.name = name;
@@ -44,7 +48,7 @@ public class OfficerDto implements Serializable {
 
 
     public Officer toEntity() {
-        return new Officer(id, name, dateOfBirth, rank.toEntity(), country.toEntity());
+        return new Officer(id, name, dateOfBirth, rank != null ? rank.toEntity() : null, country != null ? country.toEntity() : null);
     }
 
     @Override
@@ -58,5 +62,15 @@ public class OfficerDto implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "OfficerDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", rank=" + rank +
+                ", country=" + country +
+                '}';
     }
 }

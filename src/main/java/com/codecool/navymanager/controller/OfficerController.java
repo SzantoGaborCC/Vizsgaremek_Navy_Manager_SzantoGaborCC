@@ -105,7 +105,6 @@ public class OfficerController {
             return "officer-form";
     }
 
-    //todo: When rank reduced, check for fleet and ship position eligibility?
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,

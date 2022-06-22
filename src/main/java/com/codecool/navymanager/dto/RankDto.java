@@ -26,6 +26,10 @@ public class RankDto implements Serializable {
     @Size(min = 1, max = 255, message = "Designation length must be between 1 and 255!")
     private String designation;
 
+    public RankDto(Long id) {
+        this.id = id;
+    }
+
     public RankDto(Rank rank) {
         this(rank.getId(), rank.getPrecedence(), rank.getDesignation());
     }
@@ -51,5 +55,13 @@ public class RankDto implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "RankDto{" +
+                "id=" + id +
+                ", designation='" + designation + '\'' +
+                '}';
     }
 }

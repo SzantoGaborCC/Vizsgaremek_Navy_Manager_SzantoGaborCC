@@ -24,6 +24,10 @@ public class GunInstallationDto implements Serializable {
     @Min(value = 1, message = "Quantity must be at least 1!")
     private Integer quantity;
 
+    public GunInstallationDto(Long id) {
+        this.id = id;
+    }
+
     public GunInstallationDto(GunInstallation gunInstallation) {
                 id = gunInstallation.getId();
                 gun = new GunDto(gunInstallation.getGun());
@@ -31,7 +35,10 @@ public class GunInstallationDto implements Serializable {
     }
 
     public GunInstallation toEntity() {
-        return new GunInstallation(id, gun.toEntity(), quantity);
+        return new GunInstallation(
+                id,
+                gun != null ? gun.toEntity() : null,
+                quantity);
     }
 
     @Override

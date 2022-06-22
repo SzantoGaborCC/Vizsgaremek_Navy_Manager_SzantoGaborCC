@@ -1,7 +1,11 @@
 package com.codecool.navymanager.dto;
 
 import com.codecool.navymanager.entity.ShipClass;
+import com.codecool.navymanager.repository.ShipClassRepository;
+import com.codecool.navymanager.service.ShipClassService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -16,6 +20,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ShipClassDto implements Serializable {
     private static final long serialVersionUID = 1L;
+
     private Long id;
     @NotNull(message = "Name must be specified and its length must be between 1 and 255!")
     @Size(min = 1, max = 255, message = "name length must be between 1 and 255!")
@@ -56,21 +61,25 @@ public class ShipClassDto implements Serializable {
                 .collect(Collectors.toSet());
     }
 
+    public ShipClassDto(Long id) {
+        this.id = id;
+    }
+
     public ShipClass toEntity() {
         return new ShipClass(
                 id,
                 name,
                 displacementInTons,
-                hullClassification.toEntity(),
+                hullClassification != null ? hullClassification.toEntity() : null,
                 armorBeltInCms,
                 armorTurretInCms,
                 armorDeckInCms,
                 speedInKmh,
-                country.toEntity(),
-                (guns == null) ? null :
-                    guns.stream()
-                        .map(GunInstallationDto::toEntity)
-                        .collect(Collectors.toSet())
+                country != null ? country.toEntity() : null,
+                guns != null ?
+                        guns.stream()
+                            .map(GunInstallationDto::toEntity)
+                            .collect(Collectors.toSet()) : null
         );
     }
 
@@ -85,5 +94,16 @@ public class ShipClassDto implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "ShipClassDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", hullClassification=" + hullClassification +
+                ", country=" + country +
+                ", guns=" + guns +
+                '}';
     }
 }

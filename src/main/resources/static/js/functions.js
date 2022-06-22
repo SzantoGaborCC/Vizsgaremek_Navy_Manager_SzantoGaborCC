@@ -41,7 +41,9 @@ function ajaxFormSubmit(e, formId) {
     $.ajax({
         method: method,
         url : url,
-        data: data,
+        data: /*data,*/ JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
         success: function(response)
         {
             if (typeof redirectTo !== 'undefined' )

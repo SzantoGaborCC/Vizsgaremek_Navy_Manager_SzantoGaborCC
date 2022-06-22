@@ -30,6 +30,10 @@ public class FleetDto implements Serializable {
     private CountryDto country;
     private Set<ShipDto> ships;
 
+    public FleetDto(Long id) {
+        this.id = id;
+    }
+
     public FleetDto(Fleet fleet) {
         id = fleet.getId();
         designation = fleet.getDesignation();
@@ -47,13 +51,13 @@ public class FleetDto implements Serializable {
         return new Fleet(
                 id,
                 designation,
-                minimumRank.toEntity(),
+                minimumRank != null ? minimumRank.toEntity() : null,
                 commander != null ? commander.toEntity() : null,
-                country.toEntity(),
-                ships == null ? null :
-                    ships.stream()
+                country != null ? country.toEntity() : null,
+                ships != null ?
+                        ships.stream()
                             .map(shipDto -> shipDto.toEntity())
-                            .collect(Collectors.toSet())
+                            .collect(Collectors.toSet()) : null
         );
     }
 

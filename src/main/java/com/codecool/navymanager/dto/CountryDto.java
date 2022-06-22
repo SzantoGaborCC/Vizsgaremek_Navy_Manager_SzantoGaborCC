@@ -19,6 +19,10 @@ public class CountryDto implements Serializable {
     @Size(min = 1, max = 255, message = "Name length must be between 1 and 255!")
     private String name;
 
+    public CountryDto(Long id) { //Comes from Json, only id is defined
+        this.id = id;
+    }
+
     public CountryDto(Country country) {
         this(country.getId(), country.getName());
     }
