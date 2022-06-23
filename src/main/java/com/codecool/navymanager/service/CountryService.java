@@ -13,7 +13,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional(readOnly = true)
+
 public class CountryService {
     @Autowired
     private MessageSource messageSource;
@@ -32,41 +32,29 @@ public class CountryService {
 
     public CountryDto findById(long id, Locale locale) {
         return new CountryDto(countryRepository.findById(id)
-                .orElseThrow(() ->  new NoSuchElementException(
-                        messageSource.getMessage(
-                                "no_such",
-                                new Object[] {Country.class.getSimpleName()},
-                                locale))));
+                .orElseThrow(() ->  new NoSuchElementException("Country Search Error: Could not find that Country in the database!")));
     }
 
-    @Transactional
+    
     public void add(CountryDto countryDto) {
         countryRepository.save(countryDto.toEntity());
     }
 
-    @Transactional
+    
     public void update(CountryDto countryDto, long id, Locale locale) {
-        if (countryRepository.existsById(id)) {
+        if (countryRepository.existsById(id) && countryDto.getId() == id) {
             countryRepository.save(countryDto.toEntity());
         } else {
-            throw new NoSuchElementException(
-                    messageSource.getMessage(
-                            "no_such",
-                            new Object[] {Country.class.getSimpleName()},
-                            locale));
+            throw new IllegalArgumentException("Country Update Error: Id is not valid!");
         }
     }
 
-    @Transactional
+    
     public void deleteById(Long id, Locale locale) {
         if (countryRepository.existsById(id)) {
             countryRepository.deleteById(id);
         } else {
-            throw new NoSuchElementException(
-                    messageSource.getMessage(
-                            "no_such",
-                            new Object[] {Country.class.getSimpleName()},
-                            locale));
+            throw new IllegalArgumentException("Country Deletion Error: Could not find that Country in the database!");
         }
     }
 }

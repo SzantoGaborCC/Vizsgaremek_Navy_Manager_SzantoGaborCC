@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional(readOnly = true)
+
 public class ShipClassService {
 
     @Autowired
@@ -46,12 +46,12 @@ public class ShipClassService {
                 .filter(gunAndQuantity -> gunAndQuantity.getGun().getId().equals(gunId)).findAny().orElseThrow());
     }
 
-    @Transactional
+    
     public void add(ShipClassDto shipClassDto) {
         shipClassRepository.save(shipClassDto.toEntity());
     }
 
-    @Transactional
+    
     public void update(ShipClassDto shipClassDto, long id, Locale locale) {
         ShipClass oldShipClassData = shipClassRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException( messageSource.getMessage(
@@ -63,7 +63,7 @@ public class ShipClassService {
         shipClassRepository.save(newShipClassData);
     }
 
-    @Transactional
+    
     public void deleteById(long id, Locale locale) {
         if (shipClassRepository.existsById(id)) {
             shipClassRepository.deleteById(id);
@@ -76,7 +76,7 @@ public class ShipClassService {
         }
     }
 
-    @Transactional
+    
     public void addGunToShipClass(long shipClassId, GunInstallationDto gunInstallationDto, Locale locale) {
             ShipClass shipClass = shipClassRepository.findById(shipClassId)
                     .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
@@ -98,7 +98,7 @@ public class ShipClassService {
             }
     }
 
-    @Transactional
+    
     public void updateGunForShipClass(
             long shipClassId,
             long gunId,
@@ -119,7 +119,7 @@ public class ShipClassService {
         shipClassRepository.save(shipClass);
     }
 
-    @Transactional
+    
     public void removeGunFromShipClass(long shipClassId, long gunId, Locale locale) {
         ShipClass shipClass = shipClassRepository.findById(shipClassId)
                 .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(

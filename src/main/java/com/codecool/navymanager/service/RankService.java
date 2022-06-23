@@ -14,7 +14,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional(readOnly = true)
+
 public class RankService {
     @Autowired
     MessageSource messageSource;
@@ -38,12 +38,12 @@ public class RankService {
                         locale))));
     }
 
-    @Transactional
+    
     public void add(RankDto rankDto) {
         rankRepository.save(rankDto.toEntity());
     }
 
-    @Transactional
+    
     public void update(RankDto rankDto, long id, Locale locale) {
         if (rankRepository.existsById(id)) {
             rankRepository.save(rankDto.toEntity());
@@ -55,7 +55,7 @@ public class RankService {
         }
     }
 
-    @Transactional
+    
     public void deleteById(long id, Locale locale) {
         if (rankRepository.existsById(id)) {
             rankRepository.deleteById(id);

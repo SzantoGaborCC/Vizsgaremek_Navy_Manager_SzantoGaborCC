@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+
 public class FleetService {
     @Autowired
     MessageSource messageSource;
@@ -58,14 +58,14 @@ public class FleetService {
                 .collect(Collectors.toSet());
     }
 
-    @Transactional
+    
     public void add(FleetDto fleetDto) {
         if (fleetDto.getCommander().getId() == -1)
             fleetDto.setCommander(null);
         fleetRepository.save(fleetDto.toEntity());
     }
 
-    @Transactional
+    
     public void update(FleetDto fleetDto, long id, Locale locale) {
         Fleet fleet = fleetRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
                 messageSource.getMessage(
@@ -82,7 +82,7 @@ public class FleetService {
         fleetRepository.save(fleetDto.toEntity());
     }
 
-    @Transactional
+    
     public void deleteById(Long id, Locale locale) {
         if (fleetRepository.existsById(id)) {
             fleetRepository.deleteById(id);
@@ -95,7 +95,7 @@ public class FleetService {
         }
     }
 
-    @Transactional
+    
     public void addShipToFleet(Long fleetId, long shipId, Locale locale) {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new NoSuchElementException(
                     messageSource.getMessage(
@@ -111,13 +111,13 @@ public class FleetService {
             shipRepository.save(shipToAdd);
     }
 
-    @Transactional
+    
     public void updateShipInAFleet(long fleetId, long shipId, long newShipId, Locale locale) {
             removeShipFromFleet(fleetId, shipId, locale);
             addShipToFleet(fleetId, newShipId, locale);
     }
 
-    @Transactional
+    
     public void removeShipFromFleet(long fleetId, long shipId, Locale locale) {
             Ship shipToRemove = shipRepository.findById(shipId)
                     .orElseThrow(() -> new NoSuchElementException(

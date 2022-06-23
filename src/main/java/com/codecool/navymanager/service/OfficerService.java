@@ -19,7 +19,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional(readOnly = true)
+
 public class OfficerService {
     @Autowired
     MessageSource messageSource;
@@ -39,10 +39,7 @@ public class OfficerService {
 
     public OfficerDto findById(long id, Locale locale) {
         return new OfficerDto(officerRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementException(messageSource.getMessage(
-                        "no_such",
-                        new Object[]{Officer.class.getSimpleName()},
-                        locale))
+                () -> new NoSuchElementException("Could not find Officer in the database!")
         ));
     }
 
@@ -77,12 +74,12 @@ public class OfficerService {
         return foundOfficers;
     }
 
-    @Transactional
+    
     public void add(OfficerDto officerDto) {
         officerRepository.save(officerDto.toEntity());
     }
 
-    @Transactional
+    
     public void update(OfficerDto officerDto, long id, Locale locale) {
         if (officerDto.getId() != id) {
             throw new IllegalArgumentException(messageSource.getMessage(
@@ -100,7 +97,7 @@ public class OfficerService {
         }
     }
 
-    @Transactional
+    
     public void deleteById(long id, Locale locale) {
         if (officerRepository.existsById(id)) {
             officerRepository.deleteById(id);

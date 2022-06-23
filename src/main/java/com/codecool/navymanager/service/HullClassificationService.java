@@ -14,7 +14,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional(readOnly = true)
+
 public class HullClassificationService {
     @Autowired
     MessageSource messageSource;
@@ -37,12 +37,12 @@ public class HullClassificationService {
                         locale))));
     }
 
-    @Transactional
+    
     public void add(HullClassificationDto hullClassificationDto) {
         hullClassificationRepository.save(hullClassificationDto.toEntity());
     }
 
-    @Transactional
+    
     public void update(HullClassificationDto hullClassificationDto, long id, Locale locale) {
         if (hullClassificationRepository.existsById(id)) {
             hullClassificationRepository.save(hullClassificationDto.toEntity());
@@ -55,7 +55,7 @@ public class HullClassificationService {
     }
 
 
-    @Transactional
+    
     public void deleteById(long id, Locale locale) {
         if (hullClassificationRepository.existsById(id)) {
             hullClassificationRepository.deleteById(id);

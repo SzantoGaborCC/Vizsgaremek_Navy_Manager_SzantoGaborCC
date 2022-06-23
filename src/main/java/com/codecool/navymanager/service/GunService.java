@@ -15,7 +15,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional(readOnly = true)
+
 public class GunService {
     @Autowired
     MessageSource messageSource;
@@ -41,12 +41,12 @@ public class GunService {
         return gunRepository.findByCountryId(countryId).stream().map(GunDto::new).toList();
     }
 
-    @Transactional
+    
     public void add(GunDto gunDto) {
        gunRepository.save(gunDto.toEntity());
     }
 
-    @Transactional
+    
     public void update(GunDto gunDto, long id, Locale locale) {
         if (gunRepository.existsById(id)) {
             gunRepository.save(gunDto.toEntity());
@@ -58,7 +58,7 @@ public class GunService {
         }
     }
 
-    @Transactional
+    
     public void deleteById(long id, Locale locale) {
         if (gunRepository.existsById(id)) {
             gunRepository.deleteById(id);
