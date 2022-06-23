@@ -82,13 +82,13 @@ public class FleetController {
             model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {Fleet.class.getSimpleName()},
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        fleetService.add(fleet);
+        fleetService.add(fleet, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
                 new Object[] {Fleet.class.getSimpleName()},
@@ -131,7 +131,7 @@ public class FleetController {
             model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {Fleet.class.getSimpleName()},
                     locale));

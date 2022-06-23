@@ -21,8 +21,6 @@ import java.util.NoSuchElementException;
 @Service
 
 public class OfficerService {
-    @Autowired
-    MessageSource messageSource;
     private final OfficerRepository officerRepository;
     private final FleetRepository fleetRepository;
     private final ShipRepository shipRepository;
@@ -74,26 +72,25 @@ public class OfficerService {
         return foundOfficers;
     }
 
-    
+    public boolean isOfficerPostedToShipOrFleet(OfficerDto officer) {
+        return officer != null &&
+                findAvailableOfficersByCountry(officer.getCountry()).stream()
+                        .noneMatch(officerDto -> officerDto.getId().equals(officer.getId()));
+    }
+
     public void add(OfficerDto officerDto) {
         officerRepository.save(officerDto.toEntity());
     }
 
     
     public void update(OfficerDto officerDto, long id, Locale locale) {
-        if (officerDto.getId() != id) {
-            throw new IllegalArgumentException(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[]{Officer.class.getSimpleName()},
-                    locale));
+        if (officerDto.getId() == null || officerDto.getId() != id) {
+            throw new IllegalArgumentException("Officer Update Error: Id cannot be null, and must match Id in the path!");
         }
         if (officerRepository.existsById(id)) {
             officerRepository.save(officerDto.toEntity());
         } else {
-            throw new NoSuchElementException(messageSource.getMessage(
-                    "no_such",
-                    new Object[]{Officer.class.getSimpleName()},
-                    locale));
+            throw new NoSuchElementException("Officer Update error: Officer must already be in the database!");
         }
     }
 
@@ -102,11 +99,7 @@ public class OfficerService {
         if (officerRepository.existsById(id)) {
             officerRepository.deleteById(id);
         } else {
-            throw new NoSuchElementException(
-                    messageSource.getMessage(
-                            "no_such",
-                            new Object[]{Officer.class.getSimpleName()},
-                            locale));
+            throw new NoSuchElementException("Delete Officer Error : Officer must already exist in the database!");
         }
     }
 }

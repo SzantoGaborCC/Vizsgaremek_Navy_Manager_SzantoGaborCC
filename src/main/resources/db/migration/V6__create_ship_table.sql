@@ -4,7 +4,8 @@ CREATE TABLE public.ship (
 	ship_class_id BIGINT NOT NULL,
 	captain_id BIGINT,
 	country_id BIGINT NOT NULL,
-	fleet_id BIGINT
+	fleet_id BIGINT,
+    UNIQUE ("name", ship_class_id)
 );
 ALTER TABLE public.ship ADD CONSTRAINT ship_ship_class_fk FOREIGN KEY (ship_class_id) REFERENCES public.ship_class(id);
 ALTER TABLE public.ship ADD CONSTRAINT ship_captain_fk FOREIGN KEY (captain_id) REFERENCES public.officer(id);

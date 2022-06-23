@@ -65,7 +65,7 @@ public class HullClassificationController {
             model.addAttribute("validRankValues", rankService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {HullClassification.class.getSimpleName()},
                     locale));
@@ -112,7 +112,7 @@ public class HullClassificationController {
             model.addAttribute("validRankValues", rankService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {HullClassification.class.getSimpleName()},
                     locale));

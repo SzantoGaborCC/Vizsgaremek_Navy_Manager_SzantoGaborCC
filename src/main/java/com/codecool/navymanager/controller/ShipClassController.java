@@ -80,7 +80,7 @@ public class ShipClassController {
             model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {ShipClass.class.getSimpleName()},
                     locale));
@@ -127,7 +127,7 @@ public class ShipClassController {
             model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {ShipClass.class.getSimpleName()},
                     locale));

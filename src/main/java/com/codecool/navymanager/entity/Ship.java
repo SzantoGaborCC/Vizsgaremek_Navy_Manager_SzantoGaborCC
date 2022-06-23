@@ -8,7 +8,8 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ship")
+@Table(name = "ship", uniqueConstraints = {
+                @UniqueConstraint(name = "ShipNameCombinedWithClassMustBeUnique", columnNames = { "name", "ship_class_id" })})
 @Getter
 @Setter
 @AllArgsConstructor

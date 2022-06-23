@@ -4,7 +4,6 @@ package com.codecool.navymanager.service;
 import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.dto.ShipDto;
-import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.repository.CountryRepository;
 import com.codecool.navymanager.repository.ShipClassRepository;
@@ -43,10 +42,7 @@ public class ShipService {
 
     public ShipDto findById(long id, Locale locale) {
         return new ShipDto(shipRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
-                        "no_such",
-                        new Object[]{Ship.class.getSimpleName()},
-                        locale))));
+                .orElseThrow(() -> new NoSuchElementException("Ship Search Error: Ship is not in the database!")));
     }
 
     public List<ShipDto> findByCountry(CountryDto countryDto) {
@@ -59,59 +55,67 @@ public class ShipService {
                 .map(ShipDto::new).toList();
     }
 
-    
+
     public void add(ShipDto shipDto, Locale locale) {
+        if (shipRepository.existsById(shipDto.getId()))
+            throw new IllegalArgumentException("Add Ship Error: Ship already exists!");
         if (shipDto.getCaptain() != null && shipDto.getCaptain().getId() != -1) {
             OfficerDto officer = officerService.findById(shipDto.getCaptain().getId(), locale);
-            if (isOfficerPosted(officer)) {
-                shipDto.setCaptain(null);
-                throw new IllegalArgumentException(messageSource.getMessage(
-                        "invalid_data",
-                        new Object[]{Officer.class.getSimpleName()},
-                        locale));
+            if (!shipDto.getCountry().equals(officer.getCountry())) {
+                throw new IllegalArgumentException("Add Ship Error: Country mismatch!");
             }
-        } else if (shipDto.getCaptain().getId() == -1) {
+            if (officerService.isOfficerPostedToShipOrFleet(officer)) {
+                shipDto.setCaptain(null);
+                throw new IllegalArgumentException("Add Ship Error: Officer is unavailable!");
+            }
+        } else if (shipDto.getCaptain() != null && shipDto.getCaptain().getId() == -1) {
             shipDto.setCaptain(null);
         }
         shipRepository.save(shipDto.toEntity());
     }
 
-    
-    public void update(ShipDto shipDto, long id, Locale locale) {
-        if (shipDto.getId() == null || shipDto.getId() != id) {
+
+    public void update(ShipDto newShipData, long id, Locale locale) {
+        if (newShipData.getId() == null || newShipData.getId() != id) {
             throw new IllegalArgumentException("Ship Update error: Id cannot be null, and must match Id in the path!");
         }
         Ship oldShipData = shipRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Ship Update error: No such ship in the database!"));
-        OfficerDto officer = (shipDto.getCaptain() != null && shipDto.getCaptain().getId() != -1) ? officerService.findById(shipDto.getCaptain().getId(), locale) : null;
-        if (oldShipData.getCaptain() == null && isOfficerPosted(officer)) {
-            shipDto.setCaptain(null);
-            throw new IllegalArgumentException("Ship Update Error: Officer is not available!");
+                .orElseThrow(() -> new IllegalArgumentException("Ship Update error: Ship must already exist in the database!"));
+
+        checkOfficerEligibilityBasedOnShipData(newShipData, locale, oldShipData);
+
+        Ship ship = newShipData.toEntity();
+        ship.setFleet(oldShipData.getFleet());
+        shipRepository.save(ship);
+    }
+
+    private void checkOfficerEligibilityBasedOnShipData(ShipDto newShipData, Locale locale, Ship oldShipData) {
+        if (newShipData.getCaptain() != null && newShipData.getCaptain().getId() != -1) {
+            OfficerDto newOfficer = officerService.findById(newShipData.getCaptain().getId(), locale);
+            if (!newOfficer.getCountry().equals(newShipData.getCountry())) {
+                throw new IllegalArgumentException("Fleet Update Error: Country Mismatch!");
+            }
+            boolean isNewOfficerPosted = officerService.isOfficerPostedToShipOrFleet(newOfficer);
+            if ((oldShipData.getCaptain() != null
+                    && !oldShipData.getCaptain().getId().equals(newOfficer.getId())
+                    && isNewOfficerPosted)
+                    ||
+                    (oldShipData.getCaptain() == null
+                            && isNewOfficerPosted)
+            ) {
+                newShipData.setCaptain(null);
+                throw new IllegalArgumentException("Ship Update Error: Officer is not available!");
+            }
+        } else {
+            newShipData.setCaptain(null);
         }
-        Ship newShipData = shipDto.toEntity();
-        newShipData.setId(id);
-        newShipData.setFleet(oldShipData.getFleet());
-        shipRepository.save(newShipData);
     }
-
-    public boolean isOfficerPosted(OfficerDto officer) {
-        return officer != null &&
-                (
-                        officer.getId() == -1 ||
-                                officerService.findAvailableOfficersByCountry(officer.getCountry()).stream()
-                                        .noneMatch(officerDto -> officerDto.getId().equals(officer.getId())));
-    }
-
 
     public void deleteById(long id, Locale locale) {
         if (shipRepository.existsById(id)) {
             shipRepository.deleteById(id);
         } else {
-            throw new NoSuchElementException(
-                    messageSource.getMessage(
-                            "no_such",
-                            new Object[]{Ship.class.getSimpleName()},
-                            locale));
+            throw new NoSuchElementException("Delete Ship Error : Ship must already exist in the database!");
         }
     }
 }

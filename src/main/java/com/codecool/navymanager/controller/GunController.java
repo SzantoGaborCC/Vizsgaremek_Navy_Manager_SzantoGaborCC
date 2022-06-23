@@ -65,7 +65,7 @@ public class GunController {
             model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {Gun.class.getSimpleName()},
                     locale));
@@ -111,7 +111,7 @@ public class GunController {
             model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {Gun.class.getSimpleName()},
                     locale));

@@ -25,7 +25,7 @@ public class Fleet {
 
     @NotNull(message = "Designation length must be between 1 and 255!")
     @Size(min = 1, max = 255, message = "Designation length must be between 1 and 255!")
-    @Column(name = "designation")
+    @Column(name = "designation", unique = true)
     private String designation;
 
     @ManyToOne(fetch = FetchType.LAZY)
