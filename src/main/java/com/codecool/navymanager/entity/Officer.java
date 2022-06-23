@@ -52,6 +52,7 @@ public class Officer {
         return "Officer{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", rank=" + rank +
                 '}';
     }
 }

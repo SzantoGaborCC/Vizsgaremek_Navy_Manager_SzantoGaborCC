@@ -14,7 +14,6 @@
                     <th scope="col">Id</th>
                     <th scope="col">Abbreviation</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Minimum rank required</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -23,10 +22,6 @@
                     <td th:text="${hullClassification.id}"></td>
                     <td th:text="${hullClassification.abbreviation}"></td>
                     <td th:text="${hullClassification.designation}"></td>
-                    <td>
-                        <a th:href="@{/rank/{id}(id=${hullClassification.minimumRank.id})}"
-                           th:text="${hullClassification.minimumRank.designation}"></a>
-                    </td>
                     <td class="text-center">
                         <a th:href="@{/hull-classification/{id}/show-update-form(id=${hullClassification.id})}"
                            class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>

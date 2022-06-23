@@ -13,7 +13,6 @@
                 <tr>
                     <th scope="col">Id</th>
                     <th scope="col">Designation</th>
-                    <th scope="col">Minimum rank required</th>
                     <th scope="col">Commander</th>
                     <th scope="col">Country</th>
                     <th scope="col">Actions</th>
@@ -23,10 +22,6 @@
                 <tr th:object="${fleet}">
                     <td th:text="${fleet.id}"></td>
                     <td th:text="${fleet.designation}"></td>
-                    <td>
-                        <a th:href="@{/rank/{id}(id=${fleet.minimumRank.id})}"
-                           th:text="${fleet.minimumRank.designation}"></a>
-                    </td>
                     <td>
                         <span th:if="${fleet.commander} == null" class="text-danger">No commander was assigned</span>
                         <a th:unless="${fleet.commander} == null" th:href="@{/officer/{id}(id=${fleet.commander.id})}"

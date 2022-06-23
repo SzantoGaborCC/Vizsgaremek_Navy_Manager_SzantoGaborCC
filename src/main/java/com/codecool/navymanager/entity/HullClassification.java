@@ -22,12 +22,8 @@ public class HullClassification {
     @Column(name = "abbreviation", nullable = false, length = 4, unique=true)
     private String abbreviation;
 
-    @Column(name = "designation", nullable = false, length = 255, unique=true)
+    @Column(name = "designation", nullable = false, unique=true)
     private String designation;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "minimum_rank_id", nullable = false)
-    private Rank minimumRank;
 
     @Override
     public boolean equals(Object o) {

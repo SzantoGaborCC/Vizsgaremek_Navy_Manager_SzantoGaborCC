@@ -16,7 +16,6 @@
                     <th scope="col">Caliber in millimeters</th>
                     <th scope="col">Projectile weight in kilograms</th>
                     <th scope="col">Range in meters</th>
-                    <th scope="col">Minimum ship displacement</th>
                     <th scope="col">Country</th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -28,7 +27,6 @@
                     <td th:text="${gun.caliberInMms}"></td>
                     <td th:text="${gun.projectileWeightInKgs}"></td>
                     <td th:text="${gun.rangeInMeters}"></td>
-                    <td th:text="${gun.minimumShipDisplacementInTons}"></td>
                     <td><a th:href="@{/country/{id}(id=${gun.country.id})}" th:text="${gun.country.name}"></a></td>
                     <td class="text-center">
                         <a th:href="@{/gun/{id}/show-update-form(id=${gun.id})}" class="btn btn-link"><i

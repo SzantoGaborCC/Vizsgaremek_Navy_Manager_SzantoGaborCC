@@ -28,10 +28,6 @@ public class Fleet {
     @Column(name = "designation")
     private String designation;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "minimum_rank_id", nullable = false)
-    private Rank minimumRank;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commander_id")
     private Officer commander;
@@ -62,7 +58,6 @@ public class Fleet {
         return "Fleet{" +
                 "id=" + id +
                 ", designation='" + designation + '\'' +
-                ", minimumRank=" + minimumRank +
                 ", commander=" + commander +
                 ", country=" + country +
                 ", ships=" + ships +

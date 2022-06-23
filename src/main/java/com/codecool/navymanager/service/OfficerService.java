@@ -62,8 +62,6 @@ public class OfficerService {
             foundOfficers.add(shipDto.getCaptain());
         }
         foundOfficers.addAll(officerRepository.findAvailableOfficers().stream()
-                .filter(officer -> officer.getRank().getPrecedence() >=
-                        shipDto.getShipClass().getHullClassification().getMinimumRank().getPrecedence())
                 .map(OfficerDto::new).toList());
         return foundOfficers;
     }
@@ -74,7 +72,6 @@ public class OfficerService {
             foundOfficers.add(fleetDto.getCommander());
         }
         foundOfficers.addAll(officerRepository.findAvailableOfficers().stream()
-                .filter(officer -> officer.getRank().getPrecedence() >= fleetDto.getMinimumRank().getPrecedence())
                 .map(OfficerDto::new)
                 .toList());
         return foundOfficers;
@@ -94,28 +91,12 @@ public class OfficerService {
                     locale));
         }
         if (officerRepository.existsById(id)) {
-            Officer officer = officerRepository.save(officerDto.toEntity());
-            checkIfNotEligibleForCommand(officer);
+            officerRepository.save(officerDto.toEntity());
         } else {
             throw new NoSuchElementException(messageSource.getMessage(
                     "no_such",
                     new Object[]{Officer.class.getSimpleName()},
                     locale));
-        }
-    }
-
-    private void checkIfNotEligibleForCommand(Officer officer) {
-        Fleet fleet = officerRepository.findFleetPost(officer);
-        Ship ship = officerRepository.findShipPost(officer);
-        if (fleet != null && fleet.getMinimumRank().getPrecedence() > officer.getRank().getPrecedence()) {
-            fleet.setCommander(null);
-            fleetRepository.save(fleet);
-        } else if (
-                ship != null &&
-                        ship.getShipClass().getHullClassification().getMinimumRank().getPrecedence() > officer.getRank().getPrecedence()
-        ) {
-            ship.setCaptain(null);
-            shipRepository.save(ship);
         }
     }
 

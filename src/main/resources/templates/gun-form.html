@@ -15,37 +15,19 @@
                 <div class="form-group">
                     <label for="designation">Designation</label>
                     <input type="text" class="form-control" id="designation" th:field="*{designation}">
-                    <span class="validationError" th:if="${#fields.hasErrors('designation')}"
-                          th:errors="*{designation}"></span>
                 </div>
                 <div class="form-group">
                     <label for="caliberInMms">Caliber in millimeters</label>
                     <input type="text" class="form-control" id="caliberInMms" th:field="*{caliberInMms}">
-                    <span class="validationError" th:if="${#fields.hasErrors('caliberInMms')}"
-                          th:errors="*{caliberInMms}"></span>
                 </div>
                 <div class="form-group">
                     <label for="projectileWeightInKgs">Projectile weight in kilograms</label>
                     <input type="text" class="form-control" id="projectileWeightInKgs"
                            th:field="*{projectileWeightInKgs}">
-                    <span class="validationError" th:if="${#fields.hasErrors('projectileWeightInKgs')}"
-                          th:errors="*{projectileWeightInKgs}"></span>
                 </div>
                 <div class="form-group">
                     <label for="rangeInMeters">Range in meters</label>
                     <input type="text" class="form-control" id="rangeInMeters" th:field="*{rangeInMeters}">
-                    <span class="validationError" th:if="${#fields.hasErrors('rangeInMeters')}"
-                          th:errors="*{rangeInMeters}"></span>
-                    <div class="validationError" th:if="${#fields.detailedErrors('rangeInMeters') != null}"
-                         th:each="err : ${#fields.detailedErrors('rangeInMeters')}" th:text="${err.getMessage()}"></div>
-
-                </div>
-                <div class="form-group">
-                    <label for="minimumShipDisplacementInTons">Minimum ship displacement</label>
-                    <input type="text" class="form-control" id="minimumShipDisplacementInTons"
-                           th:field="*{minimumShipDisplacementInTons}">
-                    <span class="validationError" th:if="${#fields.hasErrors('minimumShipDisplacementInTons')}"
-                          th:errors="*{minimumShipDisplacementInTons}"></span>
                 </div>
                 <div class="form-group">
                     <label for="country">Country</label>
@@ -56,7 +38,6 @@
                         <option th:unless="${gun.country} != null" th:each="countryOpt : ${validCountryValues}"
                                 th:value="${countryOpt.id}" th:text="${countryOpt.name}"></option>
                     </select>
-                    <span class="validationError" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
                     </div>
                 <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
                 </button>

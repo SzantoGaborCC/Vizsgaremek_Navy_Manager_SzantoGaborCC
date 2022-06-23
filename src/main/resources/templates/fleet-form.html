@@ -16,16 +16,6 @@
                     <label for="designation">Designation</label>
                     <input type="text" class="form-control" id="designation" th:field="*{designation}">
                 </div>
-                <div class="form-group">
-                    <label for="minimumRank">Minimum rank required</label>
-                    <select id="minimumRank" th:field="*{minimumRank}">
-                        <option th:if="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"
-                                th:selected="${fleet.minimumRank.id == rankOpt.id}"></option>
-                        <option th:unless="${fleet.minimumRank} != null" th:each="rankOpt : ${validRankValues}"
-                                th:value="${rankOpt.id}" th:text="${rankOpt.designation}"></option>
-                    </select>
-                </div>
                 <div th:if="${#lists.size(validCommanderValues) == 0} and ${fleet.commander} == null"
                      th:class="'text-danger'">No assignable officer found.
                 </div>

@@ -6,53 +6,53 @@ INSERT INTO public.country ("name")
 VALUES ('United Kingdom');
 
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('30.5 cm L45 Škoda', 305, 450, 22000, 13000, 1);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('30.5 cm L45 Škoda', 305, 450, 22000, 1);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('24 cm L45 Škoda', 238, 215, 12000, 7000, 1);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('24 cm L45 Škoda', 238, 215, 12000, 1);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('24 cm L40 Krupp', 238, 215, 7000, 7000, 1);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('24 cm L40 Krupp', 238, 215, 7000, 1);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('15 cm L50 Škoda', 149, 45, 15000, 2500, 1);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('15 cm L50 Škoda', 149, 45, 15000, 1);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('19 cm L42 Škoda', 190, 97, 12000, 6000, 1);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('19 cm L42 Škoda', 190, 97, 12000, 1);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('15 cm L40 Krupp', 149, 40, 13700, 2500, 1);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('15 cm L40 Krupp', 149, 40, 13700, 1);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('10 cm L47 Škoda', 100, 14, 11000, 1000, 1);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('10 cm L47 Škoda', 100, 14, 11000, 1);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('38 cm L45 SK', 380, 750, 23200, 28000, 2);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('38 cm L45 SK', 380, 750, 23200, 2);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('30.5 cm L50 SK', 305, 405, 20400, 24000, 2);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('30.5 cm L50 SK', 305, 405, 20400, 2);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('28 cm L50 SK', 280, 300, 20900, 12000, 2);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('28 cm L50 SK', 280, 300, 20900, 2);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('28 cm L45 SK', 280, 300, 18900, 12000, 2);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('28 cm L45 SK', 280, 300, 18900, 2);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('28 cm L40 SK', 280, 240, 18800, 12000, 2);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('28 cm L40 SK', 280, 240, 18800, 2);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('24 cm L40 SK', 240, 140, 16900, 7000, 2);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('24 cm L40 SK', 240, 140, 16900, 2);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('21 cm L40 SK', 209, 107, 16300, 6500, 2);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('21 cm L40 SK', 209, 107, 16300, 2);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('15 cm L45 SK', 149, 45, 17600, 2500, 2);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('15 cm L45 SK', 149, 45, 17600, 2);
 INSERT INTO gun
-(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, minimum_ship_displacement_in_tons, country_id)
-VALUES('10.5 cm L45 SK', 105, 25, 12700, 1000, 2);
+(designation, caliber_in_mms, projectile_weight_in_kgs, range_in_meters, country_id)
+VALUES('10.5 cm L45 SK', 105, 25, 12700, 2);
 
 INSERT INTO "rank"
 (precedence, designation)
@@ -113,32 +113,32 @@ VALUES('Heinz Wegener', '1854-06-21', 7, 2);
 
 
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_id)
-VALUES('BB', 'Battleship', 5);
+(abbreviation, designation)
+VALUES('BB', 'Battleship');
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_id)
-VALUES('CA', 'Heavy Cruiser', 5);
+(abbreviation, designation)
+VALUES('CA', 'Heavy Cruiser');
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_id)
-VALUES('CL', 'Light Cruiser', 5);
+(abbreviation, designation)
+VALUES('CL', 'Light Cruiser');
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_id)
-VALUES('DD', 'Destroyer', 4);
+(abbreviation, designation)
+VALUES('DD', 'Destroyer');
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_id)
-VALUES('DE', 'Destroyer Escort', 4);
+(abbreviation, designation)
+VALUES('DE', 'Destroyer Escort');
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_id)
-VALUES('SS', 'Submarine', 4);
+(abbreviation, designation)
+VALUES('SS', 'Submarine');
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_id)
-VALUES('CV', 'Aircraft Carrier', 5);
+(abbreviation, designation)
+VALUES('CV', 'Aircraft Carrier');
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_id)
-VALUES('CVL', 'Light Aircraft Carrier', 5);
+(abbreviation, designation)
+VALUES('CVL', 'Light Aircraft Carrier');
 INSERT INTO hull_classification
-(abbreviation, designation, minimum_rank_id)
-VALUES('CVE', 'Escort Aircraft Carrier', 5);
+(abbreviation, designation)
+VALUES('CVE', 'Escort Aircraft Carrier');
 
 INSERT INTO ship_class
 ("name", displacement_in_tons, hull_classification_id, armor_belt_in_cms, armor_turret_in_cms, armor_deck_in_cms, speed_in_kmh, country_id)
@@ -178,12 +178,12 @@ INSERT INTO ship
 VALUES('Lothringen', 2, 2);
 
 INSERT INTO fleet
-(designation, commander_id, country_id, minimum_rank_id)
-VALUES('1st Battleship Fleet Pula', 1, 1, 8);
+(designation, commander_id, country_id)
+VALUES('1st Battleship Fleet Pula', 1, 1);
 
 INSERT INTO fleet
-(designation, commander_id, country_id, minimum_rank_id)
-VALUES('1st Battleship Fleet Kiel', 5, 2, 8);
+(designation, commander_id, country_id)
+VALUES('1st Battleship Fleet Kiel', 5, 2);
 
 INSERT INTO gun_installation
 (ship_class_id, gun_id, gun_quantity)

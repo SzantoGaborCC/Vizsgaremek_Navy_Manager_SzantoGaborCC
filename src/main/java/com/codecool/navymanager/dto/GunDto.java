@@ -31,9 +31,7 @@ public class GunDto implements Serializable {
     @NotNull(message = "You must specify the gun range!")
     @Min(value = 1, message = "Gun range must be at least 1 m!")
     private Integer rangeInMeters;
-    @NotNull(message = "You must specify the minimum ship displacement!")
-    @Min(value = 1, message = "Minimum ship displacement must be at least 1 t!")
-    private Integer minimumShipDisplacementInTons;
+
     @NotNull(message = "You must specify the country!")
     private CountryDto country;
 
@@ -47,7 +45,6 @@ public class GunDto implements Serializable {
         caliberInMms = gun.getCaliberInMms();
         projectileWeightInKgs = gun.getProjectileWeightInKgs();
         rangeInMeters = gun.getRangeInMeters();
-        minimumShipDisplacementInTons = gun.getMinimumShipDisplacementInTons();
         country = new CountryDto(gun.getCountry());
     }
 
@@ -58,7 +55,6 @@ public class GunDto implements Serializable {
                 caliberInMms,
                 projectileWeightInKgs,
                 rangeInMeters,
-                minimumShipDisplacementInTons,
                 country != null ? country.toEntity() : null
         );
     }

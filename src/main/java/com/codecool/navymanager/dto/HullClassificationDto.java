@@ -24,8 +24,6 @@ public class HullClassificationDto implements Serializable {
     @NotNull(message = "Designation must be specified and its length must be between 1 and 255!")
     @Size(min = 1, max = 255, message = "Designation length must be between 1 and 255!")
     private String designation;
-    @NotNull(message = "You must specify the minimum rank!")
-    private RankDto minimumRank;
 
     public HullClassificationDto(Long id) {
         this.id = id;
@@ -35,12 +33,11 @@ public class HullClassificationDto implements Serializable {
         id = hullClassification.getId();
         abbreviation = hullClassification.getAbbreviation();
         designation = hullClassification.getDesignation();
-        minimumRank = new RankDto(hullClassification.getMinimumRank());
     }
 
     public HullClassification toEntity() {
         return new HullClassification(
-                id, abbreviation, designation, minimumRank != null ? minimumRank.toEntity() : null
+                id, abbreviation, designation
         );
     }
 
@@ -62,7 +59,6 @@ public class HullClassificationDto implements Serializable {
         return "HullClassificationDto{" +
                 "id=" + id +
                 ", designation='" + designation + '\'' +
-                ", minimumRank=" + minimumRank +
                 '}';
     }
 }

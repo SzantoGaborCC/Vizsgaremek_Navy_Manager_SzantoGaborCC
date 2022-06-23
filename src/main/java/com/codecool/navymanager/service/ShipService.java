@@ -4,11 +4,9 @@ package com.codecool.navymanager.service;
 import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.dto.ShipDto;
-import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.repository.CountryRepository;
-import com.codecool.navymanager.repository.OfficerRepository;
 import com.codecool.navymanager.repository.ShipClassRepository;
 import com.codecool.navymanager.repository.ShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +25,15 @@ public class ShipService {
     MessageSource messageSource;
 
     private final ShipRepository shipRepository;
-    private final OfficerRepository officerRepository;
 
+    private final OfficerService officerService;
     private final CountryRepository countryRepository;
 
     private final ShipClassRepository shipClassRepository;
 
-    public ShipService(ShipRepository shipRepository, OfficerRepository officerRepository, CountryRepository countryRepository, ShipClassRepository shipClassRepository) {
+    public ShipService(ShipRepository shipRepository, OfficerService officerService, CountryRepository countryRepository, ShipClassRepository shipClassRepository) {
         this.shipRepository = shipRepository;
-        this.officerRepository = officerRepository;
+        this.officerService = officerService;
         this.countryRepository = countryRepository;
         this.shipClassRepository = shipClassRepository;
     }
@@ -64,31 +62,10 @@ public class ShipService {
 
     @Transactional
     public void add(ShipDto shipDto, Locale locale) {
-        //checkIfOfficerEligible(shipDto, locale);
-        if (shipDto.getCaptain().getId() == -1)
+        OfficerDto officer = shipDto.getCaptain();
+        if (officer != null && officer.getId() == -1)
             shipDto.setCaptain(null);
         shipRepository.save(shipDto.toEntity());
-    }
-
-    private void checkIfOfficerEligible(ShipDto shipDto, Locale locale) {
-        if (shipDto.getCaptain() != null) {
-            Officer officer = shipDto.getCaptain().toEntity();
-            Officer oldOfficer = officerRepository.findById(officer.getId())
-                    .orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage(
-                            "no_such",
-                            new Object[]{Ship.class.getSimpleName()},
-                            locale)));
-            if (
-                    (!officer.equals(oldOfficer)) &&
-                            (officerRepository.findFleetPost(officer) != null || officerRepository.findShipPost(officer) != null) &&
-                            officer.getRank().getPrecedence() < shipDto.getShipClass().getHullClassification().getMinimumRank().getPrecedence()
-            ) {
-                throw new IllegalArgumentException(messageSource.getMessage(
-                        "invalid_data",
-                        new Object[]{Officer.class.getSimpleName()},
-                        locale));
-            }
-        }
     }
 
     @Transactional

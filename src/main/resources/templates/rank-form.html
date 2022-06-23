@@ -15,14 +15,10 @@
                 <div class="form-group">
                     <label for="precedence">Precedence</label>
                     <input type="text" class="form-control" id="precedence" th:field="*{precedence}">
-                    <span class="validationError" th:if="${#fields.hasErrors('precedence')}"
-                          th:errors="*{precedence}"></span>
                 </div>
                 <div class="form-group">
                     <label for="designation">Designation</label>
                     <input type="text" class="form-control" id="designation" th:field="*{designation}">
-                    <span class="validationError" th:if="${#fields.hasErrors('designation')}"
-                          th:errors="*{designation}"></span>
                 </div>
                 <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
                 </button>

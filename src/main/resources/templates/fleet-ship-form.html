@@ -24,7 +24,6 @@
                         <option th:unless="${chosenShip.id} != null" th:each="shipOpt : ${validShipValues}"
                                 th:value="${shipOpt.id}" th:text="${shipOpt.name}"></option>
                     </select>
-                    <span class="validationError" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></span>
                 </div>
                 <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
                 </button>

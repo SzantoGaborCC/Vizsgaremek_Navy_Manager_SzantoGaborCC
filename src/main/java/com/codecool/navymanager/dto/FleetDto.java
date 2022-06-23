@@ -23,8 +23,6 @@ public class FleetDto implements Serializable {
     @NotNull(message = "Designation must be specified and its length must be between 1 and 255!")
     @Size(min = 1, max = 255, message = "Designation length must be between 1 and 255!")
     private String designation;
-    @NotNull(message = "You must choose a valid minimum rank!")
-    private RankDto minimumRank;
     private OfficerDto commander;
     @NotNull(message = "You must choose a valid country!")
     private CountryDto country;
@@ -37,7 +35,6 @@ public class FleetDto implements Serializable {
     public FleetDto(Fleet fleet) {
         id = fleet.getId();
         designation = fleet.getDesignation();
-        minimumRank = new RankDto(fleet.getMinimumRank());
         commander = fleet.getCommander() != null ? new OfficerDto(fleet.getCommander()) : null;
         country = new CountryDto(fleet.getCountry());
         if (fleet.getShips() != null) {
@@ -51,12 +48,11 @@ public class FleetDto implements Serializable {
         return new Fleet(
                 id,
                 designation,
-                minimumRank != null ? minimumRank.toEntity() : null,
                 commander != null ? commander.toEntity() : null,
                 country != null ? country.toEntity() : null,
                 ships != null ?
                         ships.stream()
-                            .map(shipDto -> shipDto.toEntity())
+                            .map(ShipDto::toEntity)
                             .collect(Collectors.toSet()) : null
         );
     }

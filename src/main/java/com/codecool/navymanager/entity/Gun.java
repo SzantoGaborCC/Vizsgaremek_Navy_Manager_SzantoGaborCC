@@ -31,9 +31,6 @@ public class Gun {
     @Column(name = "range_in_meters", nullable = false)
     private Integer rangeInMeters;
 
-    @Column(name = "minimum_ship_displacement_in_tons", nullable = false)
-    private Integer minimumShipDisplacementInTons;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
