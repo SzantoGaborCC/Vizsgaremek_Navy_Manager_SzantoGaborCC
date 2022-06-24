@@ -164,7 +164,7 @@ public class FleetService {
     }
 
     
-    public void addShipToFleet(Long fleetId, long shipId, Locale locale) {
+    public void addShipToFleet(long fleetId, long shipId, Locale locale) {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException(
                     messageSource.getMessage(
                     "add_error_must_exist",

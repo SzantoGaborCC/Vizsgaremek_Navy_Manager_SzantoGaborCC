@@ -14,4 +14,13 @@ public class JsonResponse {
     private String message;
     private String errorDescription;
     private Map<String, String> errorMessages;
+
+    @Override
+    public String toString() {
+        return "JsonResponse{" +
+                "message='" + message + '\'' +
+                ", errorDescription='" + errorDescription + '\'' +
+                ", errorMessages=" + errorMessages +
+                '}';
+    }
 }

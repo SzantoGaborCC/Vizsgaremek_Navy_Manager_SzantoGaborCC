@@ -18,14 +18,15 @@ public class GunInstallationDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-    @NotNull(message = "You must choose a valid gun!")
+    @NotNull(message = "You must choose a gun!")
     private GunDto gun;
     @NotNull(message = "You must specify the quantity!")
     @Min(value = 1, message = "Quantity must be at least 1!")
     private Integer quantity;
 
-    public GunInstallationDto(Long id) {
+    public GunInstallationDto(Long id, Integer quantity) {
         this.id = id;
+        this.quantity = quantity;
     }
 
     public GunInstallationDto(GunInstallation gunInstallation) {

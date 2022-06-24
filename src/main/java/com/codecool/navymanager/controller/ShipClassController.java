@@ -86,7 +86,7 @@ public class ShipClassController {
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        shipClassService.add(shipClass);
+        shipClassService.add(shipClass, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
                 new Object[] {ShipClass.class.getSimpleName()},
@@ -158,8 +158,8 @@ public class ShipClassController {
     public ResponseEntity<JsonResponse> addGun(
             @PathVariable Long id,
             @RequestBody @Valid GunInstallationDto gunInstallation,
-            Model model,
             BindingResult result,
+            Model model,
             Locale locale) {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         if (result.hasErrors()) {
@@ -203,8 +203,8 @@ public class ShipClassController {
     public ResponseEntity<JsonResponse> updateGunForShipClass(
             @PathVariable long shipClassId, @PathVariable long gunId,
             @RequestBody @Valid GunInstallationDto gunInstallation,
-            Model model,
             BindingResult result,
+            Model model,
             Locale locale) {
         if (result.hasErrors()) {
             ShipClassDto shipClass = shipClassService.findById(shipClassId, locale);

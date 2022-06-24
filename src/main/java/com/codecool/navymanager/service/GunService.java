@@ -70,4 +70,8 @@ public class GunService {
                             locale));
         }
     }
+
+    public boolean existsById(long id) {
+        return gunRepository.existsById(id);
+    }
 }

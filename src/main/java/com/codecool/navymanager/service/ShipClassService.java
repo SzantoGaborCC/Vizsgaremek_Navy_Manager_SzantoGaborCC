@@ -1,10 +1,12 @@
 package com.codecool.navymanager.service;
 
 
+import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.entity.*;
 import com.codecool.navymanager.dto.GunInstallationDto;
 import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.dto.ShipClassDto;
+import com.codecool.navymanager.repository.GunRepository;
 import com.codecool.navymanager.repository.ShipClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -47,20 +49,36 @@ public class ShipClassService {
     }
 
     
-    public void add(ShipClassDto shipClassDto) {
+    public void add(ShipClassDto shipClassDto, Locale locale) {
+        if (shipClassDto.getId() != null && shipClassRepository.existsById(shipClassDto.getId()))
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "add_error_already_exist",
+                            new Object[]{ShipClass.class.getSimpleName(), ShipClass.class.getSimpleName()},
+                            locale));
         shipClassRepository.save(shipClassDto.toEntity());
     }
 
     
-    public void update(ShipClassDto shipClassDto, long id, Locale locale) {
+    public void update(ShipClassDto newShipClassData, long id, Locale locale) {
+        if (newShipClassData.getId() == null || newShipClassData.getId() != id) {
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "update_error_id",
+                            new Object[]{ShipClass.class.getSimpleName()},
+                            locale));
+        }
         ShipClass oldShipClassData = shipClassRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException( messageSource.getMessage(
-                        "no_such",
-                        new Object[] {ShipClass.class.getSimpleName()},
-                        locale)));
-        ShipClass newShipClassData = shipClassDto.toEntity();
-        newShipClassData.setGuns(oldShipClassData.getGuns());
-        shipClassRepository.save(newShipClassData);
+                .orElseThrow(() -> new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "update_error_must_exist",
+                                new Object[]{Fleet.class.getSimpleName(), Fleet.class.getSimpleName()},
+                                locale)));
+        ShipClass newShipClass = newShipClassData.toEntity();
+        if (newShipClassData.getCountry().getId().equals(oldShipClassData.getCountry().getId())) {
+            newShipClass.setGuns(oldShipClassData.getGuns());
+        }
+        shipClassRepository.save(newShipClass);
     }
 
     
@@ -68,10 +86,10 @@ public class ShipClassService {
         if (shipClassRepository.existsById(id)) {
             shipClassRepository.deleteById(id);
         } else {
-            throw  new NoSuchElementException(
+            throw new NoSuchElementException(
                     messageSource.getMessage(
-                            "no_such",
-                            new Object[] {ShipClass.class.getSimpleName()},
+                            "delete_error_must_exist",
+                            new Object[]{ShipClass.class.getSimpleName()},
                             locale));
         }
     }
@@ -79,10 +97,19 @@ public class ShipClassService {
     
     public void addGunToShipClass(long shipClassId, GunInstallationDto gunInstallationDto, Locale locale) {
             ShipClass shipClass = shipClassRepository.findById(shipClassId)
-                    .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
-                            "no_such",
-                            new Object[] {ShipClass.class.getSimpleName()},
-                            locale)));
+                    .orElseThrow(() -> new IllegalArgumentException(
+                        messageSource.getMessage(
+                        "add_error_must_exist",
+                        new Object[] {Gun.class.getSimpleName(), ShipClass.class.getSimpleName()},
+                        locale)));
+            GunDto newGunDto = gunService.findById(gunInstallationDto.getGun().getId(), locale);
+            if (!shipClass.getCountry().getId().equals(newGunDto.getCountry().getId())) {
+                throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "add_error_mismatch",
+                            new Object[]{Gun.class.getSimpleName(), Country.class.getSimpleName()},
+                            locale));
+            }
             if (shipClass.getGuns().stream()
                     .noneMatch(gunInstallation ->
                             gunInstallation.getGun().getId().equals(gunInstallationDto.getGun().getId()))) {
@@ -92,13 +119,12 @@ public class ShipClassService {
                 shipClassRepository.save(shipClass);
             } else {
                 throw new IllegalArgumentException(messageSource.getMessage(
-                        "invalid_data",
-                        new Object[] {Gun.class.getSimpleName()},
+                        "add_error_must_not_exist",
+                        new Object[] {Gun.class.getSimpleName(), Gun.class.getSimpleName()},
                         locale));
             }
     }
 
-    
     public void updateGunForShipClass(
             long shipClassId,
             long gunId,
@@ -109,13 +135,21 @@ public class ShipClassService {
                         "no_such",
                         new Object[] {Ship.class.getSimpleName()},
                         locale)));
-        GunInstallation gunInstallation = shipClass.getGuns().stream().filter(gInst -> gInst.getGun().getId() == gunId)
+        GunInstallation oldGunInstallation = shipClass.getGuns().stream().filter(gInst -> gInst.getGun().getId() == gunId)
                 .findAny().orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
                         "param0_has_no_such_param1",
                         new Object[] {ShipClass.class.getSimpleName(), Gun.class.getSimpleName()},
                         locale)));
-        gunInstallation.setGun(newGunInstallationDto.getGun().toEntity());
-        gunInstallation.setGunQuantity(newGunInstallationDto.getQuantity());
+        GunDto newGunDto = gunService.findById(newGunInstallationDto.getGun().getId(), locale);
+        if (!shipClass.getCountry().getId().equals(newGunDto.getCountry().getId())) {
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "update_error_mismatch",
+                            new Object[]{Gun.class.getSimpleName(), Country.class.getSimpleName()},
+                            locale));
+        }
+        oldGunInstallation.setGun(newGunInstallationDto.getGun().toEntity());
+        oldGunInstallation.setGunQuantity(newGunInstallationDto.getQuantity());
         shipClassRepository.save(shipClass);
     }
 
@@ -128,7 +162,7 @@ public class ShipClassService {
                         locale)));
         GunInstallation gunInstallation = shipClass.getGuns().stream().filter(gInst -> gInst.getGun().getId() == gunId)
                 .findAny().orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
-                        "no_such",
+                        "delete_error_must_exist",
                         new Object[] {Gun.class.getSimpleName()},
                         locale)));
         shipClass.getGuns().remove(gunInstallation);

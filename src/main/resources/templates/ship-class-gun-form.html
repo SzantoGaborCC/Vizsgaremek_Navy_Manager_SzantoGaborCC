@@ -15,7 +15,6 @@
                        th:value="${add} == true ? '/ship-class/'+${shipClass.id}+'/gun' : '/ship-class/'+${shipClass.id}+'/gun/'+${gunInstallation.gun.id}">
                 <input name="add" type="hidden" th:value="${add}">
                 <input name="redirectTo" type="hidden" th:value="'/ship-class/'+${shipClass.id}">
-
                 <div class="form-group">
                     <label for="gun">Gun</label>
                     <select id="gun" th:field="*{gun}">
