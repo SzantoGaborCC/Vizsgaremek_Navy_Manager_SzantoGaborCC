@@ -28,8 +28,8 @@ public class Fleet {
     @Column(name = "designation", unique = true)
     private String designation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "commander_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "commander_id", referencedColumnName = "id")
     private Officer commander;
 
     @NotNull(message = "You must choose a valid country!")
