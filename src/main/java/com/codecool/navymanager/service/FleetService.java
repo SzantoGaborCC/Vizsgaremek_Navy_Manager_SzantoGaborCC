@@ -175,9 +175,7 @@ public class FleetService {
                     "add_error_must_exist",
                             new Object[] {Fleet.class.getSimpleName(), Ship.class.getSimpleName()},
                             locale)));
-            if (fleet.getShips().contains(shipToAdd)) {
-                return;
-            } else {
+            if (!fleet.getShips().contains(shipToAdd)) {
                 List<Ship> availableShips = shipRepository.findAvailableShipsByCountry(fleet.getCountry());
                 if (!availableShips.contains(shipToAdd)) {
                     throw new IllegalArgumentException(
@@ -193,9 +191,7 @@ public class FleetService {
 
     
     public void switchShipsInFleet(long fleetId, long shipId, long newShipId, Locale locale) {
-        if (shipId == newShipId) {
-            return;
-        } else {
+        if (shipId != newShipId) {
             Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException(
                     messageSource.getMessage(
                             "update_error_must_exist",
