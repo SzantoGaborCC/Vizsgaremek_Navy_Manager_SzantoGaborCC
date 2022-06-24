@@ -172,7 +172,7 @@ public class FleetController {
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {Ship.class.getSimpleName()},
                     locale));
@@ -201,7 +201,7 @@ public class FleetController {
     }
 
     @PutMapping("/{fleetId}/ship/{shipId}")
-    public ResponseEntity<JsonResponse> updateShipInFleet(
+    public ResponseEntity<JsonResponse> switchShipsInFleet(
             @PathVariable long fleetId, @PathVariable long shipId,
             @RequestBody @Valid IdentityDto chosenShip,
             Model model, BindingResult result,
@@ -212,12 +212,12 @@ public class FleetController {
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
             return ResponseEntity.badRequest()
-                    .body(JsonResponse.builder().message(messageSource.getMessage(
+                    .body(JsonResponse.builder().errorDescription(messageSource.getMessage(
                             "invalid_data",
                             new Object[] {Ship.class.getSimpleName()},
                             locale)).build());
         }
-        fleetService.updateShipInAFleet(fleetId, shipId, chosenShip.getId(), locale);
+        fleetService.switchShipsInFleet(fleetId, shipId, chosenShip.getId(), locale);
         return ResponseEntity.ok()
                 .body(JsonResponse.builder().message(messageSource.getMessage(
                         "updated",

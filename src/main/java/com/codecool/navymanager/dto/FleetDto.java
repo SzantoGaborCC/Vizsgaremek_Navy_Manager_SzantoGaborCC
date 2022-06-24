@@ -69,4 +69,14 @@ public class FleetDto implements Serializable {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "FleetDto{" +
+                "id=" + id +
+                ", designation='" + designation + '\'' +
+                ", commander=" + commander +
+                ", country=" + country +
+                '}';
+    }
 }

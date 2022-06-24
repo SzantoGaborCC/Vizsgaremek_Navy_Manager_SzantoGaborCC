@@ -1,4 +1,4 @@
-package com.codecool.navymanager.exception_handler;
+package com.codecool.navymanager.exception_related;
 
 import com.codecool.navymanager.response.JsonResponse;
 import org.springframework.http.HttpStatus;

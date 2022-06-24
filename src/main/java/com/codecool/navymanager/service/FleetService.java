@@ -6,13 +6,13 @@ import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.dto.ShipDto;
 import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.entity.Fleet;
+import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.repository.FleetRepository;
 import com.codecool.navymanager.repository.ShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
@@ -43,19 +43,20 @@ public class FleetService {
 
     public FleetDto findById(long id, Locale locale) {
         return new FleetDto(fleetRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(
-                        messageSource.getMessage(
-                                "no_such",
-                                new Object[] {Fleet.class.getSimpleName()},
-                                locale))));
+                .orElseThrow(
+                        () -> new NoSuchElementException(
+                                messageSource.getMessage(
+                                        "search_error_not_found",
+                                        new Object[]{Fleet.class.getSimpleName()},
+                                        locale))));
     }
 
     public Set<ShipDto> findShips(long fleetId, Locale locale) {
         return fleetRepository.findById(fleetId).orElseThrow(
                     () -> new NoSuchElementException(
                             messageSource.getMessage(
-                                    "no_such",
-                                    new Object[] {Fleet.class.getSimpleName()},
+                                    "search_error_not_found",
+                                    new Object[]{Fleet.class.getSimpleName()},
                                     locale))
                 ).getShips().stream()
                 .map(ShipDto::new)
@@ -64,15 +65,27 @@ public class FleetService {
 
     
     public void add(FleetDto fleetDto, Locale locale) {
-        if (fleetRepository.existsById(fleetDto.getId()))
-            throw new IllegalArgumentException("Add Fleet Error: Fleet already exists!");
+        if (fleetDto.getId() != null && fleetRepository.existsById(fleetDto.getId()))
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "add_error_already_exist",
+                            new Object[]{Fleet.class.getSimpleName(), Fleet.class.getSimpleName()},
+                            locale));
         if (fleetDto.getCommander() != null && fleetDto.getCommander().getId() != -1) {
             OfficerDto officer = officerService.findById(fleetDto.getCommander().getId(), locale);
             if (officerService.isOfficerPostedToShipOrFleet(officer)) {
                 fleetDto.setCommander(null);
-                throw new IllegalArgumentException("Add Fleet Error: Officer is unavailable!");
+                throw new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "add_error_unavailable",
+                                new Object[]{Fleet.class.getSimpleName(), Officer.class.getSimpleName()},
+                                locale));
             } else if (!fleetDto.getCountry().equals(officer.getCountry())) {
-                throw new IllegalArgumentException("Add Fleet Error: Country mismatch!");
+                throw new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "add_error_mismatch",
+                                new Object[]{Fleet.class.getSimpleName(), Country.class.getSimpleName()},
+                                locale));
             }
         } else if (fleetDto.getCommander() != null && fleetDto.getCommander().getId() == -1) {
             fleetDto.setCommander(null);
@@ -83,10 +96,18 @@ public class FleetService {
     
     public void update(FleetDto newFleetData, long id, Locale locale) {
         if (newFleetData.getId() == null || newFleetData.getId() != id) {
-            throw new IllegalArgumentException("Fleet Update error: Id cannot be null, and must match Id in the path!");
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "update_error_id",
+                            new Object[]{Fleet.class.getSimpleName()},
+                            locale));
         }
         Fleet oldFleetData = fleetRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Fleet Update error: Fleet must already be in the database!"));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "update_error_must_exist",
+                                new Object[]{Fleet.class.getSimpleName(), Fleet.class.getSimpleName()},
+                                locale)));
 
         checkOfficerEligibilityBasedOFleetData(newFleetData, locale, oldFleetData);
 
@@ -103,7 +124,11 @@ public class FleetService {
         if (newFleetData.getCommander() != null && newFleetData.getCommander().getId() != -1) {
             OfficerDto newOfficer = officerService.findById(newFleetData.getCommander().getId(), locale);
             if (!newOfficer.getCountry().equals(newFleetData.getCountry())) {
-                throw new IllegalArgumentException("Fleet Update Error: Country Mismatch!");
+                throw new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "update_error_mismatch",
+                                new Object[]{Fleet.class.getSimpleName(), Country.class.getSimpleName()},
+                                locale));
             }
             boolean isNewOfficerPosted = officerService.isOfficerPostedToShipOrFleet(newOfficer);
             if ((oldFleetData.getCommander() != null
@@ -114,7 +139,11 @@ public class FleetService {
                             && isNewOfficerPosted)
             ) {
                 newFleetData.setCommander(null);
-                throw new IllegalArgumentException("Fleet Update Error: Officer is not available!");
+                throw new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "update_error_unavailable",
+                                new Object[]{Fleet.class.getSimpleName(), Officer.class.getSimpleName()},
+                                locale));
             }
         } else {
             newFleetData.setCommander(null);
@@ -126,38 +155,75 @@ public class FleetService {
         if (fleetRepository.existsById(id)) {
             fleetRepository.deleteById(id);
         } else {
-            throw new NoSuchElementException("Delete Fleet Error : Fleet must already exist in the database!");
+            throw new NoSuchElementException(
+                    messageSource.getMessage(
+                            "delete_error_must_exist",
+                            new Object[]{Fleet.class.getSimpleName()},
+                            locale));
         }
     }
 
     
     public void addShipToFleet(Long fleetId, long shipId, Locale locale) {
-            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new NoSuchElementException(
+            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException(
                     messageSource.getMessage(
-                    "no_such",
-                            new Object[] {Fleet.class.getSimpleName()},
+                    "add_error_must_exist",
+                            new Object[] {Fleet.class.getSimpleName(), Fleet.class.getSimpleName()},
                             locale)));
-            Ship shipToAdd = shipRepository.findById(shipId).orElseThrow(() -> new NoSuchElementException(
+            Ship shipToAdd = shipRepository.findById(shipId).orElseThrow(() -> new IllegalArgumentException(
                     messageSource.getMessage(
-                    "no_such",
-                            new Object[] {Ship.class.getSimpleName()},
+                    "add_error_must_exist",
+                            new Object[] {Fleet.class.getSimpleName(), Ship.class.getSimpleName()},
                             locale)));
-            shipToAdd.setFleet(fleet);
-            shipRepository.save(shipToAdd);
+            if (fleet.getShips().contains(shipToAdd)) {
+                return;
+            } else {
+                List<Ship> availableShips = shipRepository.findAvailableShipsByCountry(fleet.getCountry());
+                if (!availableShips.contains(shipToAdd)) {
+                    throw new IllegalArgumentException(
+                            messageSource.getMessage(
+                                    "add_error_unavailable",
+                                    new Object[]{Ship.class.getSimpleName(), Ship.class.getSimpleName()},
+                                    locale));
+                }
+                shipToAdd.setFleet(fleet);
+                shipRepository.save(shipToAdd);
+            }
     }
 
     
-    public void updateShipInAFleet(long fleetId, long shipId, long newShipId, Locale locale) {
+    public void switchShipsInFleet(long fleetId, long shipId, long newShipId, Locale locale) {
+        if (shipId == newShipId) {
+            return;
+        } else {
+            Fleet fleet = fleetRepository.findById(fleetId).orElseThrow(() -> new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "update_error_must_exist",
+                            new Object[]{Fleet.class.getSimpleName(), Fleet.class.getSimpleName()},
+                            locale)));
+            Ship shipToUpdate = shipRepository.findById(shipId).orElseThrow(() -> new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "update_error_must_exist",
+                            new Object[]{Fleet.class.getSimpleName(), Ship.class.getSimpleName()},
+                            locale)));
+            if (!fleet.getShips().contains(shipToUpdate)) {
+                throw new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "param0_has_no_such_param1",
+                                new Object[]{Fleet.class.getSimpleName(), Ship.class.getSimpleName()},
+                                locale));
+            }
             removeShipFromFleet(fleetId, shipId, locale);
             addShipToFleet(fleetId, newShipId, locale);
+        }
     }
 
     
     public void removeShipFromFleet(long fleetId, long shipId, Locale locale) {
             Ship shipToRemove = shipRepository.findById(shipId)
-                    .orElseThrow(() -> new NoSuchElementException(
+                    .orElseThrow(() -> new IllegalArgumentException(
                             messageSource.getMessage(
-                                    "no_such",
+                                    "delete_error_must_exist",
                                     new Object[] {Ship.class.getSimpleName()},
                                     locale)));
             shipToRemove.setFleet(null);

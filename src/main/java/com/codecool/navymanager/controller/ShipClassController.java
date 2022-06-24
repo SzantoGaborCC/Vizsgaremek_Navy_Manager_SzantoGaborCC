@@ -140,8 +140,7 @@ public class ShipClassController {
                 locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
-    //todo:  should check for ship displacement.
-    // When ship displacement reduced, check for gun removal?
+
     @GetMapping("/{id}/gun/show-add-gun-form")
     public String showAddGunForm(
             @PathVariable Long id,
@@ -170,7 +169,7 @@ public class ShipClassController {
             model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setMessage(messageSource.getMessage(
+            jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
                     new Object[] {Gun.class.getSimpleName()},
                     locale));
@@ -215,7 +214,7 @@ public class ShipClassController {
             model.addAttribute("gun", gun);
             model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
             return ResponseEntity.badRequest()
-                    .body(JsonResponse.builder().message(messageSource.getMessage(
+                    .body(JsonResponse.builder().errorDescription(messageSource.getMessage(
                             "invalid_data",
                             new Object[] {Gun.class.getSimpleName(), ShipClass.class.getSimpleName()},
                             locale)).build());
