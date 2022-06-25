@@ -42,32 +42,42 @@ public class GunService {
     }
 
     
-    public void add(GunDto gunDto) {
-       gunRepository.save(gunDto.toEntity());
+    public void add(GunDto gunDto, Locale locale) {
+        if (gunDto.getId() != null && gunRepository.existsById(gunDto.getId())) {
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "add_error_must_not_exist",
+                    new Object[]{Gun.class.getSimpleName(), Gun.class.getSimpleName()},
+                    locale));
+        }
+        gunRepository.save(gunDto.toEntity());
     }
 
     
     public void update(GunDto gunDto, long id, Locale locale) {
+        if (gunDto.getId() == null || gunDto.getId() != id) {
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "update_error_id",
+                    new Object[] {Gun.class.getSimpleName()},
+                    locale));
+        }
         if (gunRepository.existsById(id)) {
             gunRepository.save(gunDto.toEntity());
         } else {
-            throw new NoSuchElementException(messageSource.getMessage(
-                    "no_such",
-                    new Object[] {Gun.class.getSimpleName()},
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "update_error_must_exist",
+                    new Object[] {Gun.class.getSimpleName(), Gun.class.getSimpleName()},
                     locale));
         }
     }
 
-    
     public void deleteById(long id, Locale locale) {
         if (gunRepository.existsById(id)) {
             gunRepository.deleteById(id);
         } else {
-            throw  new NoSuchElementException(
-                    messageSource.getMessage(
-                            "no_such",
-                            new Object[] {Gun.class.getSimpleName()},
-                            locale));
+            throw new NoSuchElementException(messageSource.getMessage(
+                    "delete_error_must_exist",
+                    new Object[] {Gun.class.getSimpleName()},
+                    locale));
         }
     }
 

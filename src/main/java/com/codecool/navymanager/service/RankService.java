@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 
 public class RankService {
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
     private final RankRepository rankRepository;
 
     public RankService(RankRepository rankRepository) {
@@ -39,18 +39,30 @@ public class RankService {
     }
 
     
-    public void add(RankDto rankDto) {
+    public void add(RankDto rankDto, Locale locale) {
+        if (rankDto.getId() != null && rankRepository.existsById(rankDto.getId())) {
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "add_error_must_not_exist",
+                    new Object[]{Rank.class.getSimpleName(), Rank.class.getSimpleName()},
+                    locale));
+        }
         rankRepository.save(rankDto.toEntity());
     }
 
     
     public void update(RankDto rankDto, long id, Locale locale) {
+        if (rankDto.getId() == null || rankDto.getId() != id) {
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "update_error_id",
+                    new Object[] {Rank.class.getSimpleName()},
+                    locale));
+        }
         if (rankRepository.existsById(id)) {
             rankRepository.save(rankDto.toEntity());
         } else {
-            throw new NoSuchElementException(messageSource.getMessage(
-                    "no_such",
-                    new Object[] {Rank.class.getSimpleName()},
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "update_error_must_exist",
+                    new Object[] {Rank.class.getSimpleName(), Rank.class.getSimpleName()},
                     locale));
         }
     }

@@ -66,7 +66,7 @@ public class CountryController {
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        countryService.add(country);
+        countryService.add(country, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
                 new Object[] {Country.class.getSimpleName()},

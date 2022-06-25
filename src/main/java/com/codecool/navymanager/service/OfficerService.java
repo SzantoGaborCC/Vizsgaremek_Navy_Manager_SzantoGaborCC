@@ -21,6 +21,8 @@ import java.util.NoSuchElementException;
 @Service
 
 public class OfficerService {
+    @Autowired
+    private MessageSource messageSource;
     private final OfficerRepository officerRepository;
     private final FleetRepository fleetRepository;
     private final ShipRepository shipRepository;
@@ -36,9 +38,11 @@ public class OfficerService {
     }
 
     public OfficerDto findById(long id, Locale locale) {
-        return new OfficerDto(officerRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementException("Could not find Officer in the database!")
-        ));
+        return new OfficerDto(officerRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
+                        "no_such",
+                        new Object[] {Officer.class.getSimpleName()},
+                        locale))));
     }
 
     public List<OfficerDto> findAvailableOfficers() {
@@ -78,28 +82,43 @@ public class OfficerService {
                         .noneMatch(officerDto -> officerDto.getId().equals(officer.getId()));
     }
 
-    public void add(OfficerDto officerDto) {
+    public void add(OfficerDto officerDto, Locale locale) {
+        if (officerDto.getId() != null && officerRepository.existsById(officerDto.getId())) {
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "add_error_must_not_exist",
+                    new Object[]{Officer.class.getSimpleName(), Officer.class.getSimpleName()},
+                    locale));
+        }
         officerRepository.save(officerDto.toEntity());
     }
 
     
     public void update(OfficerDto officerDto, long id, Locale locale) {
         if (officerDto.getId() == null || officerDto.getId() != id) {
-            throw new IllegalArgumentException("Officer Update Error: Id cannot be null, and must match Id in the path!");
+            throw new IllegalArgumentException(messageSource.getMessage(
+                            "update_error_id",
+                            new Object[] {Officer.class.getSimpleName()},
+                            locale));
         }
         if (officerRepository.existsById(id)) {
             officerRepository.save(officerDto.toEntity());
         } else {
-            throw new NoSuchElementException("Officer Update error: Officer must already be in the database!");
+            throw new IllegalArgumentException(messageSource.getMessage(
+                            "update_error_must_exist",
+                            new Object[] {Officer.class.getSimpleName(), Officer.class.getSimpleName()},
+                            locale));
+
         }
     }
-
     
     public void deleteById(long id, Locale locale) {
         if (officerRepository.existsById(id)) {
             officerRepository.deleteById(id);
         } else {
-            throw new NoSuchElementException("Delete Officer Error : Officer must already exist in the database!");
+            throw new IllegalArgumentException(messageSource.getMessage(
+                            "delete_error_must_exist",
+                            new Object[] {Officer.class.getSimpleName()},
+                            locale));
         }
     }
 }

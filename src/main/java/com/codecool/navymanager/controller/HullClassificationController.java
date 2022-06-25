@@ -71,7 +71,7 @@ public class HullClassificationController {
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        hullClassificationService.add(hullClassification);
+        hullClassificationService.add(hullClassification, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
                 new Object[] {HullClassification.class.getSimpleName()},

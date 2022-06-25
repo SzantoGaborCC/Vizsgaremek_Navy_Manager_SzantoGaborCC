@@ -38,18 +38,30 @@ public class HullClassificationService {
     }
 
     
-    public void add(HullClassificationDto hullClassificationDto) {
+    public void add(HullClassificationDto hullClassificationDto, Locale locale) {
+        if (hullClassificationDto.getId() != null && hullClassificationRepository.existsById(hullClassificationDto.getId())) {
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "add_error_must_not_exist",
+                    new Object[]{HullClassification.class.getSimpleName(), HullClassification.class.getSimpleName()},
+                    locale));
+        }
         hullClassificationRepository.save(hullClassificationDto.toEntity());
     }
 
     
     public void update(HullClassificationDto hullClassificationDto, long id, Locale locale) {
+        if (hullClassificationDto.getId() == null || hullClassificationDto.getId() != id) {
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "update_error_id",
+                    new Object[] {HullClassification.class.getSimpleName()},
+                    locale));
+        }
         if (hullClassificationRepository.existsById(id)) {
             hullClassificationRepository.save(hullClassificationDto.toEntity());
         } else {
-            throw new NoSuchElementException(messageSource.getMessage(
-                    "no_such",
-                    new Object[] {HullClassification.class.getSimpleName()},
+            throw new IllegalArgumentException(messageSource.getMessage(
+                    "update_error_must_exist",
+                    new Object[] {HullClassification.class.getSimpleName(), HullClassification.class.getSimpleName()},
                     locale));
         }
     }
@@ -60,11 +72,10 @@ public class HullClassificationService {
         if (hullClassificationRepository.existsById(id)) {
             hullClassificationRepository.deleteById(id);
         } else {
-            throw  new NoSuchElementException(
-                    messageSource.getMessage(
-                            "no_such",
-                            new Object[] {HullClassification.class.getSimpleName()},
-                            locale));
+            throw new NoSuchElementException(messageSource.getMessage(
+                    "delete_error_must_exist",
+                    new Object[] {HullClassification.class.getSimpleName()},
+                    locale));
         }
     }
 }

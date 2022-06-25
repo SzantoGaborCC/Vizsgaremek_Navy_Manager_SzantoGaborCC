@@ -71,7 +71,7 @@ public class GunController {
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        gunService.add(gun);
+        gunService.add(gun, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
                 new Object[] {Gun.class.getSimpleName()},

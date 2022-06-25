@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 
 public class ShipService {
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     private final ShipRepository shipRepository;
 
@@ -45,8 +45,7 @@ public class ShipService {
 
     public ShipDto findById(long id, Locale locale) {
         return new ShipDto(shipRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(
-                        messageSource.getMessage(
+                .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
                                 "search_error_not_found",
                                 new Object[] {Ship.class.getSimpleName()},
                                 locale))));
@@ -65,20 +64,18 @@ public class ShipService {
 
     public void add(ShipDto shipDto, Locale locale) {
         if (shipDto.getId() != null && shipRepository.existsById(shipDto.getId())) {
-            throw new IllegalArgumentException(
-                    messageSource.getMessage(
+            throw new IllegalArgumentException(messageSource.getMessage(
                             "add_error_must_not_exist",
                             new Object[]{Ship.class.getSimpleName(), Ship.class.getSimpleName()},
                             locale));
         }
-        ShipClass shipClass = shipClassRepository.findById(shipDto.getShipClass().getId()).orElseThrow(() -> new IllegalArgumentException(
-                messageSource.getMessage(
+        ShipClass shipClass = shipClassRepository.findById(shipDto.getShipClass().getId())
+                .orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage(
                         "add_error_must_exist",
                         new Object[] {Ship.class.getSimpleName(), ShipClass.class.getSimpleName()},
                         locale)));
         if (!shipDto.getCountry().getId().equals(shipClass.getCountry().getId())) {
-            throw new IllegalArgumentException(
-                    messageSource.getMessage(
+            throw new IllegalArgumentException(messageSource.getMessage(
                             "add_error_mismatch",
                             new Object[] {Ship.class.getSimpleName(), Country.class.getSimpleName()},
                             locale));
@@ -86,16 +83,14 @@ public class ShipService {
         if (shipDto.getCaptain() != null && shipDto.getCaptain().getId() != -1) {
             OfficerDto officer = officerService.findById(shipDto.getCaptain().getId(), locale);
             if (!shipDto.getCountry().equals(officer.getCountry())) {
-                throw new IllegalArgumentException(
-                        messageSource.getMessage(
+                throw new IllegalArgumentException(messageSource.getMessage(
                                 "add_error_mismatch",
                                 new Object[] {Ship.class.getSimpleName(), Country.class.getSimpleName()},
                                 locale));
             }
             if (officerService.isOfficerPostedToShipOrFleet(officer)) {
                 shipDto.setCaptain(null);
-                throw new IllegalArgumentException(
-                        messageSource.getMessage(
+                throw new IllegalArgumentException(messageSource.getMessage(
                                 "add_error_unavailable",
                                 new Object[] {Ship.class.getSimpleName(), Officer.class.getSimpleName()},
                                 locale));
@@ -109,27 +104,24 @@ public class ShipService {
 
     public void update(ShipDto newShipData, long id, Locale locale) {
         if (newShipData.getId() == null || newShipData.getId() != id) {
-            throw new IllegalArgumentException(
-                    messageSource.getMessage(
+            throw new IllegalArgumentException(messageSource.getMessage(
                             "update_error_id",
                             new Object[] {Ship.class.getSimpleName()},
                             locale));
         }
         Ship oldShipData = shipRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        messageSource.getMessage(
+                .orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage(
                                 "update_error_must_exist",
                                 new Object[] {Ship.class.getSimpleName(), Ship.class.getSimpleName()},
                                 locale)));
 
-        ShipClass shipClass = shipClassRepository.findById(newShipData.getShipClass().getId()).orElseThrow(() -> new IllegalArgumentException(
-                messageSource.getMessage(
+        ShipClass shipClass = shipClassRepository.findById(newShipData.getShipClass().getId())
+                .orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage(
                         "update_error_must_exist",
                         new Object[] {Ship.class.getSimpleName(), ShipClass.class.getSimpleName()},
                         locale)));
         if (!newShipData.getCountry().getId().equals(shipClass.getCountry().getId())) {
-            throw new IllegalArgumentException(
-                    messageSource.getMessage(
+            throw new IllegalArgumentException(messageSource.getMessage(
                             "update_error_mismatch",
                             new Object[] {Ship.class.getSimpleName(), Country.class.getSimpleName()},
                             locale));
@@ -146,8 +138,7 @@ public class ShipService {
         if (newShipData.getCaptain() != null && newShipData.getCaptain().getId() != -1) {
             OfficerDto newOfficer = officerService.findById(newShipData.getCaptain().getId(), locale);
             if (!newOfficer.getCountry().equals(newShipData.getCountry())) {
-                throw new IllegalArgumentException(
-                        messageSource.getMessage(
+                throw new IllegalArgumentException(messageSource.getMessage(
                                 "update_error_mismatch",
                                 new Object[] {Ship.class.getSimpleName(), Country.class.getSimpleName()},
                                 locale));
@@ -161,8 +152,7 @@ public class ShipService {
                             && isNewOfficerPosted)
             ) {
                 newShipData.setCaptain(null);
-                throw new IllegalArgumentException(
-                        messageSource.getMessage(
+                throw new IllegalArgumentException(messageSource.getMessage(
                                 "update_error_unavailable",
                                 new Object[] {Ship.class.getSimpleName(), Officer.class.getSimpleName()},
                                 locale));
@@ -176,8 +166,7 @@ public class ShipService {
         if (shipRepository.existsById(id)) {
             shipRepository.deleteById(id);
         } else {
-            throw new NoSuchElementException(
-                    messageSource.getMessage(
+            throw new NoSuchElementException(messageSource.getMessage(
                             "delete_error_must_exist",
                             new Object[] {Ship.class.getSimpleName()},
                             locale));
