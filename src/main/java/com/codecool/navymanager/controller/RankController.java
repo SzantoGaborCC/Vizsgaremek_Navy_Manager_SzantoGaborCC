@@ -66,7 +66,7 @@ public class RankController {
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        rankService.add(rank);
+        rankService.add(rank, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
                 new Object[] {Rank.class.getSimpleName()},

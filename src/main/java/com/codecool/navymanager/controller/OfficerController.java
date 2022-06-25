@@ -77,7 +77,7 @@ public class OfficerController {
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        officerService.add(officer);
+        officerService.add(officer, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
                 new Object[] {Officer.class.getSimpleName()},

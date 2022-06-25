@@ -41,7 +41,7 @@ function ajaxFormSubmit(e, formId) {
     $.ajax({
         method: method,
         url : url,
-        data: /*data,*/ JSON.stringify(data),
+        data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function(response)
@@ -63,27 +63,32 @@ function ajaxFormSubmit(e, formId) {
     });
 }
 
-function fillWithOptionsAccordingTo(selectToBeFilled, filterer, originalValues, prependWithUnassigned) {
+function fillSelectWithOptionsAccordingToFilterer(selectToBeFilled, filterer, originalValues, originallySelected, prependWithUnassigned) {
     const filterText = $(filterer +  " :selected").html();
+    if (prependWithUnassigned === 'prependWithUnassigned') {
+        $(selectToBeFilled).prepend($('<option></option>').val(-1).html('--------------Unassigned--------------'));
+    }
+    let found = false;
     $.each(originalValues, function (key, value) {
         if (value.includes(filterText)) {
-            $(selectToBeFilled).append($('<option></option>').val(key).html(value));
+            if (key.includes(originallySelected)) {
+                found = true;
+                $(selectToBeFilled).append($('<option selected="selected"></option>').val(key).html(value));
+            } else {
+                $(selectToBeFilled).append($('<option></option>').val(key).html(value));
+            }
         }
     });
-    if (prependWithUnassigned === 'prependWithUnassigned') {
-        $(selectToBeFilled).prepend($('<option></option>').val(-1).html('-------------Unassigned-------------'));
+    if (found === false) {
         $(selectToBeFilled).val($(selectToBeFilled + " option:first").val());
     }
 }
 
 function saveOriginalOptions(selectToBeSaved) {
     let saved = {};
-    console.log('Saving select options:');
     $(selectToBeSaved +  " option").each(function()
     {
-        console.log('val: ' + $(this).val() + " html: " + $(this).html());
         saved[$(this).val()] = $(this).html();
     });
-    console.log('Saved select options.');
     return saved;
 }

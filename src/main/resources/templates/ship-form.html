@@ -21,11 +21,11 @@
                     <select id="shipClass" th:field="*{shipClass}">
                         <option th:if="${ship.shipClass} != null" th:each="shipClassOpt : ${validShipClassValues}"
                                 th:value="${shipClassOpt.id}"
-                                th:text="${shipClassOpt.country.name} + ': ' + ${shipClassOpt.name}"
+                                th:text="${shipClassOpt.country.name} + ': ' + ${shipClassOpt.hullClassification.abbreviation} + ' ' + ${shipClassOpt.name}"
                                 th:selected="${ship.shipClass.id == shipClassOpt.id}"></option>
                         <option th:unless="${ship.id} != null" th:each="shipClassOpt : ${validShipClassValues}"
                                 th:value="${shipClassOpt.id}"
-                                th:text="${shipClassOpt.country.name} + ': ' + ${shipClassOpt.name}"></option>
+                                th:text="${shipClassOpt.country.name} + ': ' + ${shipClassOpt.hullClassification.abbreviation} + ' ' + ${shipClassOpt.name}"></option>
                     </select>
                 </div>
                 <div th:if="${#lists.size(validCaptainValues) == 0} and ${ship.captain} == null"
@@ -63,22 +63,27 @@
 <script>
     let shipClassOriginalValues;
     let captainOriginalValues;
+    let shipClassOriginallySelectedOptionVal;
+    let captainOriginallySelectedOptionVal;
+    let countryOriginallySelectedOptionVal
     $("#shipForm").submit(function (e) {
         ajaxFormSubmit(e, 'shipForm');
     });
     $(function() {
         shipClassOriginalValues = saveOriginalOptions("#shipClass");
         captainOriginalValues = saveOriginalOptions("#captain");
+        shipClassOriginallySelectedOptionVal = $("#shipClass").find(":selected").val();
+        captainOriginallySelectedOptionVal = $("#captain").find(":selected").val();
         $("#shipClass").empty();
-        fillWithOptionsAccordingTo("#shipClass", "#country", shipClassOriginalValues);
+        fillSelectWithOptionsAccordingToFilterer("#shipClass", "#country", shipClassOriginalValues, shipClassOriginallySelectedOptionVal);
         $("#captain").empty();
-        fillWithOptionsAccordingTo("#captain", "#country", captainOriginalValues, 'prependWithUnassigned');
+        fillSelectWithOptionsAccordingToFilterer("#captain", "#country", captainOriginalValues, captainOriginallySelectedOptionVal ,'prependWithUnassigned');
     });
-    $("#country").change(function() {
+   $("#country").change(function() {
         $("#shipClass").empty();
-        fillWithOptionsAccordingTo("#shipClass", "#country", shipClassOriginalValues);
+        fillSelectWithOptionsAccordingToFilterer("#shipClass", "#country", shipClassOriginalValues, shipClassOriginallySelectedOptionVal);
         $("#captain").empty();
-        fillWithOptionsAccordingTo("#captain", "#country", captainOriginalValues, 'prependWithUnassigned');
+        fillSelectWithOptionsAccordingToFilterer("#captain", "#country", captainOriginalValues, captainOriginallySelectedOptionVal, 'prependWithUnassigned');
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>

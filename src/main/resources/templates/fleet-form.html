@@ -56,11 +56,11 @@
     $(function() {
         commanderOriginalValues = saveOriginalOptions("#commander");
         $("#commander").empty();
-        fillWithOptionsAccordingTo("#commander", "#country", commanderOriginalValues, 'prependWithUnassigned');
+        fillSelectWithOptionsAccordingToFilterer("#commander", "#country", commanderOriginalValues, 'prependWithUnassigned');
     });
     $("#country").change(function() {
         $("#commander").empty();
-        fillWithOptionsAccordingTo("#commander", "#country", commanderOriginalValues, 'prependWithUnassigned');
+        fillSelectWithOptionsAccordingToFilterer("#commander", "#country", commanderOriginalValues, 'prependWithUnassigned');
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
