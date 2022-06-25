@@ -11,12 +11,12 @@
             <table class="table table-bordered table-hover text-center text-break ">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Designation</th>
-                    <th scope="col">Caliber in millimeters</th>
-                    <th scope="col">Projectile weight in kilograms</th>
-                    <th scope="col">Range in meters</th>
-                    <th scope="col">Country</th>
+                    <th class="clickable-column-header" scope="col">Id</th>
+                    <th class="clickable-column-header" scope="col">Designation</th>
+                    <th class="clickable-column-header" scope="col">Caliber in millimeters</th>
+                    <th class="clickable-column-header" scope="col">Projectile weight in kilograms</th>
+                    <th class="clickable-column-header" scope="col">Range in meters</th>
+                    <th class="clickable-column-header" scope="col">Country</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -44,6 +44,9 @@
     jQuery(document).ready(function ($) {
         $(".clickable-row").click(function () {
             window.location = $(this).data("href");
+        });
+        $(".clickable-column-header").click(function(){
+            sortByColumn($(this));
         });
     });
 </script>

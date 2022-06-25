@@ -38,7 +38,7 @@
             window.location = $(this).data("href");
         });
         $(".clickable-column-header").click(function(){
-            sortTableColumn('#countries');
+            sortTableColumn($(this).closest("table"));
         });
     });
 </script>

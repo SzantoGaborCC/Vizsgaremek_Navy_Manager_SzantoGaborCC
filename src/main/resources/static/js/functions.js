@@ -102,22 +102,27 @@ function saveOriginalOptions(selectToBeSaved) {
     return saved;
 }
 
-function sortTableColumn(tableSelector){
-    let rows = $(tableSelector).find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+function sortByColumn(that) {
+    let table = that.closest("table");
     this.asc = !this.asc;
-    if (!this.asc) {
-        rows = rows.reverse();
-    }
-    for (let i = 0; i < rows.length; i++){
-        $(tableSelector).append(rows[i]);
+    let rows = table.find('tr:gt(0)').toArray().sort(comparer(that.index(), !this.asc))
+    for (let i = 0; i < rows.length; i++) {
+        table.append(rows[i])
     }
 }
-function comparer(index) {
+
+function comparer(index, desc) {
     return function(a, b) {
-        let valA = getCellValue(a, index), valB = getCellValue(b, index);
-        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+        let valA = getCellValue(a, index),
+            valB = getCellValue(b, index)
+        let result = $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+        if (desc) {
+            result *= -1;
+        }
+        return result;
     }
 }
-function getCellValue(row, index){
-    return $(row).children('td').eq(index).text();
+
+function getCellValue(row, index) {
+    return $(row).children('td').eq(index).text()
 }

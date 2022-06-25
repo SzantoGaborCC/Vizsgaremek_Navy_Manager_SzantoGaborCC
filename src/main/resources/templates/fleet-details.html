@@ -38,11 +38,11 @@
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-light">
                 <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Ship Class</th>
-                    <th scope="col">Captain</th>
-                    <th scope="col">Country</th>
+                    <th class="clickable-column-header" scope="col">Id</th>
+                    <th class="clickable-column-header" scope="col">Name</th>
+                    <th class="clickable-column-header" scope="col">Ship Class</th>
+                    <th class="clickable-column-header" scope="col">Captain</th>
+                    <th class="clickable-column-header" scope="col">Country</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -83,6 +83,9 @@
     jQuery(document).ready(function ($) {
         $(".clickable-row").click(function () {
             window.location = $(this).data("href");
+        });
+        $(".clickable-column-header").click(function(){
+            sortTableColumn($(this).closest("table"));
         });
     });
 </script>
