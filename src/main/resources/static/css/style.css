@@ -15,7 +15,7 @@ nav{
     color: #ED4337;
 }
 
-tr.clickable-row { cursor: pointer; }
+tr.clickable-row, tr.clickable-column-header { cursor: pointer; }
 
 .table thead th {
     border: 1px solid lightgrey; border-bottom: none;

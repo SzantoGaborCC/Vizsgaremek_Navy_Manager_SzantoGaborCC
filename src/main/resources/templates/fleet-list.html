@@ -29,7 +29,7 @@
                     </td>
                     <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
                     <td class="text-center">
-                        <button th:onclick="'showDialog(\'dialog-delete\',\'Delete fleet?\',\'/fleet/'+${fleet.id}+'\',\'DELETE\');event.stopPropagation();'"
+                        <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete fleet?\',\'/fleet/'+${fleet.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:href="@{/fleet/{id}/show-update-form(id=${fleet.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>

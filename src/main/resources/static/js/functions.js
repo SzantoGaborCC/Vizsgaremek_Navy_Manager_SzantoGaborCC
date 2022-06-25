@@ -1,5 +1,5 @@
-function showDialog(dialogId, title,  url, method, data) {
-    $( '#' + dialogId ).dialog({
+function showDialog(dialogSelector, title,  url, method, data) {
+    $(dialogSelector ).dialog({
         dialogClass: "no-close",
         title : title,
         resizable: false,
@@ -8,15 +8,24 @@ function showDialog(dialogId, title,  url, method, data) {
         modal: true,
         buttons: {
             "Ok": function() {
+                let that = this;
                 $.ajax({
                     method: method,
                     url: url,
-                    data: data, //{ name: "John", location: "Boston" }
+                    data: data,
                     success: function(resp) {
                         setTimeout(function(){
                             window.location.reload();
                         },1);
+                    },
+                    error: function (response) {
+                        $(that).dialog("close");
+                        if (typeof response.responseJSON.errorDescription !== 'undefined' &&
+                            response.responseJSON.errorDescription !== null) {
+                            $("h2").after('<span class="validationError">' + response.responseJSON.errorDescription + '</span>');
+                        }
                     }
+
                 });
 
             },
@@ -27,10 +36,10 @@ function showDialog(dialogId, title,  url, method, data) {
     });
 }
 
-function ajaxFormSubmit(e, formId) {
+function ajaxFormSubmit(e, formSelector) {
     e.preventDefault();
     let data = {};
-    $("#" + formId).serializeArray().map(function(x){data[x.name] = x.value;});
+    $(formSelector).serializeArray().map(function(x){data[x.name] = x.value;});
     const url = data['url'];
     delete data['url'];
     const method = data['add'] === 'true' ? 'POST' : 'PUT';
@@ -91,4 +100,24 @@ function saveOriginalOptions(selectToBeSaved) {
         saved[$(this).val()] = $(this).html();
     });
     return saved;
+}
+
+function sortTableColumn(tableSelector){
+    let rows = $(tableSelector).find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+    this.asc = !this.asc;
+    if (!this.asc) {
+        rows = rows.reverse();
+    }
+    for (let i = 0; i < rows.length; i++){
+        $(tableSelector).append(rows[i]);
+    }
+}
+function comparer(index) {
+    return function(a, b) {
+        let valA = getCellValue(a, index), valB = getCellValue(b, index);
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+    }
+}
+function getCellValue(row, index){
+    return $(row).children('td').eq(index).text();
 }

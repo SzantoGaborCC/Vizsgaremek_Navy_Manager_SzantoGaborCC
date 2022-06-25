@@ -61,7 +61,7 @@
                     </td>
                     <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
                     <td>
-                        <button th:onclick="'showDialog(\'dialog-delete\',\'Remove ship from fleet?\',\'/fleet/'+${fleet.id}+'/ship/'+${ship.id}+'\',\'DELETE\');event.stopPropagation();'"
+                        <button th:onclick="'showDialog(\'#dialog-delete\',\'Remove ship from fleet?\',\'/fleet/'+${fleet.id}+'/ship/'+${ship.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:unless="${#lists.isEmpty(validShipValues)}" class="btn btn-link"
                            th:href="@{/fleet/{fleetId}/ship/{shipId}/show-update-ship-form(shipId=${ship.id},fleetId=${fleet.id})}"><i

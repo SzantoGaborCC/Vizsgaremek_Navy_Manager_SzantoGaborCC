@@ -34,7 +34,7 @@
                     </td>
                     <td><a th:href="@{/country/{id}(id=${ship.country.id})}" th:text="${ship.country.name}"></a></td>
                     <td class="text-center">
-                        <button th:onclick="'showDialog(\'dialog-delete\',\'Delete ship?\',\'/ship/'+${ship.id}+'\',\'DELETE\');event.stopPropagation();'"
+                        <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete ship?\',\'/ship/'+${ship.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:href="@{/ship/{id}/show-update-form(id=${ship.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>

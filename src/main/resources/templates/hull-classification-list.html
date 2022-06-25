@@ -23,7 +23,7 @@
                     <td th:text="${hullClassification.abbreviation}"></td>
                     <td th:text="${hullClassification.designation}"></td>
                     <td class="text-center">
-                        <button th:onclick="'showDialog(\'dialog-delete\',\'Delete hull classification?\',\'/hull-classification/'+${hullClassification.id}+'\',\'DELETE\');event.stopPropagation();'"
+                        <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete hull classification?\',\'/hull-classification/'+${hullClassification.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:href="@{/hull-classification/{id}/show-update-form(id=${hullClassification.id})}"
                            class="btn btn-link"><i class="fa-solid fa-pen-to-square"></i></a></td>

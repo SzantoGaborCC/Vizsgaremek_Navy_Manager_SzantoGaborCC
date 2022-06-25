@@ -7,5 +7,5 @@ CREATE TABLE public.ship (
 	fleet_id BIGINT,
     UNIQUE ("name", ship_class_id)
 );
-ALTER TABLE public.ship ADD CONSTRAINT ship_ship_class_fk FOREIGN KEY (ship_class_id) REFERENCES public.ship_class(id);
+ALTER TABLE public.ship ADD CONSTRAINT ship_ship_class_fk FOREIGN KEY (ship_class_id) REFERENCES public.ship_class(id) ON DELETE CASCADE;
 ALTER TABLE public.ship ADD CONSTRAINT ship_captain_fk FOREIGN KEY (captain_id) REFERENCES public.officer(id);

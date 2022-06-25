@@ -29,7 +29,7 @@
                     <td th:text="${gun.rangeInMeters}"></td>
                     <td><a th:href="@{/country/{id}(id=${gun.country.id})}" th:text="${gun.country.name}"></a></td>
                     <td class="text-center">
-                        <button th:onclick="'showDialog(\'dialog-delete\',\'Delete gun?\',\'/gun/'+${gun.id}+'\',\'DELETE\');event.stopPropagation();'"
+                        <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete gun?\',\'/gun/'+${gun.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:href="@{/gun/{id}/show-update-form(id=${gun.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>
