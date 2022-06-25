@@ -50,17 +50,20 @@
 </div>
 <script>
     let commanderOriginalValues;
+    let commanderOriginallySelectedOptionVal
+
     $("#fleetForm").submit(function (e) {
         ajaxFormSubmit(e, 'fleetForm');
     });
     $(function() {
         commanderOriginalValues = saveOriginalOptions("#commander");
+        commanderOriginallySelectedOptionVal = $("#commander").find(":selected").val();
         $("#commander").empty();
-        fillSelectWithOptionsAccordingToFilterer("#commander", "#country", commanderOriginalValues, 'prependWithUnassigned');
+        fillSelectWithOptionsAccordingToFilterer("#commander", "#country", commanderOriginalValues, commanderOriginallySelectedOptionVal,  'prependWithUnassigned');
     });
     $("#country").change(function() {
         $("#commander").empty();
-        fillSelectWithOptionsAccordingToFilterer("#commander", "#country", commanderOriginalValues, 'prependWithUnassigned');
+        fillSelectWithOptionsAccordingToFilterer("#commander", "#country", commanderOriginalValues,  commanderOriginallySelectedOptionVal, 'prependWithUnassigned');
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
