@@ -11,9 +11,9 @@
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Precedence</th>
-                    <th scope="col">Designation</th>
+                    <th class="clickable-column-header" scope="col">Id</th>
+                    <th class="clickable-column-header" scope="col">Precedence</th>
+                    <th class="clickable-column-header" scope="col">Designation</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -38,6 +38,9 @@
     jQuery(document).ready(function ($) {
         $(".clickable-row").click(function () {
             window.location = $(this).data("href");
+        });
+        $(".clickable-column-header").click(function(){
+            sortByColumn($(this));
         });
     });
 </script>

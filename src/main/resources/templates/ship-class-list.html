@@ -11,15 +11,15 @@
             <table class="table table-bordered table-hover text-center text-break ">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Displacement</th>
-                    <th scope="col">Hull classification</th>
-                    <th scope="col">Belt armor</th>
-                    <th scope="col">Turret armor</th>
-                    <th scope="col">Deck armor</th>
-                    <th scope="col">Speed</th>
-                    <th scope="col">Country</th>
+                    <th class="clickable-column-header" scope="col">Id</th>
+                    <th class="clickable-column-header" scope="col">Name</th>
+                    <th class="clickable-column-header" scope="col">Displacement</th>
+                    <th class="clickable-column-header" scope="col">Hull classification</th>
+                    <th class="clickable-column-header" scope="col">Belt armor</th>
+                    <th class="clickable-column-header" scope="col">Turret armor</th>
+                    <th class="clickable-column-header" scope="col">Deck armor</th>
+                    <th class="clickable-column-header" scope="col">Speed</th>
+                    <th class="clickable-column-header" scope="col">Country</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -53,6 +53,9 @@
     jQuery(document).ready(function ($) {
         $(".clickable-row").click(function () {
             window.location = $(this).data("href");
+        });
+        $(".clickable-column-header").click(function(){
+            sortByColumn($(this));
         });
     });
 </script>

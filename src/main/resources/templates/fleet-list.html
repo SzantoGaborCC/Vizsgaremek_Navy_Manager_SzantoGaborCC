@@ -45,9 +45,9 @@
         $(".clickable-row").click(function () {
             window.location = $(this).data("href");
         });
-       /* $(".clickable-column-header").click(function(){
-            sortTableColumn($(this).closest("table"));
-        });*/
+        $(".clickable-column-header").click(function(){
+            sortByColumn($(this));
+        });
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
