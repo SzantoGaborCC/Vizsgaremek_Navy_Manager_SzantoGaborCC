@@ -15,7 +15,8 @@
             </ul>
         </div>
         <span class="navbar-text">
-                    Welcome, <span id="userName" style="font-weight:bolder;" sec:authentication="name">!</span>!
+                    Welcome, <span id="userName" style="font-weight:bolder;" sec:authentication="name">! </span>!
+                    <span sec:authentication="principal.authorities" sec:authorize="hasRole('ADMIN')"></span>
                 </span>
     </div>
 </nav>

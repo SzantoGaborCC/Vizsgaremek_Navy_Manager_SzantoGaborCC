@@ -23,9 +23,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/country")
 public class CountryController {
     @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
     MessageSource messageSource;
     private final CountryService countryService;
 
@@ -35,7 +32,6 @@ public class CountryController {
 
     @GetMapping
     public String listCountries(Model model) {
-        System.out.println("AuthenticationManager is: " + authenticationManager);
         model.addAttribute("countries", countryService.findAll());
         return "country-list";
     }

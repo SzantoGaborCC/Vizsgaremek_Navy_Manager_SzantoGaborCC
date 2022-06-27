@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<div th:replace="fragments/header :: header (title='Navy Manager - Login Page')"></div>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h2>Please Log In</h2>
+            <form id="loginForm" th:object="${login}" novalidate>
+                <input name="redirectTo" type="hidden" th:value="'/'">
+                <input name="add" type="hidden"  th:value="true">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" th:field="*{password}">
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $("#loginForm").submit(function (e) {
+        ajaxFormSubmit(e, '#loginForm');
+    });
+</script>
+<div th:insert="fragments/footer :: footer"></div>
+</body>
+</html>

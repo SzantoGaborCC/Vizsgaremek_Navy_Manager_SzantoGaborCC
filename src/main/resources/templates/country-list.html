@@ -11,16 +11,16 @@
             <table id="countries" class="table table-bordered table-hover text-center">
                 <thead class="table-dark">
                 <tr>
-                    <th class="clickable-column-header" scope="col">Id</th>
+                    <th sec:authorize="hasRole('ADMIN')" class="clickable-column-header" scope="col">Id</th>
                     <th class="clickable-column-header" scope="col">Name</th>
-                    <th scope="col">Actions</th>
+                    <th sec:authorize="hasRole('ADMIN')"  scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr class="clickable-row" th:data-href="@{/country/{id}(id=${country.id})}" th:each="country: ${countries}">
-                    <td th:text="${country.id}"></td>
+                    <td sec:authorize="hasRole('ADMIN')" th:text="${country.id}"></td>
                     <td th:text="${country.name}"></td>
-                    <td class="text-center">
+                    <td sec:authorize="hasRole('ADMIN')"  class="text-center">
                         <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete country?\',\'/country/'+${country.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:href="@{/country/{id}/show-update-form(id=${country.id})}" class="btn btn-link"><i

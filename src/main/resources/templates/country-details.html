@@ -11,16 +11,16 @@
             <table class="table table-bordered text-center">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">Id</th>
+                    <th sec:authorize="hasRole('ADMIN')"  scope="col">Id</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Actions</th>
+                    <th sec:authorize="hasRole('ADMIN')" scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:object="${country}">
-                    <td th:text="${country.id}"></td>
+                    <td sec:authorize="hasRole('ADMIN')" th:text="${country.id}"></td>
                     <td th:text="${country.name}"></td>
-                    <td class="text-center">
+                    <td sec:authorize="hasRole('ADMIN')"  class="text-center">
                         <a th:href="@{/country/{id}/show-update-form(id=${country.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>
                 </tr>
