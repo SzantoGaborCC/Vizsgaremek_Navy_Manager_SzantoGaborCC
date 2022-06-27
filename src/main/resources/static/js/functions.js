@@ -126,3 +126,9 @@ function comparer(index, desc) {
 function getCellValue(row, index) {
     return $(row).children('td').eq(index).text()
 }
+
+function checkIfUserIsAnonymousAndOverwriteItToGuest() {
+    if ($('#userName').text() === 'anonymousUser') {
+        $('#userName').text('Guest');
+    }
+}

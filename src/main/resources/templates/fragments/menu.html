@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-light" th:fragment="menu" xmlns:th="http://www.thymeleaf.org">
+<nav class="navbar navbar-expand-sm navbar-light bg-light" th:fragment="menu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div class="container-fluid">
         <a class="navbar-brand" href="/"><img style="max-width: 75px;" class="img-fluid" th:src="@{/images/navy_manager_logo.jpg}"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -14,5 +14,8 @@
                 </li>
             </ul>
         </div>
+        <span class="navbar-text">
+                    Welcome, <span id="userName" style="font-weight:bolder;" sec:authentication="name">!</span>!
+                </span>
     </div>
 </nav>

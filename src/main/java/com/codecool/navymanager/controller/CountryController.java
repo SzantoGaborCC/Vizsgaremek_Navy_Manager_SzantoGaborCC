@@ -8,6 +8,7 @@ import com.codecool.navymanager.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +23,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/country")
 public class CountryController {
     @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
     MessageSource messageSource;
     private final CountryService countryService;
 
@@ -31,6 +35,7 @@ public class CountryController {
 
     @GetMapping
     public String listCountries(Model model) {
+        System.out.println("AuthenticationManager is: " + authenticationManager);
         model.addAttribute("countries", countryService.findAll());
         return "country-list";
     }
