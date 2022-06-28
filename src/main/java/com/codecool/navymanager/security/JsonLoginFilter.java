@@ -39,7 +39,6 @@ public class JsonLoginFilter extends AbstractAuthenticationProcessingFilter {
             );
         });
         setAuthenticationFailureHandler((request, response, exception) -> {
-            System.out.println("in failure handler!");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             JsonResponse jsonResponse = JsonResponse.builder().errorDescription(
                     messageSource.getMessage(

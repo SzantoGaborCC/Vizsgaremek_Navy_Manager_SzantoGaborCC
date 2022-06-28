@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Ships')"></div>
 <body>
 <div th:replace="fragments/menu :: menu (entityName = 'Ship', addUrl = '/ship/show-add-form', listUrl = '/ship')"></div>
@@ -11,17 +11,17 @@
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-dark">
                 <tr>
-                    <th class="clickable-column-header" scope="col">Id</th>
+                    <th sec:authorize="hasRole('ADMIN')" class="clickable-column-header" scope="col">Id</th>
                     <th class="clickable-column-header" scope="col">Name</th>
                     <th class="clickable-column-header" scope="col">Ship Class</th>
                     <th class="clickable-column-header" scope="col">Captain</th>
                     <th class="clickable-column-header" scope="col">Country</th>
-                    <th scope="col">Actions</th>
+                    <th sec:authorize="hasRole('ADMIN')" scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr class="clickable-row" th:data-href="@{/ship/{id}(id=${ship.id})}" th:each="ship: ${ships}">
-                    <td th:text="${ship.id}"></td>
+                    <td sec:authorize="hasRole('ADMIN')" th:text="${ship.id}"></td>
                     <td th:text="${ship.name}"></td>
                     <td>
                         <a th:href="@{/ship-class/{id}(id=${ship.shipClass.id})}"
@@ -33,7 +33,7 @@
                            th:text="${ship.captain.name}"></a>
                     </td>
                     <td><a th:href="@{/country/{id}(id=${ship.country.id})}" th:text="${ship.country.name}"></a></td>
-                    <td class="text-center">
+                    <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete ship?\',\'/ship/'+${ship.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:href="@{/ship/{id}/show-update-form(id=${ship.id})}" class="btn btn-link"><i

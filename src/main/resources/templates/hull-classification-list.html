@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Hull Classifications')"></div>
 <body>
 <div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', addUrl = '/hull-classification/show-add-form', listUrl = '/hull-classification')"></div>
@@ -11,18 +11,18 @@
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-dark">
                 <tr>
-                    <th class="clickable-column-header" scope="col">Id</th>
+                    <th sec:authorize="hasRole('ADMIN')" class="clickable-column-header" scope="col">Id</th>
                     <th class="clickable-column-header" scope="col">Abbreviation</th>
                     <th class="clickable-column-header" scope="col">Name</th>
-                    <th scope="col">Actions</th>
+                    <th sec:authorize="hasRole('ADMIN')" scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr class="clickable-row" th:data-href="@{/hull-classification/{id}(id=${hullClassification.id})}" th:each="hullClassification: ${hullClassifications}">
-                    <td th:text="${hullClassification.id}"></td>
+                    <td sec:authorize="hasRole('ADMIN')" th:text="${hullClassification.id}"></td>
                     <td th:text="${hullClassification.abbreviation}"></td>
                     <td th:text="${hullClassification.designation}"></td>
-                    <td class="text-center">
+                    <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete hull classification?\',\'/hull-classification/'+${hullClassification.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:href="@{/hull-classification/{id}/show-update-form(id=${hullClassification.id})}"

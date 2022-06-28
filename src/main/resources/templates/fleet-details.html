@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
 <div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet')"></div>
@@ -11,16 +11,16 @@
             <table class="table table-bordered text-center">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">Id</th>
+                    <th sec:authorize="hasRole('ADMIN')" scope="col">Id</th>
                     <th scope="col">Designation</th>
                     <th scope="col">Commander</th>
                     <th scope="col">Country</th>
-                    <th scope="col">Actions</th>
+                    <th sec:authorize="hasRole('ADMIN')" scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:object="${fleet}">
-                    <td th:text="${fleet.id}"></td>
+                    <td sec:authorize="hasRole('ADMIN')" th:text="${fleet.id}"></td>
                     <td th:text="${fleet.designation}"></td>
                     <td>
                         <span th:if="${fleet.commander} == null" class="text-danger">No commander was assigned</span>
@@ -28,7 +28,7 @@
                            th:text="${fleet.commander.name}"></a>
                     </td>
                     <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
-                    <td class="text-center">
+                    <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <a th:href="@{/fleet/{id}/show-update-form(id=${fleet.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>
                 </tr>
@@ -38,17 +38,17 @@
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-light">
                 <tr>
-                    <th class="clickable-column-header" scope="col">Id</th>
+                    <th sec:authorize="hasRole('ADMIN')" class="clickable-column-header" scope="col">Id</th>
                     <th class="clickable-column-header" scope="col">Name</th>
                     <th class="clickable-column-header" scope="col">Ship Class</th>
                     <th class="clickable-column-header" scope="col">Captain</th>
                     <th class="clickable-column-header" scope="col">Country</th>
-                    <th scope="col">Actions</th>
+                    <th sec:authorize="hasRole('ADMIN')" scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr class="clickable-row" th:data-href="@{/ship/{id}(id=${ship.id})}" th:each="ship: ${fleet.ships}">
-                    <td th:text="${ship.id}"></td>
+                    <td sec:authorize="hasRole('ADMIN')" th:text="${ship.id}"></td>
                     <td th:text="${ship.name}"></td>
                     <td>
                         <a th:href="@{/ship-class/{id}(id=${ship.shipClass.id})}"
@@ -60,7 +60,7 @@
                            th:text="${ship.captain.name}"></a>
                     </td>
                     <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
-                    <td>
+                    <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <button th:onclick="'showDialog(\'#dialog-delete\',\'Remove ship from fleet?\',\'/fleet/'+${fleet.id}+'/ship/'+${ship.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:unless="${#lists.isEmpty(validShipValues)}" class="btn btn-link"
@@ -69,11 +69,11 @@
                 </tr>
                 </tbody>
             </table>
-            <a th:class="${#lists.isEmpty(validShipValues)} ? 'btn btn-secondary disabled' : 'btn btn-primary'"
+            <a sec:authorize="hasRole('ADMIN')" th:class="${#lists.isEmpty(validShipValues)} ? 'btn btn-secondary disabled' : 'btn btn-primary'"
                th:href="@{/fleet/{id}/ship/show-add-ship-form(id=${fleet.id})}" role="button"><i
                     class="fa-solid fa-plus"></i>
                 Add New Ship</a>
-            <span th:if="${#lists.isEmpty(validShipValues)}"
+            <span sec:authorize="hasRole('ADMIN')" th:if="${#lists.isEmpty(validShipValues)}"
                   class="text-danger"> This country has no available ships to add.</span>
         </div>
     </div>

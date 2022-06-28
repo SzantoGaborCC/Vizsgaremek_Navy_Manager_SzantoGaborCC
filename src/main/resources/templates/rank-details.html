@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Ranks')"></div>
 <body>
 <div th:replace="fragments/menu :: menu (entityName = 'Rank', listUrl = '/rank')"></div>
@@ -11,18 +11,18 @@
             <table class="table table-bordered text-center">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">Id</th>
+                    <th sec:authorize="hasRole('ADMIN')" scope="col">Id</th>
                     <th scope="col">Precedence</th>
                     <th scope="col">Designation</th>
-                    <th scope="col">Actions</th>
+                    <th sec:authorize="hasRole('ADMIN')" scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:object="${rank}">
-                    <td th:text="${rank.id}"></td>
+                    <td sec:authorize="hasRole('ADMIN')" th:text="${rank.id}"></td>
                     <td th:text="${rank.precedence}"></td>
                     <td th:text="${rank.designation}"></td>
-                    <td class="text-center">
+                    <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <a th:href="@{/rank/{id}/show-update-form(id=${rank.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>
                 </tr>

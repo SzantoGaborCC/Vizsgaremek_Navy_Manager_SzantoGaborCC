@@ -4,6 +4,7 @@ package com.codecool.navymanager.controller;
 import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.dto.GunInstallationDto;
 import com.codecool.navymanager.dto.ShipClassDto;
+import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Gun;
 import com.codecool.navymanager.entity.ShipClass;
 import com.codecool.navymanager.response.JsonResponse;
@@ -95,12 +96,12 @@ public class ShipClassController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id, Locale locale) {
+    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
         shipClassService.deleteById(id, locale);
-        return ResponseEntity.ok().body(messageSource.getMessage(
+        return ResponseEntity.ok().body(JsonResponse.builder().message(messageSource.getMessage(
                 "removed",
-                new Object[] {ShipClass.class.getSimpleName()},
-                locale));
+                new Object[] {Fleet.class.getSimpleName()},
+                locale)).build());
     }
 
     @GetMapping("/{id}/show-update-form")
