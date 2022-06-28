@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class LoginData {
     @NotEmpty
-    private String name;
+    private String username;
     @NotEmpty
     private String password;
 }

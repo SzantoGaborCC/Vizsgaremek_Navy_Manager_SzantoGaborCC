@@ -172,10 +172,10 @@ VALUES('Radetzky', 2, 1);
 
 INSERT INTO ship
 ("name", ship_class_id, captain_id, country_id)
-VALUES('Prinzregent Luitpold', 1, 6, 2);
+VALUES('Prinzregent Luitpold', 4, 6, 2);
 INSERT INTO ship
 ("name", ship_class_id, country_id)
-VALUES('Lothringen', 2, 2);
+VALUES('Lothringen', 3, 2);
 
 INSERT INTO fleet
 (designation, commander_id, country_id)
@@ -192,4 +192,12 @@ VALUES(1, 1, 12);
 INSERT INTO gun_installation
 (ship_class_id, gun_id, gun_quantity)
 VALUES(3, 9, 10);
+
+INSERT INTO "user"
+("username", "password")
+VALUES('Admin', '$2a$10$mI2hgZb4oP90n5dIPIVQi.Lx28CqCvLcCCo1w24HR5ef5KiX0WUKy');
+
+INSERT INTO user_role
+(user_id, "role")
+VALUES(1, 'ADMIN');
 
