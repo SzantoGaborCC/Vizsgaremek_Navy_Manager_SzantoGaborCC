@@ -2,6 +2,7 @@
 <html lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Login Page')"></div>
 <body>
+<div th:replace="fragments/menu :: menu"></div>
 <div class="container-fluid">
     <div class="row">
         <div class="col">
@@ -26,6 +27,7 @@
     $("#loginForm").submit(function (e) {
         ajaxFormSubmit(e, '#loginForm');
     });
+    checkIfUserIsAnonymousAndOverwriteItToGuest();
 </script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>

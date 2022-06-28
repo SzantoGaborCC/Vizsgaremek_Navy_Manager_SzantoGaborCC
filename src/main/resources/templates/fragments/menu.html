@@ -1,22 +1,33 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-light" th:fragment="menu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<nav class="navbar navbar-expand-sm navbar-light bg-light" th:fragment="menu" xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/"><img style="max-width: 75px;" class="img-fluid" th:src="@{/images/navy_manager_logo.jpg}"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="/"><img style="max-width: 75px;" class="img-fluid"
+                                              th:src="@{/images/navy_manager_logo.jpg}"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav align-items-center">
                 <li th:if="${listUrl} != null" class="nav-item">
-                    <a class="btn btn-lg btn-primary"   th:href="@{${listUrl}}"><span th:text="${entityName} + ' Home'"></span></a>
+                    <a class="btn btn-lg btn-primary" th:href="@{${listUrl}}"><span
+                            th:text="${entityName} + ' Home'"></span></a>
                 </li>
                 <li th:if="${addUrl} != null" class="nav-item">
-                    <a class="btn btn-secondary" th:href="@{${addUrl}}">Add New <span th:text="${entityName}"></span></a>
+                    <a class="btn btn-secondary" th:href="@{${addUrl}}">Add New <span
+                            th:text="${entityName}"></span></a>
                 </li>
             </ul>
         </div>
         <span class="navbar-text">
-                    Welcome, <span id="userName" style="font-weight:bolder;" sec:authentication="name">! </span>!
-                    <span sec:authentication="principal.authorities" sec:authorize="hasRole('ADMIN')"></span>
-                </span>
+                        Welcome,
+                        <span th:if="${#authorization.expression('isAuthenticated()')}" style="font-weight:bolder;" sec:authentication="name"></span>
+                        <span th:unless="${#authorization.expression('isAuthenticated()')}" style="font-weight:bolder;">Guest</span>!
+                        <a th:unless="${#authorization.expression('isAuthenticated()')}"
+                        class="btn btn-lg btn-warning" href="/login">Login</a>
+                        <a th:if="${#authorization.expression('isAuthenticated()')}"
+                        class="btn btn-lg btn-warning" href="/logout">Logout</a>
+        </span>
     </div>
+    <div id="dialog-login"></div>
 </nav>

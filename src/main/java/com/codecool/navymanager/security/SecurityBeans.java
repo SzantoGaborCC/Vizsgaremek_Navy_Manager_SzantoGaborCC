@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.http.HttpServletResponse;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
@@ -53,13 +55,13 @@ public class SecurityBeans {
                 .exceptionHandling()
                 .authenticationEntryPoint(securityExceptionHandler)
                 .and()
-               // .formLogin().permitAll()
-               // .loginPage("/login")
-              //  .and()
-             //   .formLogin().permitAll()
-              //  .and()
-             //   .logout().permitAll()
-             //   .httpBasic()
+                .logout(logout -> logout
+                        .permitAll()
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                                    response.setStatus(HttpServletResponse.SC_OK);
+                                    response.sendRedirect("/");
+                                }
+                        ))
                 .csrf().disable()
                 .cors();
         return http.build();
