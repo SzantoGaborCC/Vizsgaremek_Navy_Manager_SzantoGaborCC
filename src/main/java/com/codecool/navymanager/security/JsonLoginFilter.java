@@ -28,7 +28,7 @@ public class JsonLoginFilter extends AbstractAuthenticationProcessingFilter {
         super(new AntPathRequestMatcher("/login", "POST"));
         setAuthenticationSuccessHandler((request, response, authentication) -> {
             response.setStatus(HttpServletResponse.SC_OK);
-            JsonResponse jsonResponse = JsonResponse.builder().errorDescription(
+            JsonResponse jsonResponse = JsonResponse.builder().message(
                     messageSource.getMessage(
                             "logged_in",
                             null,

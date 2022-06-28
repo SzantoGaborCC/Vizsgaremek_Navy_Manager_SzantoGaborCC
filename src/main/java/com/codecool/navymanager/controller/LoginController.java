@@ -37,15 +37,4 @@ public class LoginController {
             return "redirect:/";
         }
     }
-
-   /* @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session= request.getSession(false);
-        SecurityContextHolder.clearContext();
-        if(session != null) {
-            session.invalidate();
-        }
-        return "redirect:/";
-    }*/
-
 }
