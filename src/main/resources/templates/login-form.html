@@ -5,7 +5,8 @@
 <div th:replace="fragments/menu :: menu"></div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col">
+        <div class="col-4"></div>
+        <div class="col-4">
             <h2>Please Log In</h2>
             <form id="loginForm" th:object="${login}" novalidate>
                 <input name="redirectTo" type="hidden" th:value="'/'">
@@ -21,13 +22,13 @@
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
         </div>
+        <div class="col-4"></div>
     </div>
 </div>
 <script>
     $("#loginForm").submit(function (e) {
         ajaxFormSubmit(e, '#loginForm');
     });
-    checkIfUserIsAnonymousAndOverwriteItToGuest();
 </script>
 <div th:insert="fragments/footer :: footer"></div>
 </body>

@@ -13,8 +13,8 @@
                     <a class="btn btn-lg btn-primary" th:href="@{${listUrl}}"><span
                             th:text="${entityName} + ' Home'"></span></a>
                 </li>
-                <li th:if="${addUrl} != null" class="nav-item">
-                    <a class="btn btn-secondary" th:href="@{${addUrl}}">Add New <span
+                <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="nav-item">
+                    <a th:if="${addUrl} != null" class="btn btn-secondary" th:href="@{${addUrl}}">Add New <span
                             th:text="${entityName}"></span></a>
                 </li>
             </ul>
@@ -22,7 +22,7 @@
         <span class="navbar-text">
                         Welcome,
                         <span th:if="${#authorization.expression('isAuthenticated()')}" style="font-weight:bolder;" sec:authentication="name"></span>
-                        <span th:unless="${#authorization.expression('isAuthenticated()')}" style="font-weight:bolder;">Guest</span>!
+                        <span th:unless="${#authorization.expression('isAuthenticated()')}" style="font-weight:bolder;">guest</span>!
                         <a th:unless="${#authorization.expression('isAuthenticated()')}"
                         class="btn btn-lg btn-warning" href="/login">Login</a>
                         <a th:if="${#authorization.expression('isAuthenticated()')}"
