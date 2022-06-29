@@ -40,7 +40,7 @@ public class ShipClassService {
                         locale))));
     }
 
-    public GunInstallationDto findGunAndQuantityByShipClassIdAndGunId(long shipClassId, long gunId) {
+    public GunInstallationDto findGunInstallationByShipClassIdAndGunId(long shipClassId, long gunId) {
         return new GunInstallationDto(shipClassRepository.findById(shipClassId).orElseThrow().getGuns().stream()
                 .filter(gunAndQuantity -> gunAndQuantity.getGun().getId().equals(gunId)).findAny().orElseThrow());
     }
@@ -170,5 +170,20 @@ public class ShipClassService {
         return gunService.findByCountry(shipClassDto.getCountry().getId()).stream()
                 .filter(gunDto -> !gunIdsOfShipClass.contains(gunDto.getId()))
                 .toList();
+    }
+
+    public List<GunInstallationDto> findGuns(long id, Locale locale) {
+        return findById(id, locale).getGuns().stream().toList();
+    }
+
+    public GunInstallationDto findGunInShipClassById(long shipClassId, long gunId, Locale locale) {
+        return findGuns(shipClassId, locale).stream()
+                .filter(gunInstallationDto -> gunInstallationDto.getId() == gunId)
+                .findAny()
+                .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
+                        "search_error_not_found",
+                        new Object[]{Gun.class.getSimpleName()},
+                        locale))
+                );
     }
 }

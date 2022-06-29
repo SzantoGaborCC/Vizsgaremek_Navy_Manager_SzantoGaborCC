@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 
@@ -49,7 +47,7 @@ public class FleetService {
                                         locale))));
     }
 
-    public Set<ShipDto> findShips(long fleetId, Locale locale) {
+    public List<ShipDto> findShips(long fleetId, Locale locale) {
         return fleetRepository.findById(fleetId)
                 .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
                                     "search_error_not_found",
@@ -57,7 +55,7 @@ public class FleetService {
                                     locale))
                 ).getShips().stream()
                 .map(ShipDto::new)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     
@@ -180,7 +178,7 @@ public class FleetService {
     }
 
     
-    public void switchShipsInFleet(long fleetId, long shipId, long newShipId, Locale locale) {
+    public void updateShipInFleet(long fleetId, long shipId, long newShipId, Locale locale) {
         if (shipId != newShipId) {
             Fleet fleet = fleetRepository.findById(fleetId)
                     .orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage(
@@ -212,5 +210,16 @@ public class FleetService {
                                     locale)));
             shipToRemove.setFleet(null);
             shipRepository.save(shipToRemove);
+    }
+
+    public ShipDto findShipInFleet(long fleetId, long shipId, Locale locale) {
+        return findShips(fleetId, locale).stream()
+                .filter(shipDto -> shipDto.getId() == shipId)
+                .findAny()
+                .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
+                        "search_error_not_found",
+                        new Object[]{Ship.class.getSimpleName()},
+                        locale))
+                );
     }
 }

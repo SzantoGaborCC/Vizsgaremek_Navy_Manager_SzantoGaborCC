@@ -2,6 +2,7 @@ package com.codecool.navymanager.controller;
 
 import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.dto.IdentityDto;
+import com.codecool.navymanager.dto.ShipDto;
 import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.response.JsonResponse;
@@ -16,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -44,18 +46,28 @@ public class FleetController {
         this.shipService = shipService;
     }
 
-    @GetMapping
-    public String listFleets(Model model) {
+    @GetMapping("/show-list-page")
+    public String showListPage(Model model) {
         model.addAttribute("fleets", fleetService.findAll());
         return "fleet-list";
     }
 
-    @GetMapping("/{id}")
-    public String getDetails(@PathVariable Long id, Model model, Locale locale) {
+    @GetMapping
+    public ResponseEntity<List<FleetDto>> findAll() {
+        return ResponseEntity.ok(fleetService.findAll());
+    }
+
+    @GetMapping("/{id}/show-details-page")
+    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
         FleetDto fleet = fleetService.findById(id, locale);
         model.addAttribute("fleet", fleet);
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-details";
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FleetDto> findById(@PathVariable long id, Locale locale) {
+        return ResponseEntity.ok(fleetService.findById(id, locale));
     }
 
     @GetMapping("/show-add-form")
@@ -97,7 +109,7 @@ public class FleetController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<JsonResponse> removeShipFromFleet(@PathVariable Long id, Locale locale) {
+    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
         fleetService.deleteById(id, locale);
         return ResponseEntity.ok().body(JsonResponse.builder().message(messageSource.getMessage(
                 "removed",
@@ -186,6 +198,11 @@ public class FleetController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
+    @GetMapping("/{id}/ship")
+    public ResponseEntity<List<ShipDto>> findShips(@PathVariable long id, Locale locale) {
+        return ResponseEntity.ok(fleetService.findShips(id, locale));
+    }
+
     @GetMapping("{fleetId}/ship/{shipId}/show-update-ship-form")
     public String showUpdateShipForm(
             @PathVariable long fleetId,
@@ -200,8 +217,16 @@ public class FleetController {
         return "fleet-ship-form";
     }
 
+    @GetMapping("/{fleetId}/ship/{shipId}")
+    public ResponseEntity<ShipDto> findShipInFleetById(
+            @PathVariable long fleetId,
+            @PathVariable  long shipId,
+            Locale locale) {
+        return ResponseEntity.ok(fleetService.findShipInFleet(fleetId, shipId, locale));
+    }
+
     @PutMapping("/{fleetId}/ship/{shipId}")
-    public ResponseEntity<JsonResponse> switchShipsInFleet(
+    public ResponseEntity<JsonResponse> updateShipInFleet(
             @PathVariable long fleetId, @PathVariable long shipId,
             @RequestBody @Valid IdentityDto chosenShip,
             Model model, BindingResult result,
@@ -217,7 +242,7 @@ public class FleetController {
                             new Object[] {Ship.class.getSimpleName()},
                             locale)).build());
         }
-        fleetService.switchShipsInFleet(fleetId, shipId, chosenShip.getId(), locale);
+        fleetService.updateShipInFleet(fleetId, shipId, chosenShip.getId(), locale);
         return ResponseEntity.ok()
                 .body(JsonResponse.builder().message(messageSource.getMessage(
                         "updated",

@@ -29,13 +29,6 @@
                 <span style="font-weight:bolder;">Guest</span>!
                  <a th:if="${login} == null" class="btn btn-lg btn-warning" href="/login">Login</a>
             </span>
-
-                     <!--   <span th:if="${#authorization.expression('isAuthenticated()')}" style="font-weight:bolder;" sec:authentication="name"></span>
-                        <span th:unless="${#authorization.expression('isAuthenticated()')}" style="font-weight:bolder;">guest</span>!
-                        <a th:unless="${#authorization.expression('isAuthenticated()')}"
-                        class="btn btn-lg btn-warning" href="/login">Login</a>
-                        <a th:if="${#authorization.expression('isAuthenticated()')}"
-                        class="btn btn-lg btn-warning" href="/logout">Logout</a>-->
         </span>
     </div>
     <div id="dialog-login"></div>

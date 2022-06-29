@@ -1,6 +1,7 @@
 package com.codecool.navymanager.controller;
 
 
+import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.ShipDto;
 import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.response.JsonResponse;
@@ -18,6 +19,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -40,17 +42,27 @@ public class ShipController {
         this.countryService = countryService;
     }
 
-    @GetMapping
-    public String listShips(Model model) {
+    @GetMapping("/show-list-page")
+    public String showListPage(Model model) {
         model.addAttribute("ships", shipService.findAll());
         return "ship-list";
     }
 
-    @GetMapping("/{id}")
-    public String getDetails(@PathVariable Long id, Model model, Locale locale) {
+    @GetMapping
+    public ResponseEntity<List<ShipDto>> findAll() {
+        return ResponseEntity.ok(shipService.findAll());
+    }
+
+    @GetMapping("/{id}/show-details-page")
+    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
         ShipDto ship = shipService.findById(id, locale);
         model.addAttribute("ship", ship);
         return "ship-details";
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ShipDto> findById(@PathVariable long id, Locale locale) {
+        return ResponseEntity.ok(shipService.findById(id, locale));
     }
 
     @GetMapping("/show-add-form")

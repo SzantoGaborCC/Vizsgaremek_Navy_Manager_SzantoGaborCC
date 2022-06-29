@@ -2,13 +2,13 @@
 <div class="col-3 d-none d-md-block d-lg-block" th:fragment="sidebar" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div class="list-group">
         <div class="header-side list-group-item-dark p-3" >Categories</div>
-        <a th:classappend="${active} == 'Fleet' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/fleet">Fleets</a>
-        <a th:classappend="${active} == 'Ship' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/ship">Ships</a>
-        <a th:classappend="${active} == 'Ship Class' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/ship-class">Ship Classes</a>
-        <a th:classappend="${active} == 'Hull Classification' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/hull-classification">Hull Classifications</a>
-        <a th:classappend="${active} == 'Gun' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/gun">Guns</a>
-        <a th:classappend="${active} == 'Officer' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/officer">Officers</a>
-        <a th:classappend="${active} == 'Rank' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/rank">Ranks</a>
-        <a th:classappend="${active} == 'Country' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/country">Countries</a>
+        <a th:classappend="${active} == 'Fleet' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/fleet/show-list-page">Fleets</a>
+        <a th:classappend="${active} == 'Ship' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/ship/show-list-page">Ships</a>
+        <a th:classappend="${active} == 'Ship Class' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/ship-class/show-list-page">Ship Classes</a>
+        <a th:classappend="${active} == 'Hull Classification' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/hull-classification/show-list-page">Hull Classifications</a>
+        <a th:classappend="${active} == 'Gun' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/gun/show-list-page">Guns</a>
+        <a th:classappend="${active} == 'Officer' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/officer/show-list-page">Officers</a>
+        <a th:classappend="${active} == 'Rank' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/rank/show-list-page">Ranks</a>
+        <a th:classappend="${active} == 'Country' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/country/show-list-page">Countries</a>
     </div>
 </div>

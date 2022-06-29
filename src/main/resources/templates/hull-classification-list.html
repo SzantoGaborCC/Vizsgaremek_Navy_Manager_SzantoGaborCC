@@ -2,7 +2,7 @@
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Hull Classifications')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', addUrl = '/hull-classification/show-add-form', listUrl = '/hull-classification')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Hull Classification', addUrl = '/hull-classification/show-add-form', listUrl = '/hull-classification/show-list-page')"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="fragments/sidebar :: sidebar (active = 'Hull Classification')"></div>
@@ -18,7 +18,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="clickable-row" th:data-href="@{/hull-classification/{id}(id=${hullClassification.id})}" th:each="hullClassification: ${hullClassifications}">
+                <tr class="clickable-row" th:data-href="@{/hull-classification/{id}/show-details-page(id=${hullClassification.id})}" th:each="hullClassification: ${hullClassifications}">
                     <td sec:authorize="hasRole('ADMIN')" th:text="${hullClassification.id}"></td>
                     <td th:text="${hullClassification.abbreviation}"></td>
                     <td th:text="${hullClassification.designation}"></td>

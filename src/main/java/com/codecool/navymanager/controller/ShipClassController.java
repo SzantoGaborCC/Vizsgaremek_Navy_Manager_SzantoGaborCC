@@ -1,9 +1,7 @@
 package com.codecool.navymanager.controller;
 
 
-import com.codecool.navymanager.dto.GunDto;
-import com.codecool.navymanager.dto.GunInstallationDto;
-import com.codecool.navymanager.dto.ShipClassDto;
+import com.codecool.navymanager.dto.*;
 import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Gun;
 import com.codecool.navymanager.entity.ShipClass;
@@ -22,6 +20,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -45,18 +44,28 @@ public class ShipClassController {
         this.countryService = countryService;
     }
 
-    @GetMapping
-    public String listShipClasses(Model model) {
+    @GetMapping("/show-list-page")
+    public String showListPage(Model model) {
         model.addAttribute("shipClasses", shipClassService.findAll());
         return "ship-class-list";
     }
 
-    @GetMapping("/{id}")
-    public String showDetails(@PathVariable Long id, Model model, Locale locale) {
+    @GetMapping
+    public ResponseEntity<List<ShipClassDto>> findAll() {
+        return ResponseEntity.ok(shipClassService.findAll());
+    }
+
+    @GetMapping("/{id}/show-details-page")
+    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
         ShipClassDto shipClass = shipClassService.findById(id, locale);
         model.addAttribute("shipClass", shipClass);
         model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
         return "ship-class-details";
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ShipClassDto> findById(@PathVariable long id, Locale locale) {
+        return ResponseEntity.ok(shipClassService.findById(id, locale));
     }
 
     @GetMapping("/show-add-form")
@@ -184,6 +193,11 @@ public class ShipClassController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
+    @GetMapping("/{id}/ship")
+    public ResponseEntity<List<GunInstallationDto>> findGuns(@PathVariable long id, Locale locale) {
+        return ResponseEntity.ok(shipClassService.findGuns(id, locale));
+    }
+
     @GetMapping("{shipClassId}/gun/{gunId}/show-update-gun-form")
     public String showUpdateGunForm(
             @PathVariable long shipClassId,
@@ -192,12 +206,20 @@ public class ShipClassController {
             Locale locale) {
         ShipClassDto shipClass = shipClassService.findById(shipClassId, locale);
         GunInstallationDto gunInstallationDto =
-                shipClassService.findGunAndQuantityByShipClassIdAndGunId(shipClassId, gunId);
+                shipClassService.findGunInstallationByShipClassIdAndGunId(shipClassId, gunId);
         model.addAttribute("add", false);
         model.addAttribute("shipClass", shipClass);
         model.addAttribute("gunInstallation", gunInstallationDto);
         model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
         return "ship-class-gun-form";
+    }
+
+    @GetMapping("/{shipClassId}/ship/{gunId}")
+    public ResponseEntity<GunInstallationDto> findGunInShipClassById(
+            @PathVariable long shipClassId,
+            @PathVariable  long gunId,
+            Locale locale) {
+        return ResponseEntity.ok(shipClassService.findGunInShipClassById(shipClassId, gunId, locale));
     }
 
     @PutMapping("/{shipClassId}/gun/{gunId}")

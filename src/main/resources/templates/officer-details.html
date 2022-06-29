@@ -2,7 +2,7 @@
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Officers')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Officer', listUrl = '/officer')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Officer', listUrl = '/officer/show-list-page')"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="fragments/sidebar :: sidebar (active = 'Officer')"></div>
@@ -25,10 +25,10 @@
                     <td th:text="${officer.name}"></td>
                     <td th:text="${officer.dateOfBirth}"></td>
                     <td>
-                        <a th:href="@{/rank/{id}(id=${officer.rank.id})}"
+                        <a th:href="@{/rank/{id}/show-details-page(id=${officer.rank.id})}"
                            th:text="${officer.rank.designation}"></a>
                     </td>
-                    <td><a th:href="@{/country/{id}(id=${officer.country.id})}" th:text="${officer.country.name}"></a></td>
+                    <td><a th:href="@{/country/{id}/show-details-page(id=${officer.country.id})}" th:text="${officer.country.name}"></a></td>
                     <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <a th:href="@{/officer/{id}/show-update-form(id=${officer.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>

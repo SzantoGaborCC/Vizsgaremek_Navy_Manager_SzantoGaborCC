@@ -2,7 +2,7 @@
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Fleets')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Fleet', listUrl = '/fleet/show-list-page')"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="fragments/sidebar :: sidebar (active = 'Fleet')"></div>
@@ -24,10 +24,10 @@
                     <td th:text="${fleet.designation}"></td>
                     <td>
                         <span th:if="${fleet.commander} == null" class="text-danger">No commander was assigned</span>
-                        <a th:unless="${fleet.commander} == null" th:href="@{/officer/{id}(id=${fleet.commander.id})}"
+                        <a th:unless="${fleet.commander} == null" th:href="@{/officer/{id}/show-details-page(id=${fleet.commander.id})}"
                            th:text="${fleet.commander.name}"></a>
                     </td>
-                    <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
+                    <td><a th:href="@{/country/{id}/show-details-page(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
                     <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <a th:href="@{/fleet/{id}/show-update-form(id=${fleet.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>
@@ -47,19 +47,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="clickable-row" th:data-href="@{/ship/{id}(id=${ship.id})}" th:each="ship: ${fleet.ships}">
+                <tr class="clickable-row" th:data-href="@{/ship/{id}/show-details-page(id=${ship.id})}" th:each="ship: ${fleet.ships}">
                     <td sec:authorize="hasRole('ADMIN')" th:text="${ship.id}"></td>
                     <td th:text="${ship.name}"></td>
                     <td>
-                        <a th:href="@{/ship-class/{id}(id=${ship.shipClass.id})}"
+                        <a th:href="@{/ship-class/{id}/show-details-page(id=${ship.shipClass.id})}"
                            th:text="${ship.shipClass.name}"></a>
                     </td>
                     <td>
                         <span th:if="${ship.captain} == null" class="text-danger">No captain was assigned</span>
-                        <a th:unless="${ship.captain} == null" th:href="@{/officer/{id}(id=${ship.captain.id})}"
+                        <a th:unless="${ship.captain} == null" th:href="@{/officer/{id}/show-details-page(id=${ship.captain.id})}"
                            th:text="${ship.captain.name}"></a>
                     </td>
-                    <td><a th:href="@{/country/{id}(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
+                    <td><a th:href="@{/country/{id}/show-details-page(id=${fleet.country.id})}" th:text="${fleet.country.name}"></a></td>
                     <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <button th:onclick="'showDialog(\'#dialog-delete\',\'Remove ship from fleet?\',\'/fleet/'+${fleet.id}+'/ship/'+${ship.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>

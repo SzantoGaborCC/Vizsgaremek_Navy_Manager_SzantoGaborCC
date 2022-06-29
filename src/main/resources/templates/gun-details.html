@@ -2,7 +2,7 @@
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Guns')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Gun', listUrl = '/gun')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Gun', listUrl = '/gun/show-list-page')"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="fragments/sidebar :: sidebar (active = 'Gun')"></div>
@@ -27,7 +27,7 @@
                     <td th:text="${gun.caliberInMms}"></td>
                     <td th:text="${gun.projectileWeightInKgs}"></td>
                     <td th:text="${gun.rangeInMeters}"></td>
-                    <td><a th:href="@{/country/{id}(id=${gun.country.id})}" th:text="${gun.country.name}"></a></td>
+                    <td><a th:href="@{/country/{id}/show-details-page(id=${gun.country.id})}" th:text="${gun.country.name}"></a></td>
                     <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <a th:href="@{/gun/{id}/show-update-form(id=${gun.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>

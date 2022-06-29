@@ -2,7 +2,7 @@
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Ship Classes')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Ship Class', addUrl = '/ship-class/show-add-form', listUrl = '/ship-class')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Ship Class', addUrl = '/ship-class/show-add-form', listUrl = '/ship-class/show-list-page')"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="fragments/sidebar :: sidebar (active = 'Ship Class')"></div>
@@ -24,18 +24,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="clickable-row" th:data-href="@{/ship-class/{id}(id=${shipClass.id})}"
+                <tr class="clickable-row" th:data-href="@{/ship-class/{id}/show-details-page(id=${shipClass.id})}"
                     th:each="shipClass: ${shipClasses}">
                     <td sec:authorize="hasRole('ADMIN')" th:text="${shipClass.id}"></td>
                     <td th:text="${shipClass.name}"></td>
                     <td th:text="${shipClass.displacementInTons} + ' t'"></td>
-                    <td><a th:href="@{/hull-classification/{id}(id=${shipClass.hullClassification.id})}"
+                    <td><a th:href="@{/hull-classification/{id}/show-details-page(id=${shipClass.hullClassification.id})}"
                            th:text="${shipClass.hullClassification.designation}"></a></td>
                     <td th:text="${shipClass.armorBeltInCms} + ' cm'"></td>
                     <td th:text="${shipClass.armorTurretInCms} + ' cm'"></td>
                     <td th:text="${shipClass.armorDeckInCms} + ' cm'"></td>
                     <td th:text="${shipClass.speedInKmh} + ' km/h'"></td>
-                    <td><a th:href="@{/country/{id}(id=${shipClass.country.id})}"
+                    <td><a th:href="@{/country/{id}/show-details-page(id=${shipClass.country.id})}"
                            th:text="${shipClass.country.name}"></a></td>
                     <td sec:authorize="hasRole('ADMIN')" class="text-center">
                         <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete ship class?\',\'/ship-class/'+${shipClass.id}+'\',\'DELETE\');event.stopPropagation();'"

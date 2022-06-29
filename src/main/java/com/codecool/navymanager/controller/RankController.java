@@ -1,5 +1,6 @@
 package com.codecool.navymanager.controller;
 
+import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.entity.Rank;
 import com.codecool.navymanager.response.JsonResponse;
@@ -15,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -29,17 +31,27 @@ public class RankController {
         this.rankService = rankService;
     }
 
-    @GetMapping
-    public String listRanks(Model model) {
+    @GetMapping("/show-list-page")
+    public String showListPage(Model model) {
         model.addAttribute("ranks", rankService.findAll());
         return "rank-list";
     }
 
-    @GetMapping("/{id}")
-    public String getDetails(@PathVariable Long id, Model model, Locale locale) {
+    @GetMapping
+    public ResponseEntity<List<RankDto>> findAll() {
+        return ResponseEntity.ok(rankService.findAll());
+    }
+
+    @GetMapping("/{id}/show-details-page")
+    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
         RankDto rank = rankService.findById(id, locale);
         model.addAttribute("rank", rank);
         return "rank-details";
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RankDto> findById(@PathVariable long id, Locale locale) {
+        return ResponseEntity.ok(rankService.findById(id, locale));
     }
 
     @GetMapping("/show-add-form")
