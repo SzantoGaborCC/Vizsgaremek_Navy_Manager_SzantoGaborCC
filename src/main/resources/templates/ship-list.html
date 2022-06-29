@@ -8,7 +8,7 @@
         <div th:replace="fragments/sidebar :: sidebar (active = 'Ship')"></div>
         <div class="col">
             <h2>List of Ships</h2>
-            <table class="table table-bordered table-hover text-center">
+            <table class="table table-bordered table-hover text-center" id="shipsTable">
                 <thead class="table-dark">
                 <tr>
                     <th sec:authorize="hasRole('ADMIN')" class="clickable-column-header" scope="col">Id</th>
@@ -53,6 +53,7 @@
         $(".clickable-column-header").click(function(){
             sortByColumn($(this));
         });
+        $("#shipsTable").searchTable();
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>

@@ -43,7 +43,7 @@
                 </tbody>
             </table>
             <h3>Guns</h3>
-            <table class="table table-bordered table-hover text-center">
+            <table class="table table-bordered table-hover text-center" id="gunsTable">
                 <thead class="table-light">
                 <tr>
                     <th sec:authorize="hasRole('ADMIN')" class="clickable-column-header" scope="col">Id</th>
@@ -88,6 +88,7 @@
         $(".clickable-column-header").click(function(){
             sortByColumn($(this));
         });
+        $("#gunsTable").searchTable();
     });
 </script>
 <div th:insert="fragments/footer :: footer"></div>
