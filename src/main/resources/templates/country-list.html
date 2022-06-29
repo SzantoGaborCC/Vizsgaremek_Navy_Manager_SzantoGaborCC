@@ -2,7 +2,7 @@
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"  lang="en">
 <div th:replace="fragments/header :: header (title='Navy Manager - Countries')"></div>
 <body>
-<div th:replace="fragments/menu :: menu (entityName = 'Country', addUrl = '/country/show-add-form', listUrl = '/country')"></div>
+<div th:replace="fragments/menu :: menu (entityName = 'Country', addUrl = '/country/show-add-form', listUrl = '/country/show-list-page')"></div>
 <div class="container-fluid">
     <div class="row">
         <div th:replace="fragments/sidebar :: sidebar (active = 'Country')"></div>
@@ -17,7 +17,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="clickable-row" th:data-href="@{/country/{id}(id=${country.id})}" th:each="country: ${countries}">
+                <tr class="clickable-row" th:data-href="@{/country/{id}/show-details-page(id=${country.id})}" th:each="country: ${countries}">
                     <td sec:authorize="hasRole('ADMIN')" th:text="${country.id}"></td>
                     <td th:text="${country.name}"></td>
                     <td sec:authorize="hasRole('ADMIN')"  class="text-center">

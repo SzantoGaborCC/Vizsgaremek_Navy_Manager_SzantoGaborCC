@@ -8,7 +8,6 @@ import com.codecool.navymanager.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -30,17 +30,27 @@ public class CountryController {
         this.countryService = countryService;
     }
 
-    @GetMapping
-    public String listCountries(Model model) {
+    @GetMapping("/show-list-page")
+    public String showListPage(Model model) {
         model.addAttribute("countries", countryService.findAll());
         return "country-list";
     }
 
-    @GetMapping("/{id}")
-    public String getDetails(@PathVariable Long id, Model model, Locale locale) {
+    @GetMapping
+    public ResponseEntity<List<CountryDto>> findAll() {
+        return ResponseEntity.ok(countryService.findAll());
+    }
+
+    @GetMapping("/{id}/show-details-page")
+    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
         CountryDto country = countryService.findById(id, locale);
         model.addAttribute("country", country);
         return "country-details";
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CountryDto> findById(@PathVariable long id, Locale locale) {
+        return ResponseEntity.ok(countryService.findById(id, locale));
     }
 
     @GetMapping("/show-add-form")
