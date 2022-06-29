@@ -60,13 +60,13 @@ function ajaxFormSubmit(e, formSelector) {
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: function (response) {
+        success: function () {
             if (typeof redirectTo !== 'undefined')
                 window.location = redirectTo;
             else
                 window.location = document.referrer;
         },
-        error: function (response, error) {
+        error: function (response) {
                 if (typeof response.responseJSON.errorDescription !== 'undefined' &&
                     response.responseJSON.errorDescription !== null)
                     $("[id$='Form']").before('<span class="validationError">' + response.responseJSON.errorDescription + '</span>');
@@ -78,23 +78,24 @@ function ajaxFormSubmit(e, formSelector) {
 }
 
 function fillSelectWithOptionsAccordingToFilterer(selectToBeFilled, filterer, originalValues, originallySelected, prependWithUnassigned) {
+    let catchedSelector = $(selectToBeFilled);
     const filterText = $(filterer + " :selected").html();
     if (prependWithUnassigned === 'prependWithUnassigned') {
-        $(selectToBeFilled).prepend($('<option></option>').val(-1).html('--------------Unassigned--------------'));
+        catchedSelector.prepend($('<option></option>').val(-1).html('--------------Unassigned--------------'));
     }
     let found = false;
     $.each(originalValues, function (key, value) {
         if (value.includes(filterText)) {
             if (key.includes(originallySelected)) {
                 found = true;
-                $(selectToBeFilled).append($('<option selected="selected"></option>').val(key).html(value));
+                catchedSelector.append($('<option selected="selected"></option>').val(key).html(value));
             } else {
-                $(selectToBeFilled).append($('<option></option>').val(key).html(value));
+                catchedSelector.append($('<option></option>').val(key).html(value));
             }
         }
     });
     if (found === false) {
-        $(selectToBeFilled).val($(selectToBeFilled + " option:first").val());
+        catchedSelector.val($(selectToBeFilled + " option:first").val());
     }
 }
 

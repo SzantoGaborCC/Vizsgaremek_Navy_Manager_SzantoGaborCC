@@ -57,8 +57,9 @@
     });
     $(function() {
         commanderOriginalValues = saveOriginalOptions("#commander");
-        commanderOriginallySelectedOptionVal = $("#commander").find(":selected").val();
-        $("#commander").empty();
+        let commander = $("#commander");
+        commanderOriginallySelectedOptionVal = commander.find(":selected").val();
+        commander.empty();
         fillSelectWithOptionsAccordingToFilterer("#commander", "#country", commanderOriginalValues, commanderOriginallySelectedOptionVal,  'prependWithUnassigned');
     });
     $("#country").change(function() {

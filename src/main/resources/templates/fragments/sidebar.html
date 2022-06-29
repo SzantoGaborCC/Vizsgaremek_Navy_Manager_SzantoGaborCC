@@ -1,5 +1,5 @@
 <!-- Sidebar-->
-<div class="col-3 d-none d-md-block d-lg-block" th:fragment="sidebar" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div class="col-3 d-none d-md-block d-lg-block" th:fragment="sidebar" xmlns:th="http://www.thymeleaf.org">
     <div class="list-group">
         <div class="header-side list-group-item-dark p-3" >Categories</div>
         <a th:classappend="${active} == 'Fleet' ? 'active' : ''" class="list-group-item list-group-item-action list-group-item-light p-3" href="/fleet/show-list-page">Fleets</a>

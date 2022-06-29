@@ -72,11 +72,13 @@
     $(function() {
         shipClassOriginalValues = saveOriginalOptions("#shipClass");
         captainOriginalValues = saveOriginalOptions("#captain");
-        shipClassOriginallySelectedOptionVal = $("#shipClass").find(":selected").val();
-        captainOriginallySelectedOptionVal = $("#captain").find(":selected").val();
-        $("#shipClass").empty();
+        let shipClass = $("#shipClass");
+        let captain = $("#captain");
+        shipClassOriginallySelectedOptionVal = shipClass.find(":selected").val();
+        captainOriginallySelectedOptionVal = captain.find(":selected").val();
+        shipClass.empty();
         fillSelectWithOptionsAccordingToFilterer("#shipClass", "#country", shipClassOriginalValues, shipClassOriginallySelectedOptionVal);
-        $("#captain").empty();
+        captain.empty();
         fillSelectWithOptionsAccordingToFilterer("#captain", "#country", captainOriginalValues, captainOriginallySelectedOptionVal ,'prependWithUnassigned');
     });
    $("#country").change(function() {
