@@ -1,4 +1,4 @@
-package com.codecool.navymanager.integration;
+package com.codecool.navymanager;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

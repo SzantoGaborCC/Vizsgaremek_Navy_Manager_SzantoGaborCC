@@ -16,14 +16,12 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
-
 public class CountryService {
-    @Autowired
-    private MessageSource messageSource;
-
+    private final MessageSource messageSource;
     private final CountryRepository countryRepository;
 
-    public CountryService(CountryRepository countryRepository) {
+    public CountryService(MessageSource messageSource, CountryRepository countryRepository) {
+        this.messageSource = messageSource;
         this.countryRepository = countryRepository;
     }
 
@@ -40,7 +38,6 @@ public class CountryService {
                                 new Object[] {Country.class.getSimpleName()},
                                 locale))));
     }
-
     
     public void add(CountryDto countryDto, Locale locale) {
         if (countryDto.getId() != null && countryRepository.existsById(countryDto.getId())) {
@@ -52,7 +49,6 @@ public class CountryService {
         countryRepository.save(countryDto.toEntity());
     }
 
-    
     public void update(CountryDto countryDto, long id, Locale locale) {
         if (countryDto.getId() == null || countryDto.getId() != id) {
             throw new IllegalArgumentException(messageSource.getMessage(
@@ -69,7 +65,6 @@ public class CountryService {
                             locale));
         }
     }
-
 
     public void deleteById(Long id, Locale locale) {
         if (countryRepository.existsById(id)) {

@@ -11,15 +11,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @Profile("NO_AUTH")
 public class NoAuthSecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
-
-  /*  @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // Disable CSRF
-        httpSecurity.csrf().disable()
-                // Permit all requests without authentication
-                .authorizeRequests().anyRequest().permitAll();
-    }*/
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return  // Disable CSRF

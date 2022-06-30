@@ -1,188 +1,208 @@
 package com.codecool.navymanager.integration;
 
+import com.codecool.navymanager.TestMessages;
+import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.CountryDto;
-import com.codecool.navymanager.dto.LoginData;
 import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.response.JsonResponse;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CountryIntegrationTest {
+    @Autowired
+    private ServletWebServerApplicationContext webServerAppCtxt;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    private final String baseUrl = "/country";
-    private final String loginURl = "/login";
-
-    private final Country[] data = {
-            new Country(1L, "Mexico"),
-            new Country(2L, "Chile"),
-            new Country(3L, "Argentina")
-    };
-
-    private static LoginData loginData = new LoginData("Admin", "security");
-
-    private String addedMessage = "Country was added.";
-
-    private CountryDto toBePosted = new CountryDto();
+    private final WebClient webClient = new WebClient();
 
     {
-        toBePosted.setName("Uruguay");
+        webClient.getOptions().setCssEnabled(false);
+        webClient.getOptions().setJavaScriptEnabled(false);
     }
+    private final String baseUrl = "/country";
 
+    private final CountryDto[] data = {
+            CountryDto.builder().name("Mexico").build(),
+            CountryDto.builder().name("Chile").build(),
+            CountryDto.builder().name("Argentina").build(),
+            CountryDto.builder().name("Uruguay").build()
+    };
 
- /*   @Test
-    @Order(1)
-    void tryToLoginWithRightCredentialsShouldReturnOk() {
-        HttpEntity<LoginData> loginDataHttpEntity = TestUtilities.createHttpEntity(loginData);
-        ResponseEntity<?> responseEntity
-                = testRestTemplate.postForEntity(baseUrl + "/login", loginDataHttpEntity, CountryDto.class);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    }*/
+    private final CountryDto countryToBeAdded = CountryDto.builder().name("Uruguay").build();
+    private final CountryDto countryForUpdatedNoIdLeadsToError = CountryDto.builder().name("Brazil").build();
+    private final CountryDto countryToBeUpdatedInvalidIdLeadsToError = CountryDto.builder().id(22L).name("Brazil").build();
+    private final CountryDto countryToBeUpdatedValid = CountryDto.builder().id(4L).name("Brazil").build();
+    private final CountryDto countryNullName = CountryDto.builder().id(4L).build();
+    private final CountryDto countryEmptyName = CountryDto.builder().id(4L).name("").build();
 
     @Test
     @Order(1)
     void getAllCountriesShouldReturnOkAndEmptyArray() {
-        ResponseEntity<Country[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl, Country[].class);
-
+        ResponseEntity<CountryDto[]> responseEntity =
+                testRestTemplate.getForEntity(baseUrl, CountryDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        Assertions.assertTrue(responseEntity.getBody().length == 0);
+        assertTrue(responseEntity.getBody().length == 0);
     }
 
     @Test
     @Order(2)
-    void postCountryShouldReturnOkAndTheExpectedDto() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(toBePosted);
+    void postCountryShouldReturnOkWithAddedMessage() {
+        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeAdded);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(addedMessage, responseEntity.getBody().getMessage());
     }
 
-  /*  @Test
+    @Test
     @Order(3)
-    void getWarehouseByIdTest() {
-        ResponseEntity<Warehouse> responseEntity = testRestTemplate.getForEntity(warehouseBaseUrl + "/id/4", Warehouse.class);
-
+    void getTheAddedCountryShouldHaveIdOfOneAndNameUruguay() {
+        ResponseEntity<CountryDto> responseEntity =
+                testRestTemplate.getForEntity(baseUrl + "/1", CountryDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        assertEquals(expected, responseEntity.getBody());
+        assertEquals(1, responseEntity.getBody().getId());
+        assertEquals("Uruguay", responseEntity.getBody().getName());
     }
 
     @Test
     @Order(4)
-    void getWarehouseByNameTest() {
-        ResponseEntity<Warehouse> responseEntity = testRestTemplate.getForEntity(warehouseBaseUrl + "/name/Test Name", Warehouse.class);
-
+    void postMultipleCountriesThenCheckTheReturnedArrayUsingCountryNames() {
+        HttpEntity<CountryDto> countryHttpEntity;
+        for (CountryDto countryDto : data) {
+            if (countryDto.getName().equals("Uruguay"))
+                continue;
+            countryHttpEntity = TestUtilities.createHttpEntity(countryDto);
+            testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+        }
+        ResponseEntity<CountryDto[]> responseEntity =
+                testRestTemplate.getForEntity(baseUrl, CountryDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        assertEquals(expected, responseEntity.getBody());
+        List<String> dataAsListJustNames = Arrays.stream(data).map(CountryDto::getName).toList();
+        List<String> returnedListJustNames =
+                Arrays.stream(responseEntity.getBody()).map(CountryDto::getName).toList();
+        assertTrue(dataAsListJustNames.containsAll(returnedListJustNames));
     }
 
     @Test
     @Order(5)
-    void getWarehouseByAddressTest() {
-        ResponseEntity<Warehouse> responseEntity = testRestTemplate.getForEntity(warehouseBaseUrl + "/address/1234 Test City Test street 01", Warehouse.class);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        assertEquals(expected, responseEntity.getBody());
+    void updateCountryWithNullIdShouldReturnIdError() {
+        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryForUpdatedNoIdLeadsToError);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
     @Test
     @Order(6)
-    void getAllProductsInWarehouseTest() {
-        Product[] expected = {
-                new Product(1L, "Fifa", "Football videogame", ProductType.GAME, 22000,
-                        ProductStatus.IN_STORAGE, null, null, null),
-                new Product(2L, "Mario", "Jumping videogame", ProductType.GAME, 24999,
-                        ProductStatus.IN_STORAGE, null, null, null),
-                new Product(3L, "Doom", "Shooting videogame", ProductType.GAME, 5000,
-                        ProductStatus.IN_STORAGE, null, null, null),
-                new Product(4L, "Fifa", "Football videogame", ProductType.GAME, 22000,
-                        ProductStatus.IN_STORAGE, null, null, null),
-                new Product(5L, "Fifa", "Football videogame", ProductType.GAME, 22000,
-                        ProductStatus.IN_STORAGE, null, null, null)
-        };
-
-        ResponseEntity<Product[]> responseEntity = testRestTemplate.getForEntity(warehouseBaseUrl + "/warehouse/1", Product[].class);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        assertTrue(GenericArrayContentEqual.isEqual(expected, responseEntity.getBody()));
+    void updateCountryWithIdDifferentThanPathVariableShouldReturnError() {
+        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeUpdatedValid);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
     @Test
     @Order(7)
-    void listWarehousesByNeededWorkersTest() {
-        ResponseEntity<Warehouse[]> responseEntity = testRestTemplate.getForEntity(warehouseBaseUrl + "/workers_needed", Warehouse[].class);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        assertEquals(4L, responseEntity.getBody()[0].getId());
-        assertEquals(3L, responseEntity.getBody()[1].getId());
-        assertEquals(2L, responseEntity.getBody()[2].getId());
-        assertEquals(1L, responseEntity.getBody()[3].getId());
+    void updateCountryIfNotAlreadyExistsShouldReturnError() {
+        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeUpdatedInvalidIdLeadsToError);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/22", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
     @Test
     @Order(8)
-    void updateWarehouseByIdTest() {
-        WarehouseDTOWithoutId modifierDto = new WarehouseDTOWithoutId("Modified Name", "9999 Cityname Street Name street 99",
-                9999, 100, 1500, 2000);
-
-        testRestTemplate.put(warehouseBaseUrl + "/id/4", modifierDto);
-
-        Warehouse after = testRestTemplate.getForEntity(warehouseBaseUrl + "/id/4", Warehouse.class).getBody();
-
-        Warehouse expectedWarehouse = new Warehouse(modifierDto);
-        expectedWarehouse.setId(4L);
-
-        assertEquals(expectedWarehouse.getId(), after.getId());
-        assertEquals(expectedWarehouse.getName(), after.getName());
-        assertEquals(expectedWarehouse.getAddress(), after.getAddress());
-        assertEquals(expectedWarehouse.getStorageSpace(), after.getStorageSpace());
-        assertEquals(expectedWarehouse.getNumOfWorkers(), after.getNumOfWorkers());
-        assertEquals(expectedWarehouse.getMaxWorkers(), after.getMaxWorkers());
-        assertEquals(expectedWarehouse.getReqWorkers(), after.getReqWorkers());
+    void addCountryIfNameIsNullOrLengthIsZeroShouldReturnError() {
+        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryNullName);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        countryHttpEntity = TestUtilities.createHttpEntity(countryEmptyName);
+        responseEntity =
+                testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     @Test
-    void deleteWarehouseByIdTest(){
-        assertTrue(databaseContainsWarehouseWithId(4L));
-
-        testRestTemplate.delete(warehouseBaseUrl + "/id/4");
-
-        assertFalse(databaseContainsWarehouseWithId(4L));
+    @Order(9)
+    void updateCountryIfNameIsNullOrLengthIsZeroShouldReturnError() {
+        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryNullName);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        countryHttpEntity = TestUtilities.createHttpEntity(countryEmptyName);
+        responseEntity =
+                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
-    private boolean databaseContainsWarehouseWithId(long id) {
-        Warehouse[] warehouses = testRestTemplate.getForEntity(warehouseBaseUrl, Warehouse[].class).getBody();
-        long num = Arrays.stream(warehouses).filter(w -> w.getId() == id).count();
-        return num > 0;
+    @Test
+    @Order(10)
+    void deleteCountryIfExistsShouldReturnOkIfItDoesNotExistThenShouldBadRequest() {
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        responseEntity =
+                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
-    private HttpEntity<WarehouseDTOWithoutId> createWarehouseDTOHttpEntity(WarehouseDTOWithoutId warehouseDTO) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        return new HttpEntity<>(warehouseDTO, httpHeaders);
-    }*/
+    @Test
+    @Order(11)
+    void checkIfShowListPageIsWorking() throws IOException {
+        HtmlPage htmlPage = webClient.getPage("http://localhost:" +
+                webServerAppCtxt.getWebServer().getPort() + baseUrl + "/show-list-page");
+        DomNodeList<DomElement> h2headers = htmlPage.getElementsByTagName("h2");
+        assertThat(h2headers).hasSize(1);
+    }
+
+    @Test
+    @Order(12)
+    void checkIfShowAddFormIsWorking() throws IOException {
+        HtmlPage htmlPage = webClient.getPage("http://localhost:" +
+                webServerAppCtxt.getWebServer().getPort() + baseUrl + "/show-add-form");
+        DomNodeList<DomElement> h2headers = htmlPage.getElementsByTagName("h2");
+        assertThat(h2headers).hasSize(1);
+    }
+
+    @Test
+    @Order(13)
+    void checkIfShowDetailsPageIsWorking() throws IOException {
+        HtmlPage htmlPage = webClient.getPage("http://localhost:" +
+                webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/show-details-page");
+        DomNodeList<DomElement> h2headers = htmlPage.getElementsByTagName("h2");
+        assertThat(h2headers).hasSize(1);
+    }
+
+    @Test
+    @Order(14)
+    void checkIfShowUpdateFormIsWorking() throws IOException {
+        HtmlPage htmlPage = webClient.getPage("http://localhost:" +
+                webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/show-update-form");
+        DomNodeList<DomElement> h2headers = htmlPage.getElementsByTagName("h2");
+        assertThat(h2headers).hasSize(1);
+    }
 }

@@ -64,8 +64,6 @@ public class JsonLoginFilter extends AbstractAuthenticationProcessingFilter {
             Map<String, String> requestMap = new ObjectMapper().readValue(request.getInputStream(), Map.class);
             username = requestMap.get("username");
             password = requestMap.get("password");
-            System.out.println(username);
-            System.out.println(password);
         } catch (IOException e) {
             throw new AuthenticationServiceException(e.getMessage(), e);
         }
