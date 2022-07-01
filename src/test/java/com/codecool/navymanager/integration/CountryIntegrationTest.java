@@ -1,9 +1,7 @@
 package com.codecool.navymanager.integration;
 
-import com.codecool.navymanager.TestMessages;
 import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.CountryDto;
-import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.response.JsonResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
@@ -11,7 +9,6 @@ import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
@@ -19,7 +16,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,7 +48,7 @@ class CountryIntegrationTest {
             CountryDto.builder().name("Uruguay").build()
     };
 
-    private final CountryDto countryToBeAdded = CountryDto.builder().name("Uruguay").build();
+    private final CountryDto countryToBeAddedFirst = CountryDto.builder().name("Uruguay").build();
     private final CountryDto countryForUpdatedNoIdLeadsToError = CountryDto.builder().name("Brazil").build();
     private final CountryDto countryToBeUpdatedInvalidIdLeadsToError = CountryDto.builder().id(22L).name("Brazil").build();
     private final CountryDto countryToBeUpdatedValid = CountryDto.builder().id(4L).name("Brazil").build();
@@ -71,7 +67,7 @@ class CountryIntegrationTest {
     @Test
     @Order(2)
     void postCountryShouldReturnOkWithAddedMessage() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeAdded);
+        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -177,6 +173,8 @@ class CountryIntegrationTest {
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/show-list-page");
         DomNodeList<DomElement> h2headers = htmlPage.getElementsByTagName("h2");
         assertThat(h2headers).hasSize(1);
+        String h2FoundTextContent = h2headers.get(0).getTextContent();
+        assertEquals(h2FoundTextContent, "List of Countries");
     }
 
     @Test
@@ -186,6 +184,8 @@ class CountryIntegrationTest {
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/show-add-form");
         DomNodeList<DomElement> h2headers = htmlPage.getElementsByTagName("h2");
         assertThat(h2headers).hasSize(1);
+        String h2FoundTextContent = h2headers.get(0).getTextContent();
+        assertEquals(h2FoundTextContent, "Add New Country");
     }
 
     @Test
@@ -195,6 +195,8 @@ class CountryIntegrationTest {
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/show-details-page");
         DomNodeList<DomElement> h2headers = htmlPage.getElementsByTagName("h2");
         assertThat(h2headers).hasSize(1);
+        String h2FoundTextContent = h2headers.get(0).getTextContent();
+        assertEquals(h2FoundTextContent, countryToBeAddedFirst.getName() + " - Details");
     }
 
     @Test
@@ -204,5 +206,7 @@ class CountryIntegrationTest {
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/show-update-form");
         DomNodeList<DomElement> h2headers = htmlPage.getElementsByTagName("h2");
         assertThat(h2headers).hasSize(1);
+        String h2FoundTextContent = h2headers.get(0).getTextContent();
+        assertEquals(h2FoundTextContent, "Update Country");
     }
 }
