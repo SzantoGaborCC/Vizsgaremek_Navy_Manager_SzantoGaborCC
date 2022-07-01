@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+@Builder
 public class RankDto implements Serializable {
     private static final long serialVersionUID = 1L;
 

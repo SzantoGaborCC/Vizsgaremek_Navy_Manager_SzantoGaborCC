@@ -51,7 +51,7 @@ class CountryIntegrationTest {
     private final CountryDto countryToBeAddedFirst = CountryDto.builder().name("Uruguay").build();
     private final CountryDto countryForUpdatedNoIdLeadsToError = CountryDto.builder().name("Brazil").build();
     private final CountryDto countryToBeUpdatedInvalidIdLeadsToError = CountryDto.builder().id(22L).name("Brazil").build();
-    private final CountryDto countryToBeUpdatedValid = CountryDto.builder().id(4L).name("Brazil").build();
+    private final CountryDto countryWithUpdateDataValid = CountryDto.builder().id(4L).name("Brazil").build();
     private final CountryDto countryNullName = CountryDto.builder().id(4L).build();
     private final CountryDto countryEmptyName = CountryDto.builder().id(4L).name("").build();
 
@@ -66,7 +66,7 @@ class CountryIntegrationTest {
 
     @Test
     @Order(2)
-    void postCountryShouldReturnOkWithAddedMessage() {
+    void postCountryShouldReturnOk() {
         HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
@@ -114,7 +114,7 @@ class CountryIntegrationTest {
     @Test
     @Order(6)
     void updateCountryWithIdDifferentThanPathVariableShouldReturnError() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeUpdatedValid);
+        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryWithUpdateDataValid);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
@@ -157,7 +157,7 @@ class CountryIntegrationTest {
 
     @Test
     @Order(10)
-    void deleteCountryIfExistsShouldReturnOkIfItDoesNotExistThenShouldBadRequest() {
+    void deleteCountryIfExistsShouldReturnOkIfItDoesNotExistThenShouldBeBadRequest() {
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

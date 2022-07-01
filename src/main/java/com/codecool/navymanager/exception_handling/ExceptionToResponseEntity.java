@@ -17,7 +17,7 @@ public class ExceptionToResponseEntity {
         JsonResponse jsonResponse = JsonResponse.builder().build();
         jsonResponse.setErrorDescription(e.getMessage());
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .status(HttpStatus.CONFLICT)
                 .body(jsonResponse);
     }
 
