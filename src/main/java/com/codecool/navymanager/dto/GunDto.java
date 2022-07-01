@@ -1,10 +1,7 @@
 package com.codecool.navymanager.dto;
 
 import com.codecool.navymanager.entity.Gun;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -15,6 +12,8 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@ToString
 public class GunDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -70,13 +69,5 @@ public class GunDto implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "GunDto{" +
-                "id=" + id +
-                ", designation='" + designation + '\'' +
-                '}';
     }
 }

@@ -62,6 +62,7 @@ public class GunService {
         }
         if (gunRepository.existsById(id)) {
             gunRepository.save(gunDto.toEntity());
+
         } else {
             throw new IllegalArgumentException(messageSource.getMessage(
                     "update_error_must_exist",
