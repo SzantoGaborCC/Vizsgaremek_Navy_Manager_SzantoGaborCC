@@ -5,5 +5,5 @@ CREATE TABLE gun (
 	projectile_weight_in_kgs INTEGER NOT NULL CHECK (projectile_weight_in_kgs > 0),
 	range_in_meters INTEGER NOT NULL CHECK (range_in_meters > 0),
 	country_id BIGINT NOT NULL,
-    UNIQUE (designation, country_id)
+    CONSTRAINT each_country_unique_gun_designation UNIQUE (designation, country_id)
 );

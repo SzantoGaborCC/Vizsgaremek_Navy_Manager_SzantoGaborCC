@@ -12,7 +12,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "fleet")
+@Table(
+        name = "fleet",
+        uniqueConstraints = { @UniqueConstraint(
+                name = "each_country_unique_fleet_designation", columnNames = { "designation", "country_id" }) })
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,7 +28,7 @@ public class Fleet {
 
     @NotNull(message = "Designation length must be between 1 and 255!")
     @Size(min = 1, max = 255, message = "Designation length must be between 1 and 255!")
-    @Column(name = "designation", unique = true)
+    @Column(name = "designation")
     private String designation;
 
     @OneToOne(fetch = FetchType.LAZY)

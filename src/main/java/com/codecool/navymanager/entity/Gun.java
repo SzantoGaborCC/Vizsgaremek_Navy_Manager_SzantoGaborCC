@@ -5,7 +5,10 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "gun")
+@Table(
+        name = "gun",
+        uniqueConstraints = { @UniqueConstraint(
+                name = "each_country_unique_gun_designation", columnNames = { "designation", "country_id" }) })
 @Getter
 @Setter
 @AllArgsConstructor

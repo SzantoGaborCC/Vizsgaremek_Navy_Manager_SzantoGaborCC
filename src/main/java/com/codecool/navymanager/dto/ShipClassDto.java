@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ShipClassDto implements Serializable {
     private static final long serialVersionUID = 1L;
 

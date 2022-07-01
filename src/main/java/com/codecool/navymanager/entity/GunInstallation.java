@@ -1,20 +1,19 @@
 package com.codecool.navymanager.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "gun_installation",
-        uniqueConstraints = { @UniqueConstraint(columnNames = { "ship_class_id", "gun_id" }) })
+        uniqueConstraints = {@UniqueConstraint(
+                name = "each_ship_class_unique_gun_id", columnNames = { "ship_class_id", "gun_id" }) })
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class GunInstallation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

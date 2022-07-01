@@ -5,7 +5,7 @@ CREATE TABLE public.ship (
 	captain_id BIGINT,
 	country_id BIGINT NOT NULL,
 	fleet_id BIGINT,
-    UNIQUE ("name", ship_class_id)
+    CONSTRAINT each_ship_class_unique_ship_name UNIQUE ("name", ship_class_id)
 );
 ALTER TABLE public.ship ADD CONSTRAINT ship_ship_class_fk FOREIGN KEY (ship_class_id) REFERENCES public.ship_class(id) ON DELETE CASCADE;
 ALTER TABLE public.ship ADD CONSTRAINT ship_captain_fk FOREIGN KEY (captain_id) REFERENCES public.officer(id);

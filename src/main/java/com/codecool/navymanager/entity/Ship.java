@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "ship", uniqueConstraints = {
-                @UniqueConstraint(name = "ShipNameCombinedWithClassMustBeUnique", columnNames = { "name", "ship_class_id" })})
+                @UniqueConstraint(name = "each_ship_class_unique_ship_name", columnNames = { "name", "ship_class_id" })})
 @Getter
 @Setter
 @AllArgsConstructor
