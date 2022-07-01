@@ -54,6 +54,9 @@ class RankIntegrationTest {
 
     private final RankDto rankToBeAddedFirst =
             RankDto.builder().precedence(4).designation("Commander").build();
+
+    private final RankDto rankToBeAddedFirstWithIdToTriggerError =
+            RankDto.builder().id(1L).precedence(4).designation("Commander").build();
     private final RankDto rankForUpdatedNoIdLeadsToError =
             RankDto.builder().precedence(5).designation("Captain").build();
     private final RankDto rankToBeUpdatedInvalidIdLeadsToError =
@@ -70,6 +73,12 @@ class RankIntegrationTest {
     private final RankDto rankToUpdateWithDuplicatePrecedenceLeadsToError =
             RankDto.builder().id(4L).precedence(4).designation("Captain").build();
 
+    private final RankDto rankForAdditionDesignationDuplicated =
+            RankDto.builder().precedence(5).designation("Ensign").build();
+
+    private final RankDto rankForUpdateDesignationDuplicated =
+            RankDto.builder().id(4L).precedence(5).designation("Ensign").build();
+
     @Test
     @Order(1)
     void getAllRanksShouldReturnOkAndEmptyArray() {
@@ -81,11 +90,20 @@ class RankIntegrationTest {
 
     @Test
     @Order(2)
-    void postRankShouldReturnOk() {
+    void postRankShouldReturnOkDuplicateShouldReturnWithError() {
         HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        responseEntity =
+                testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+
+        rankHttpEntity = TestUtilities.createHttpEntity(rankToBeAddedFirstWithIdToTriggerError);
+        responseEntity =
+                testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
     @Test
@@ -190,8 +208,27 @@ class RankIntegrationTest {
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
-   @Test
+    @Test
     @Order(12)
+    void addRankIfDesignationIsDuplicatedShouldReturnError() {
+        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankForAdditionDesignationDuplicated);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
+        System.out.println(responseEntity.getBody().getErrorDescription());
+        assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @Order(13)
+    void updateRankIfDesignationIsDuplicatedShouldReturnError() {
+        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankForUpdateDesignationDuplicated);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+    }
+
+   @Test
+    @Order(14)
     void deleteRankIfExistsShouldReturnOkIfItDoesNotExistThenShouldBeBadRequest() {
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
@@ -202,7 +239,7 @@ class RankIntegrationTest {
     }
 
     @Test
-    @Order(11)
+    @Order(15)
     void checkIfShowListPageIsWorking() throws IOException {
         HtmlPage htmlPage = webClient.getPage("http://localhost:" +
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/show-list-page");
@@ -213,7 +250,7 @@ class RankIntegrationTest {
     }
 
     @Test
-    @Order(12)
+    @Order(16)
     void checkIfShowAddFormIsWorking() throws IOException {
         HtmlPage htmlPage = webClient.getPage("http://localhost:" +
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/show-add-form");
@@ -224,7 +261,7 @@ class RankIntegrationTest {
     }
 
     @Test
-    @Order(13)
+    @Order(17)
     void checkIfShowDetailsPageIsWorking() throws IOException {
         HtmlPage htmlPage = webClient.getPage("http://localhost:" +
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/show-details-page");
@@ -235,7 +272,7 @@ class RankIntegrationTest {
     }
 
     @Test
-    @Order(14)
+    @Order(18)
     void checkIfShowUpdateFormIsWorking() throws IOException {
         HtmlPage htmlPage = webClient.getPage("http://localhost:" +
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/show-update-form");

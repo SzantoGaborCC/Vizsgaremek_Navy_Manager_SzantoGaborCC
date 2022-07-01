@@ -49,6 +49,7 @@ class CountryIntegrationTest {
     };
 
     private final CountryDto countryToBeAddedFirst = CountryDto.builder().name("Uruguay").build();
+    private final CountryDto countryToBeAddedFirstWithIdToTriggerError = CountryDto.builder().id(1L).name("Uruguay").build();
     private final CountryDto countryForUpdatedNoIdLeadsToError = CountryDto.builder().name("Brazil").build();
     private final CountryDto countryToBeUpdatedInvalidIdLeadsToError = CountryDto.builder().id(22L).name("Brazil").build();
     private final CountryDto countryWithUpdateDataValid = CountryDto.builder().id(4L).name("Brazil").build();
@@ -66,11 +67,20 @@ class CountryIntegrationTest {
 
     @Test
     @Order(2)
-    void postCountryShouldReturnOk() {
+    void postCountryShouldReturnOkDuplicateShouldReturnWithError() {
         HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        responseEntity =
+                testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+
+        countryHttpEntity = TestUtilities.createHttpEntity(countryToBeAddedFirstWithIdToTriggerError);
+        responseEntity =
+                testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
     @Test
