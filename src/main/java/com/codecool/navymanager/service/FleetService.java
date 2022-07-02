@@ -174,6 +174,11 @@ public class FleetService {
                 }
                 shipToAdd.setFleet(fleet);
                 shipRepository.save(shipToAdd);
+            } else {
+                throw new IllegalArgumentException(messageSource.getMessage(
+                        "add_error_must_not_exist",
+                        new Object[] {Fleet.class.getSimpleName(), Ship.class.getSimpleName()},
+                        locale));
             }
     }
 

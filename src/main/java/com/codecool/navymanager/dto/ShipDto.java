@@ -2,10 +2,7 @@ package com.codecool.navymanager.dto;
 
 import com.codecool.navymanager.entity.Ship;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,6 +12,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ShipDto implements Serializable {
     private static final long serialVersionUID = 1L;
 

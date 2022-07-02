@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class OfficerDto implements Serializable {
     private static final long serialVersionUID = 1L;
 

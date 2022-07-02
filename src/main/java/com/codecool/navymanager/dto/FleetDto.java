@@ -1,10 +1,7 @@
 package com.codecool.navymanager.dto;
 
 import com.codecool.navymanager.entity.Fleet;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,6 +13,7 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class FleetDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
