@@ -2,6 +2,7 @@ package com.codecool.navymanager.integration;
 
 import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.CountryDto;
+import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.response.JsonResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
@@ -57,6 +58,9 @@ class CountryIntegrationTest {
     private final CountryDto countryWithUpdateDataValid = CountryDto.builder().id(4L).name("Brazil").build();
     private final CountryDto countryNullName = CountryDto.builder().id(4L).build();
     private final CountryDto countryEmptyName = CountryDto.builder().id(4L).name("").build();
+
+    private final CountryDto countryWithUpdateData = CountryDto.builder().id(1L).name("Uruguay22").build();
+
 
     @Test
     @Order(1)
@@ -220,5 +224,15 @@ class CountryIntegrationTest {
         assertThat(h2headers).hasSize(1);
         String h2FoundTextContent = h2headers.get(0).getTextContent();
         assertEquals(h2FoundTextContent, "Update Country");
+    }
+
+    @Test
+    @Order(15)
+    void updateCountryWithValidDataShouldReturnOk() {
+        HttpEntity<CountryDto> countryHttpEntity =
+                TestUtilities.createHttpEntity(countryWithUpdateData);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }

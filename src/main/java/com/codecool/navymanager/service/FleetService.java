@@ -62,7 +62,7 @@ public class FleetService {
     public void add(FleetDto fleetDto, Locale locale) {
         if (fleetDto.getId() != null && fleetRepository.existsById(fleetDto.getId()))
             throw new IllegalArgumentException(messageSource.getMessage(
-                            "add_error_already_exist",
+                            "add_error_must_not_exist",
                             new Object[]{Fleet.class.getSimpleName(), Fleet.class.getSimpleName()},
                             locale));
 

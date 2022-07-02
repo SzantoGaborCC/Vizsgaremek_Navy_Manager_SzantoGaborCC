@@ -2,6 +2,7 @@ package com.codecool.navymanager.integration;
 
 import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.RankDto;
+import com.codecool.navymanager.dto.ShipClassDto;
 import com.codecool.navymanager.response.JsonResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
@@ -80,6 +81,9 @@ class RankIntegrationTest {
 
     private final RankDto rankForUpdateDesignationDuplicated =
             RankDto.builder().id(4L).precedence(5).designation("Ensign").build();
+
+    private final RankDto rankWithUpdateData =
+            RankDto.builder().id(1L).precedence(4).designation("Comm22").build();
 
     @Test
     @Order(1)
@@ -282,5 +286,15 @@ class RankIntegrationTest {
         assertThat(h2headers).hasSize(1);
         String h2FoundTextContent = h2headers.get(0).getTextContent();
         assertEquals(h2FoundTextContent, "Update Rank");
+    }
+
+    @Test
+    @Order(19)
+    void updateRankWithValidDataShouldReturnOk() {
+        HttpEntity<RankDto> rankHttpEntity =
+                TestUtilities.createHttpEntity(rankWithUpdateData);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }

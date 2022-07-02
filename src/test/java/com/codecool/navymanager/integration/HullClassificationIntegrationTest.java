@@ -3,6 +3,7 @@ package com.codecool.navymanager.integration;
 import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.HullClassificationDto;
+import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.response.JsonResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
@@ -85,6 +86,9 @@ class HullClassificationIntegrationTest {
             HullClassificationDto.builder().abbreviation("CVL").designation("Destroyer").build();
     private final HullClassificationDto hullClassificationForUpdateDesignationDuplicated =
             HullClassificationDto.builder().id(4L).abbreviation("BB").designation("Destroyer").build();
+
+    private final HullClassificationDto hullClassificationWithUpdateData =
+            HullClassificationDto.builder().id(1L).abbreviation("BB").designation("Battleship22").build();
 
     @Test
     @Order(1)
@@ -282,7 +286,7 @@ class HullClassificationIntegrationTest {
     }
 
     @Test
-    @Order(11)
+    @Order(17)
     void checkIfShowListPageIsWorking() throws IOException {
         HtmlPage htmlPage = webClient.getPage("http://localhost:" +
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/show-list-page");
@@ -293,7 +297,7 @@ class HullClassificationIntegrationTest {
     }
 
     @Test
-    @Order(12)
+    @Order(18)
     void checkIfShowAddFormIsWorking() throws IOException {
         HtmlPage htmlPage = webClient.getPage("http://localhost:" +
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/show-add-form");
@@ -304,7 +308,7 @@ class HullClassificationIntegrationTest {
     }
 
     @Test
-    @Order(13)
+    @Order(19)
     void checkIfShowDetailsPageIsWorking() throws IOException {
         HtmlPage htmlPage = webClient.getPage("http://localhost:" +
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/show-details-page");
@@ -315,7 +319,7 @@ class HullClassificationIntegrationTest {
     }
 
     @Test
-    @Order(14)
+    @Order(20)
     void checkIfShowUpdateFormIsWorking() throws IOException {
         HtmlPage htmlPage = webClient.getPage("http://localhost:" +
                 webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/show-update-form");
@@ -323,5 +327,15 @@ class HullClassificationIntegrationTest {
         assertThat(h2headers).hasSize(1);
         String h2FoundTextContent = h2headers.get(0).getTextContent();
         assertEquals(h2FoundTextContent, "Update Hull Classification");
+    }
+
+    @Test
+    @Order(21)
+    void updateHullClassificationWithValidDataShouldReturnOk() {
+        HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
+                TestUtilities.createHttpEntity(hullClassificationWithUpdateData);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }
