@@ -20,7 +20,7 @@ public class Gun {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "designation", nullable = false, unique = true)
+    @Column(name = "designation", nullable = false)
     private String designation;
 
     @Column(name = "caliber_in_mms", nullable = false)

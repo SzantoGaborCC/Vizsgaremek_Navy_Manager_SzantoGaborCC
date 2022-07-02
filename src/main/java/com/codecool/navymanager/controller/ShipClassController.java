@@ -193,7 +193,7 @@ public class ShipClassController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
-    @GetMapping("/{id}/ship")
+    @GetMapping("/{id}/gun")
     public ResponseEntity<List<GunInstallationDto>> findGuns(@PathVariable long id, Locale locale) {
         return ResponseEntity.ok(shipClassService.findGuns(id, locale));
     }
@@ -214,7 +214,7 @@ public class ShipClassController {
         return "ship-class-gun-form";
     }
 
-    @GetMapping("/{shipClassId}/ship/{gunId}")
+    @GetMapping("/{shipClassId}/gun/{gunId}")
     public ResponseEntity<GunInstallationDto> findGunInShipClassById(
             @PathVariable long shipClassId,
             @PathVariable  long gunId,

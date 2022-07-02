@@ -182,7 +182,7 @@ public class ShipClassService {
 
     public GunInstallationDto findGunInShipClassById(long shipClassId, long gunId, Locale locale) {
         return findGuns(shipClassId, locale).stream()
-                .filter(gunInstallationDto -> gunInstallationDto.getId() == gunId)
+                .filter(gunInstallationDto -> gunInstallationDto.getGun().getId() == gunId)
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
                         "search_error_not_found",

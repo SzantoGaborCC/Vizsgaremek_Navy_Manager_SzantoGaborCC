@@ -2,7 +2,6 @@ package com.codecool.navymanager.integration;
 
 import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.*;
-import com.codecool.navymanager.entity.HullClassification;
 import com.codecool.navymanager.response.JsonResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
@@ -25,7 +24,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,13 +66,30 @@ class ShipClassIntegrationTest {
                     .projectileWeightInKgs(750)
                     .rangeInMeters(30000)
                     .country(country1).build();
+
+    private final GunDto gun1withCountry2 = GunDto.builder()
+            .id(2L)
+            .designation("Big gun")
+            .caliberInMms(380)
+            .projectileWeightInKgs(750)
+            .rangeInMeters(30000)
+            .country(country2).build();
+
     private final GunDto gun2 = GunDto.builder()
-                    .id(2L)
-                    .designation("Medium gun")
-                    .caliberInMms(150)
-                    .projectileWeightInKgs(45)
-                    .rangeInMeters(20000)
-                    .country(country2).build();
+            .id(3L)
+            .designation("Medium gun")
+            .caliberInMms(150)
+            .projectileWeightInKgs(45)
+            .rangeInMeters(20000)
+            .country(country2).build();
+
+    private final GunDto gun2WithCountry1 = GunDto.builder()
+            .id(4L)
+            .designation("Medium gun")
+            .caliberInMms(150)
+            .projectileWeightInKgs(45)
+            .rangeInMeters(20000)
+            .country(country1).build();
 
     private final ShipClassDto[] data = {
             ShipClassDto.builder()
@@ -264,6 +279,29 @@ class ShipClassIntegrationTest {
                     .speedInKmh(22)
                     .country(country1).build();
 
+    private final GunInstallationDto gunInstallation1 = GunInstallationDto.builder()
+            .gun(gun2)
+            .quantity(12)
+            .build();
+
+    private final GunInstallationDto gunInstallation2 = GunInstallationDto.builder()
+            .gun(gun1)
+            .quantity(8)
+            .build();
+
+    private final GunInstallationDto gunInstallation1WithCountry2 = GunInstallationDto.builder()
+            .gun(gun1withCountry2)
+            .quantity(12)
+            .build();
+
+
+    private final GunInstallationDto gunInstallation1b = GunInstallationDto.builder()
+            .gun(gun1)
+            .quantity(12)
+            .build();
+
+    private final GunInstallationDto gunInstallation1ForUpdateWithCountry2NoData = GunInstallationDto.builder().build();
+
     @Test
     @Order(1)
     void postDependencies() {
@@ -296,7 +334,20 @@ class ShipClassIntegrationTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         gunHttpEntity =
+                TestUtilities.createHttpEntity(gun1withCountry2);
+        responseEntity =
+                testRestTemplate.postForEntity(gunUrl, gunHttpEntity, JsonResponse.class);
+        System.out.println(responseEntity.getBody().getErrorDescription());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        gunHttpEntity =
                 TestUtilities.createHttpEntity(gun2);
+        responseEntity =
+                testRestTemplate.postForEntity(gunUrl, gunHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        gunHttpEntity =
+                TestUtilities.createHttpEntity(gun2WithCountry1);
         responseEntity =
                 testRestTemplate.postForEntity(gunUrl, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -568,26 +619,124 @@ class ShipClassIntegrationTest {
 
     @Test
     @Order(23)
-    void addNewGunInstallationShouldReturnOk() throws IOException {
-        GunInstallationDto gunInstallation = GunInstallationDto.builder()
-                .gun(gun2)
-                .quantity(12)
-                .build();
+    void addNewGunInstallationShouldReturnOkAddingItAgainShouldReturnError() throws IOException {
         HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
-                TestUtilities.createHttpEntity(gunInstallation);
+                TestUtilities.createHttpEntity(gunInstallation1);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        gunInstallationHttpEntity =
+                TestUtilities.createHttpEntity(gunInstallation1);
+        responseEntity =
+                testRestTemplate.postForEntity(baseUrl + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
     @Test
     @Order(24)
     void checkIfShowUpdateGunFormIsWorking() throws IOException {
         HtmlPage htmlPage = webClient.getPage("http://localhost:" +
-                webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/gun/2/show-update-gun-form");
+                webServerAppCtxt.getWebServer().getPort() + baseUrl + "/1/gun/3/show-update-gun-form");
         DomNodeList<DomElement> h2headers = htmlPage.getElementsByTagName("h2");
         assertThat(h2headers).hasSize(1);
         String h2FoundTextContent = h2headers.get(0).getTextContent();
         assertEquals("Update Gun for " + shipClassToBeAddedFirst.getName() + " Class" , h2FoundTextContent);
+    }
+
+    @Test
+    @Order(25)
+    void findGunsShouldReturnThePreviouslyAddedGunInstallation() {
+        ResponseEntity<GunInstallationDto[]> responseEntity =
+                testRestTemplate.getForEntity(baseUrl + "/1/gun", GunInstallationDto[].class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertTrue(responseEntity.getBody().length == 1);
+        GunInstallationDto gunInstallationDto = responseEntity.getBody()[0];
+        assertEquals(3, gunInstallationDto.getGun().getId());
+        assertEquals(12, gunInstallationDto.getQuantity());
+    }
+
+    @Test
+    @Order(26)
+    void updateGunInstallationShouldReturnOk() throws IOException {
+        HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
+                TestUtilities.createHttpEntity(gunInstallation1WithCountry2);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1/gun/3", HttpMethod.PUT,gunInstallationHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @Order(27)
+    public void findGunInShipClassByIdShouldReturnTheUpdatedGunInstallation() {
+        ResponseEntity<GunInstallationDto> responseEntity =
+                testRestTemplate.getForEntity(baseUrl + "/1/gun/2", GunInstallationDto.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        GunInstallationDto gunInstallationDto = responseEntity.getBody();
+        assertEquals(2, gunInstallationDto.getGun().getId());
+        assertEquals(12, gunInstallationDto.getQuantity());
+    }
+
+    @Test
+    @Order(28)
+    void updateGunInstallationWithInvalidDataShouldReturnError() throws IOException {
+        HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
+                TestUtilities.createHttpEntity(gunInstallation1ForUpdateWithCountry2NoData);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1/gun/3", HttpMethod.PUT,gunInstallationHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @Order(28)
+    void updateGunInstallationWithWrongCountryShouldReturnError() throws IOException {
+        HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
+                TestUtilities.createHttpEntity(gunInstallation1b);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1/gun/2", HttpMethod.PUT,gunInstallationHttpEntity, JsonResponse.class);
+        System.out.println(responseEntity.getBody().getErrorDescription());
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @Order(29)
+    void postGunInstallationWithInvalidDataShouldReturnWithError() {
+        HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
+                TestUtilities.createHttpEntity(gunInstallation1ForUpdateWithCountry2NoData);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.postForEntity(baseUrl + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @Order(30)
+    void addNewGunInstallationWrongCountryShouldReturnError() throws IOException {
+        HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
+                TestUtilities.createHttpEntity(gunInstallation2);
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.postForEntity(baseUrl + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @Order(31)
+    public void deleteGunFromShipClassShouldReturnOkDeletingTheSameAgainShouldReturnError() {
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1/gun/2", HttpMethod.DELETE,null, JsonResponse.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1/gun/2", HttpMethod.DELETE,null, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @Order(32)
+    public void deleteShipClassShouldReturnOkDeletingTheSameAgainShouldReturnError() {
+        ResponseEntity<JsonResponse> responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.DELETE,null, JsonResponse.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        responseEntity =
+                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.DELETE,null, JsonResponse.class);
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 }
