@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.codecool</groupId>
     <artifactId>NavyManager</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.9.5</version>
     <name>NavyManager</name>
     <description>NavyManager</description>
     <properties>

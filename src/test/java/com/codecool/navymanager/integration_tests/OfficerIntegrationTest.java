@@ -1,4 +1,4 @@
-package com.codecool.navymanager.integration;
+package com.codecool.navymanager.integration_tests;
 
 import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.CountryDto;

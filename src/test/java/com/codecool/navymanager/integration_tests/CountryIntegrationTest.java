@@ -1,8 +1,7 @@
-package com.codecool.navymanager.integration;
+package com.codecool.navymanager.integration_tests;
 
 import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.CountryDto;
-import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.response.JsonResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;

@@ -1,9 +1,8 @@
-package com.codecool.navymanager.integration;
+package com.codecool.navymanager.integration_tests;
 
 import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.*;
 import com.codecool.navymanager.response.JsonResponse;
-import com.codecool.navymanager.service.OfficerService;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
@@ -22,9 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
