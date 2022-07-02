@@ -51,11 +51,6 @@ public class ShipService {
                                 locale))));
     }
 
-    public List<ShipDto> findByCountry(CountryDto countryDto) {
-        return shipRepository.findByCountry(countryDto.toEntity()).stream()
-                .map(ShipDto::new).toList();
-    }
-
     public List<ShipDto> findAvailableShipsByCountry(CountryDto countryDto) {
         return shipRepository.findAvailableShipsByCountry(countryDto.toEntity()).stream()
                 .map(ShipDto::new).toList();
