@@ -1,0 +1,25 @@
+services:
+  navy_manager_db:
+    restart: always
+    image: postgres:14.3-alpine
+    container_name: navy_manager_db
+    environment:
+      POSTGRES_DB: navy_manager_db
+      POSTGRES_USER: navy_manager_user
+      POSTGRES_PASSWORD: fleetingimage
+    ports:
+      - "5433:5432"
+
+  navy_manager_app:
+    image: navy_manager_app
+    build:
+      context: .
+    container_name: navy_manager_app
+    depends_on:
+      - navy_manager_db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://navy_manager_db:5432/navy_manager_db
+      - SPRING_DATASOURCE_USERNAME=navy_manager_user
+      - SPRING_DATASOURCE_PASSWORD=fleetingimage
+    ports:
+      - "8080:8080"
