@@ -1,14 +1,24 @@
 NAVY MANAGER - A PROJEKT
 
-„Volt tengerünk, de elvették tőlünk.”
-
-Hadiflotta menedzsment, főképpen tengernélküli országok számára
+Hadiflotta menedzsment
 
 FUTTATÁS:
 
-    Operációs rendszernek megfelelően "run_app.bat" vagy "run_app.sh" indítása.
-    Ezek a Docker Compose-t használják.
+    Legegyszerűbb mód a "docker compose up" parancs kiadása a program gyökérkönytárában, 
+    így saját PostgreSQL adatbázissal dolgozhat a applikáció.
     
+    Ha a Maven Flyway Plugin parancsokat akarod futtatni: "mvn flyway:clean" és "mvn flyway:migrate" akkor 
+    előtte futtasd a "flyway_maven_plugin_envs" .bat avagy .sh állományt, 
+    ezekben az adatbázis beállítások át is írhatóak.
+
+    Ha a Maven Spring Boot Plugint akarod használni az alkalmazás futtatására: "mvn spring-boot:run" akkor 
+    előtte futtasd a "maven_spring_boot_plugin_envs" .bat avagy .sh állományt, 
+    ezekben az adatbázis beállítások át is írhatóak.
+
+TESZTELÉS:
+
+    Add ki a "mvn test" parancsot, a teszt H2 memória adatbázist használ, és a Flyway ki van kapcsolva, 
+    így nem szükséges környezeti változók megadása.
 
 LEÍRÁS:
 
@@ -32,12 +42,7 @@ LEÍRÁS:
     (Pl.: azonos országból jöhet csak a kapitány és a hajó, stb.)
 
     Egy tiszt csak egy hajó avagy flotta parancsnoka lehet.
-    Egy hajót csak akkor lehet hozzáadni egy flottához, ha van parancsnoka. 
-
-TESZTELÉS:
-
-    "mvn test" paranccsal, a teszt H2 memória adatbázist használ
-
+    Egy hajót csak akkor lehet hozzáadni egy flottához, ha van parancsnoka.
 
 VÉGPONTOK:
 
