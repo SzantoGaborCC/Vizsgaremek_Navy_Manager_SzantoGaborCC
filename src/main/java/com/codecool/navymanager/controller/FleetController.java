@@ -203,7 +203,7 @@ public class FleetController {
         return ResponseEntity.ok(fleetService.findShips(id, locale));
     }
 
-    @GetMapping("{fleetId}/ship/{shipId}/show-update-ship-form")
+    @GetMapping("/{fleetId}/ship/{shipId}/show-update-ship-form")
     public String showUpdateShipForm(
             @PathVariable long fleetId,
             @PathVariable long shipId,

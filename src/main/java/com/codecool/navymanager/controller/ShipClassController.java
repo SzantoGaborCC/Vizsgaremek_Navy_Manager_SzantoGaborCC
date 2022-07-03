@@ -198,7 +198,7 @@ public class ShipClassController {
         return ResponseEntity.ok(shipClassService.findGuns(id, locale));
     }
 
-    @GetMapping("{shipClassId}/gun/{gunId}/show-update-gun-form")
+    @GetMapping("/{shipClassId}/gun/{gunId}/show-update-gun-form")
     public String showUpdateGunForm(
             @PathVariable long shipClassId,
             @PathVariable long gunId,

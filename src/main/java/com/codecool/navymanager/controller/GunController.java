@@ -1,6 +1,5 @@
 package com.codecool.navymanager.controller;
 
-import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.entity.Gun;
 import com.codecool.navymanager.response.JsonResponse;

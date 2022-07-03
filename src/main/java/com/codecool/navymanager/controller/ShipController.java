@@ -1,7 +1,6 @@
 package com.codecool.navymanager.controller;
 
 
-import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.ShipDto;
 import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.response.JsonResponse;
