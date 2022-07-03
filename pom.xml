@@ -58,11 +58,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.9</version>
-        </dependency>
-        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
@@ -96,6 +91,7 @@
             <artifactId>htmlunit</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -115,11 +111,11 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>8.5.10</version>
-              <!--  <configuration>
+                <!--<configuration>
                     <url>jdbc:postgresql://localhost:5432/navy_manager_db</url>
                     <user>navy_manager_user</user>
                     <password>fleetingimage</password>
-                </configuration> -->
+                </configuration>-->
                 <dependencies>
                     <dependency>
                         <groupId>org.postgresql</groupId>
@@ -141,14 +137,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
-            <!--    <configuration>
-                    <systemPropertyVariables>
-                        <DB_NAME>navy_manager_db</DB_NAME>
-                        <DB_PORT>5432</DB_PORT>
-                        <DB_USER>navy_manager_user</DB_USER>
-                        <DB_PASSWORD>fleetingimage</DB_PASSWORD>
-                    </systemPropertyVariables>
-                </configuration> -->
             </plugin>
         </plugins>
     </build>

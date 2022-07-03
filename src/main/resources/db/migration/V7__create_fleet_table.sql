@@ -6,4 +6,4 @@ CREATE TABLE public.fleet (
 	CONSTRAINT fleet_commander_fk FOREIGN KEY (commander_id) REFERENCES public.officer(id),
     CONSTRAINT each_country_unique_fleet_designation UNIQUE (designation, country_id)
 );
-ALTER TABLE public.ship ADD CONSTRAINT ship_fleet_fk FOREIGN KEY (fleet_id) REFERENCES public.fleet(id);
+ALTER TABLE public.ship ADD CONSTRAINT ship_fleet_fk FOREIGN KEY (fleet_id) REFERENCES public.fleet(id) ON DELETE SET NULL;
