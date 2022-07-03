@@ -5,7 +5,8 @@ Hadiflotta menedzsment
 FUTTATÁS:
 
     Legegyszerűbb mód a "docker compose up" parancs kiadása a program gyökérkönytárában, 
-    így saját PostgreSQL adatbázissal dolgozhat a applikáció.
+    így saját PostgreSQL adatbázissal dolgozhat a applikáció. Ekkor a főoldal elérhető a "localhost:8080" címen.
+    Spring Security felhasználónév: "Admin", jelszó: "security".
     
     Ha a Maven Flyway Plugin parancsokat akarod futtatni: "mvn flyway:clean" és "mvn flyway:migrate" akkor 
     előtte futtasd a "flyway_maven_plugin_envs" .bat avagy .sh állományt, 
