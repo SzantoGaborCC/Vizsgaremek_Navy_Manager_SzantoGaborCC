@@ -8,7 +8,6 @@ import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.entity.ShipClass;
-import com.codecool.navymanager.repository.CountryRepository;
 import com.codecool.navymanager.repository.ShipClassRepository;
 import com.codecool.navymanager.repository.ShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,12 @@ public class ShipService {
     private final ShipRepository shipRepository;
 
     private final OfficerService officerService;
-    private final CountryRepository countryRepository;
 
     private final ShipClassRepository shipClassRepository;
 
-    public ShipService(ShipRepository shipRepository, OfficerService officerService, CountryRepository countryRepository, ShipClassRepository shipClassRepository) {
+    public ShipService(ShipRepository shipRepository, OfficerService officerService, ShipClassRepository shipClassRepository) {
         this.shipRepository = shipRepository;
         this.officerService = officerService;
-        this.countryRepository = countryRepository;
         this.shipClassRepository = shipClassRepository;
     }
 

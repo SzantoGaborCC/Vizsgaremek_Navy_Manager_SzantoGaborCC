@@ -12,7 +12,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class GunInstallationDto implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -2,12 +2,11 @@ package com.codecool.navymanager.dto;
 
 
 import com.codecool.navymanager.entity.Rank;
-import com.codecool.navymanager.service.RankService;
-import lombok.*;
-import org.apache.catalina.core.ApplicationContext;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;

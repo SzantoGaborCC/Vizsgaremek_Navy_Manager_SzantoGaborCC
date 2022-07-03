@@ -2,13 +2,11 @@ package com.codecool.navymanager.service;
 
 
 import com.codecool.navymanager.dto.GunDto;
-import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.entity.Gun;
 import com.codecool.navymanager.repository.GunRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;

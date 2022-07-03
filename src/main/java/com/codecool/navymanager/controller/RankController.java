@@ -1,11 +1,9 @@
 package com.codecool.navymanager.controller;
 
-import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.entity.Rank;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.RankService;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;

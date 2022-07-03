@@ -1,11 +1,7 @@
 package com.codecool.navymanager.dto;
 
 import com.codecool.navymanager.entity.ShipClass;
-import com.codecool.navymanager.repository.ShipClassRepository;
-import com.codecool.navymanager.service.ShipClassService;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -18,7 +14,6 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Builder
 public class ShipClassDto implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -1,13 +1,11 @@
 package com.codecool.navymanager.service;
 
 import com.codecool.navymanager.dto.HullClassificationDto;
-import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.entity.HullClassification;
 import com.codecool.navymanager.repository.HullClassificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;

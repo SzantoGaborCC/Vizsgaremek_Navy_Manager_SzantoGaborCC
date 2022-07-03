@@ -1,6 +1,5 @@
 package com.codecool.navymanager.controller;
 
-import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.HullClassificationDto;
 import com.codecool.navymanager.entity.HullClassification;
 import com.codecool.navymanager.response.JsonResponse;

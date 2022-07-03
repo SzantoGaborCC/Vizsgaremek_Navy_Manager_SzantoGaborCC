@@ -1,7 +1,6 @@
 package com.codecool.navymanager.dto;
 
 import com.codecool.navymanager.entity.Ship;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;

@@ -4,14 +4,11 @@ import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.dto.ShipDto;
-import com.codecool.navymanager.entity.*;
-import com.codecool.navymanager.repository.FleetRepository;
+import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.repository.OfficerRepository;
-import com.codecool.navymanager.repository.ShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +21,9 @@ public class OfficerService {
     @Autowired
     private MessageSource messageSource;
     private final OfficerRepository officerRepository;
-    private final FleetRepository fleetRepository;
-    private final ShipRepository shipRepository;
 
-    public OfficerService(OfficerRepository officerRepository, FleetRepository fleetRepository, ShipRepository shipRepository) {
+    public OfficerService(OfficerRepository officerRepository) {
         this.officerRepository = officerRepository;
-        this.fleetRepository = fleetRepository;
-        this.shipRepository = shipRepository;
     }
 
     public List<OfficerDto> findAll() {
