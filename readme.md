@@ -32,12 +32,12 @@ LEÍRÁS:
     Spring Security védi módosítás ellen végpontokat, csak a "/login" végponton lehet kizárólag "POST"-olt 
     belépési információt küldeni a belépéshez. 
     Egyetlen felhasználó van: "Admin", jelszava: "security", csak ő tud adatokat módosítani, 
-    a webes felület figyeli is a felhasználói szerepet, csak az "ADMIN" szerep látja a módosító gombokat.
+    a webes felület figyeli is a felhasználói szerepet, csak az "ADMIN" szerep látja a módosító gombokat és az id-ket.
     A védelem szerveroldali, így a gombok "meghekkelése" nem segít, "Bad credentials!" üzenettel jutalmaz.
     "GET" minden végpontra engedélyezett, mivel így bizalmas információ nem elérhető.
-    A nem belépett felhasználó "Guest" néven van emlegetve, ők csak adatokat nézegetni, keresni tudnak.
+    A nem belépett felhasználó "Guest" néven van emlegetve, ő csak adatokat nézegetni, keresni tud.
     
-    Ha entitásnak van "Country" mezője, ami ez kötelezően beállítandó, és le is korlátoz minden egyéb 
+    Ha entitásnak van "Country" mezője, ez kötelezően beállítandó, és le is korlátoz minden egyéb 
     kapcsolatot az azonos országból származó entitásokra.
     (Pl.: azonos országból jöhet csak a kapitány és a hajó, stb.)
 
@@ -45,11 +45,35 @@ LEÍRÁS:
     Egy hajót csak akkor lehet hozzáadni egy flottához, ha van parancsnoka.
 
 VÉGPONTOK:
+    Ha a végpont NEM adatot kérdez le, akkor "JsonResponse" formájában válaszol, ennek mezői:
+        String message :            nyugtázó üzenet, hiba esetén null az értéke
+        String errorDescription :   hibaüzenet, ha nincsen hiba akkor null az értéke. 
+                                    A kivételekben van beállítva az üzenet, a "ControllerAdvice"-al
+                                    annotált osztályok küldik vissza ResponseEntity formájában.
+        Map<String, String> errorMessages;
+                                    hibaüzenet, ha nincsen hiba, akkoor null az értéke.
+                                    Itt vannak összegyűjte a validációs hibák a "BindingResult"-ból,
+                                    mezők nevei és hibaüzenetei formában.
 
-    PRODUCT:
-        POST: /product - új Product hozzáadás 
-                         Requestbody: ProductDTO
-        GET: /product - összes Product kilistázása
+    Country: mapping -> "/country"
+
+        GET:                    Listázza az összes országot
+            visszaad: List<CountryDto> 
+        GET: /{id}              Lekérdez egy már létező országot
+            visszaad: CountryDto
+        POST:                   CountryDto request body formájában hozzáadd az adatbázishoz egy országot
+            visszaad: JsonResponse
+        PUT: /{id}              CountryDto request body formájában frissít egy már létező országot
+            visszaad: JsonResponse
+        DELETE: /{id}           töröl egy már létező országot
+            visszaad: JsonResponse
+
+        GET : /show-add-form        Megmutatja az webes űrlapot ország hozzáadására    
+        GET : /show-update-form     Megmutatja az webes űrlapot ország frissítésére
+        GET : /show-details-page    Megmutatja az országot részletező weblapot
+        GET : /show-list-page       Megmutatja az összes országot listázo weblapot
+
+    GET: /product - összes Product kilistázása
         GET: /product/name/{name} - adott nevű Product-ok listáját adja vissza
         GET: /product/type/{type} - adott típusú Product-okat listázza
                                     type: ProductType enum megfelelő String változata
