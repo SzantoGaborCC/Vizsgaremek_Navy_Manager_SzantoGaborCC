@@ -5,8 +5,10 @@ import com.codecool.navymanager.entity.HullClassification;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.HullClassificationService;
 import com.codecool.navymanager.service.RankService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,8 +41,10 @@ public class HullClassificationController {
         return "hull-classification-list";
     }
 
-    @GetMapping
-    public ResponseEntity<List<HullClassificationDto>> findAll() {
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns all hull classifications")
+    public ResponseEntity<List<HullClassificationDto>> getAllHullClassifications() {
         return ResponseEntity.ok(hullClassificationService.findAll());
     }
 
@@ -51,8 +55,10 @@ public class HullClassificationController {
         return "hull-classification-details";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<HullClassificationDto> findById(@PathVariable long id, Locale locale) {
+    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns an existing hull classification by id")
+    public ResponseEntity<HullClassificationDto> getHullClassificationById(@PathVariable long id, Locale locale) {
         return ResponseEntity.ok(hullClassificationService.findById(id, locale));
     }
 
@@ -64,8 +70,10 @@ public class HullClassificationController {
         return "hull-classification-form";
     }
 
-    @PostMapping
-    public ResponseEntity<JsonResponse> add(
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Adds a hull classification to the database")
+    public ResponseEntity<JsonResponse> addHullClassification(
             @RequestBody @Valid HullClassificationDto hullClassification,
             BindingResult result,
             Model model,
@@ -90,8 +98,10 @@ public class HullClassificationController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<JsonResponse> deleteById(@PathVariable long id, Locale locale) {
+    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Deletes a hull classification by id")
+    public ResponseEntity<JsonResponse> deleteHullClassificationById(@PathVariable long id, Locale locale) {
         hullClassificationService.deleteById(id, locale);
         return ResponseEntity.ok()
                 .body(JsonResponse.builder().message(messageSource.getMessage(
@@ -109,9 +119,10 @@ public class HullClassificationController {
             return "hull-classification-form";
     }
 
-    //todo: when rank requirement increased, check for captain eligibility
-    @PutMapping("/{id}")
-    public ResponseEntity<JsonResponse> update(
+    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Updates an existing hull classification by id")
+    public ResponseEntity<JsonResponse> updateHullClassification(
             @PathVariable long id,
             @RequestBody @Valid HullClassificationDto hullClassification,
             BindingResult result,

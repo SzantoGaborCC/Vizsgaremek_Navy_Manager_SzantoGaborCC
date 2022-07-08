@@ -47,7 +47,7 @@ public class FleetService {
                                         locale))));
     }
 
-    public List<ShipDto> findShips(long fleetId, Locale locale) {
+    public List<ShipDto> findShipsInFleet(long fleetId, Locale locale) {
         return fleetRepository.findById(fleetId)
                 .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
                                     "search_error_not_found",
@@ -218,7 +218,7 @@ public class FleetService {
     }
 
     public ShipDto findShipInFleet(long fleetId, long shipId, Locale locale) {
-        return findShips(fleetId, locale).stream()
+        return findShipsInFleet(fleetId, locale).stream()
                 .filter(shipDto -> shipDto.getId() == shipId)
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(

@@ -7,8 +7,10 @@ import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.*;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,8 +54,10 @@ public class FleetController {
         return "fleet-list";
     }
 
-    @GetMapping
-    public ResponseEntity<List<FleetDto>> findAll() {
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns all fleets")
+    public ResponseEntity<List<FleetDto>> getAllFleets() {
         return ResponseEntity.ok(fleetService.findAll());
     }
 
@@ -65,8 +69,10 @@ public class FleetController {
         return "fleet-details";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FleetDto> findById(@PathVariable long id, Locale locale) {
+    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns an existing fleet by id")
+    public ResponseEntity<FleetDto> getFleetById(@PathVariable long id, Locale locale) {
         return ResponseEntity.ok(fleetService.findById(id, locale));
     }
 
@@ -80,8 +86,10 @@ public class FleetController {
         return "fleet-form";
     }
 
-    @PostMapping
-    public ResponseEntity<JsonResponse> add(
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Adds a fleet to the database")
+    public ResponseEntity<JsonResponse> addFleet(
             @RequestBody @Valid FleetDto fleet,
             BindingResult result,
             Model model,
@@ -108,8 +116,10 @@ public class FleetController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
+    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Deletes a fleet by id")
+    public ResponseEntity<JsonResponse> deleteFleetById(@PathVariable Long id, Locale locale) {
         fleetService.deleteById(id, locale);
         return ResponseEntity.ok().body(JsonResponse.builder().message(messageSource.getMessage(
                 "removed",
@@ -128,8 +138,10 @@ public class FleetController {
             return "fleet-form";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<JsonResponse> update(
+    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Updates an existing fleet by id")
+    public ResponseEntity<JsonResponse> updateFleet(
             @PathVariable long id,
             @RequestBody @Valid FleetDto fleet,
             BindingResult result,
@@ -170,8 +182,10 @@ public class FleetController {
         return "fleet-ship-form";
     }
 
-    @PostMapping("/{id}/ship")
-    public ResponseEntity<JsonResponse> addShip(
+    @RequestMapping(value = "/{id}/ship" , method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Adds a ship to a fleet")
+    public ResponseEntity<JsonResponse> addShipToFleet(
             @PathVariable Long id,
             @RequestBody @Valid IdentityDto chosenShip,
             Model model, BindingResult result,
@@ -198,9 +212,11 @@ public class FleetController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
-    @GetMapping("/{id}/ship")
-    public ResponseEntity<List<ShipDto>> findShips(@PathVariable long id, Locale locale) {
-        return ResponseEntity.ok(fleetService.findShips(id, locale));
+    @RequestMapping(value = "/{id}/ship" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns the ships of the fleet")
+    public ResponseEntity<List<ShipDto>> findShipsInFleet(@PathVariable long id, Locale locale) {
+        return ResponseEntity.ok(fleetService.findShipsInFleet(id, locale));
     }
 
     @GetMapping("/{fleetId}/ship/{shipId}/show-update-ship-form")
@@ -217,7 +233,9 @@ public class FleetController {
         return "fleet-ship-form";
     }
 
-    @GetMapping("/{fleetId}/ship/{shipId}")
+    @RequestMapping(value = "/{fleetId}/ship/{shipId}" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Finds a ship in a fleet by id")
     public ResponseEntity<ShipDto> findShipInFleetById(
             @PathVariable long fleetId,
             @PathVariable  long shipId,
@@ -225,7 +243,9 @@ public class FleetController {
         return ResponseEntity.ok(fleetService.findShipInFleet(fleetId, shipId, locale));
     }
 
-    @PutMapping("/{fleetId}/ship/{shipId}")
+    @RequestMapping(value = "/{fleetId}/ship/{shipId}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Updates a ship in a fleet")
     public ResponseEntity<JsonResponse> updateShipInFleet(
             @PathVariable long fleetId, @PathVariable long shipId,
             @RequestBody @Valid IdentityDto chosenShip,
@@ -250,7 +270,9 @@ public class FleetController {
                         locale)).build());
     }
 
-    @DeleteMapping("/{fleetId}/ship/{shipId}")
+    @RequestMapping(value = "/{fleetId}/ship/{shipId}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Deletes a ship from a fleet")
     public ResponseEntity<JsonResponse> removeShipFromFleet(@PathVariable long fleetId, @PathVariable long shipId, Locale locale) {
         fleetService.removeShipFromFleet(fleetId, shipId, locale);
         return ResponseEntity.ok()

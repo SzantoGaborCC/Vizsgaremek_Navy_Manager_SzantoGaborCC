@@ -4,8 +4,10 @@ import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.entity.Rank;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.RankService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,8 +37,10 @@ public class RankController {
         return "rank-list";
     }
 
-    @GetMapping
-    public ResponseEntity<List<RankDto>> findAll() {
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns all ranks")
+    public ResponseEntity<List<RankDto>> getAllRanks() {
         return ResponseEntity.ok(rankService.findAll());
     }
 
@@ -47,8 +51,10 @@ public class RankController {
         return "rank-details";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RankDto> findById(@PathVariable long id, Locale locale) {
+    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns an existing rank by id")
+    public ResponseEntity<RankDto> getRankById(@PathVariable long id, Locale locale) {
         return ResponseEntity.ok(rankService.findById(id, locale));
     }
 
@@ -59,8 +65,10 @@ public class RankController {
         return "rank-form";
     }
 
-    @PostMapping
-    public ResponseEntity<JsonResponse> add(
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Adds a rank to the database")
+    public ResponseEntity<JsonResponse> addRank(
             @RequestBody @Valid RankDto rank,
             BindingResult result,
             Model model,
@@ -84,7 +92,9 @@ public class RankController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
-    @DeleteMapping("/{id}")
+    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Deletes a rank by id")
     public ResponseEntity<JsonResponse> deleteById(@PathVariable long id, Locale locale) {
         rankService.deleteById(id, locale);
         return ResponseEntity.ok()
@@ -102,7 +112,9 @@ public class RankController {
         return "rank-form";
     }
 
-    @PutMapping("/{id}")
+    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Updates an existing rank by id")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
             @RequestBody @Valid RankDto rank,

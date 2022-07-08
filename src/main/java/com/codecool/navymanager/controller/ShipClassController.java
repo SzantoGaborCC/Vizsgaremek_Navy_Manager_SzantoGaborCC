@@ -1,7 +1,9 @@
 package com.codecool.navymanager.controller;
 
 
-import com.codecool.navymanager.dto.*;
+import com.codecool.navymanager.dto.GunDto;
+import com.codecool.navymanager.dto.GunInstallationDto;
+import com.codecool.navymanager.dto.ShipClassDto;
 import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Gun;
 import com.codecool.navymanager.entity.ShipClass;
@@ -10,8 +12,10 @@ import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.GunService;
 import com.codecool.navymanager.service.HullClassificationService;
 import com.codecool.navymanager.service.ShipClassService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,8 +54,10 @@ public class ShipClassController {
         return "ship-class-list";
     }
 
-    @GetMapping
-    public ResponseEntity<List<ShipClassDto>> findAll() {
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns all ship classes")
+    public ResponseEntity<List<ShipClassDto>> getAllShipClasses() {
         return ResponseEntity.ok(shipClassService.findAll());
     }
 
@@ -63,8 +69,10 @@ public class ShipClassController {
         return "ship-class-details";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ShipClassDto> findById(@PathVariable long id, Locale locale) {
+    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns an existing ship class by id")
+    public ResponseEntity<ShipClassDto> getShipClassById(@PathVariable long id, Locale locale) {
         return ResponseEntity.ok(shipClassService.findById(id, locale));
     }
 
@@ -77,8 +85,10 @@ public class ShipClassController {
         return "ship-class-form";
     }
 
-    @PostMapping
-    public ResponseEntity<JsonResponse> add(
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Adds a ship class to the database")
+    public ResponseEntity<JsonResponse> addShipClass(
             @RequestBody @Valid ShipClassDto shipClass,
             BindingResult result,
             Model model,
@@ -104,7 +114,9 @@ public class ShipClassController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
-    @DeleteMapping("/{id}")
+    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Deletes a ship class by id")
     public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
         shipClassService.deleteById(id, locale);
         return ResponseEntity.ok().body(JsonResponse.builder().message(messageSource.getMessage(
@@ -123,7 +135,9 @@ public class ShipClassController {
             return "ship-class-form";
     }
 
-    @PutMapping("/{id}")
+    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Updates an existing ship class by id")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
             @RequestBody @Valid ShipClassDto shipClass,
@@ -164,7 +178,9 @@ public class ShipClassController {
         return "ship-class-gun-form";
     }
 
-    @PostMapping("/{id}/gun")
+    @RequestMapping(value = "/{id}/gun" , method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Adds a gun to a ship class")
     public ResponseEntity<JsonResponse> addGun(
             @PathVariable Long id,
             @RequestBody @Valid GunInstallationDto gunInstallation,
@@ -193,7 +209,9 @@ public class ShipClassController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
-    @GetMapping("/{id}/gun")
+    @RequestMapping(value = "/{id}/gun" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns the guns of a ship class")
     public ResponseEntity<List<GunInstallationDto>> findGuns(@PathVariable long id, Locale locale) {
         return ResponseEntity.ok(shipClassService.findGuns(id, locale));
     }
@@ -215,6 +233,9 @@ public class ShipClassController {
     }
 
     @GetMapping("/{shipClassId}/gun/{gunId}")
+    @RequestMapping(value = "/{shipClassId}/gun/{gunId}" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Finds a gun in a ship class")
     public ResponseEntity<GunInstallationDto> findGunInShipClassById(
             @PathVariable long shipClassId,
             @PathVariable  long gunId,
@@ -222,7 +243,9 @@ public class ShipClassController {
         return ResponseEntity.ok(shipClassService.findGunInShipClassById(shipClassId, gunId, locale));
     }
 
-    @PutMapping("/{shipClassId}/gun/{gunId}")
+    @RequestMapping(value = "/{shipClassId}/gun/{gunId}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Updates a gun in a ship class")
     public ResponseEntity<JsonResponse> updateGunForShipClass(
             @PathVariable long shipClassId, @PathVariable long gunId,
             @RequestBody @Valid GunInstallationDto gunInstallation,
@@ -250,7 +273,9 @@ public class ShipClassController {
                         locale)).build());
     }
 
-    @DeleteMapping("/{shipClassId}/gun/{gunId}")
+    @RequestMapping(value = "/{shipClassId}/gun/{gunId}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Deletes a gun from a ship class")
     public ResponseEntity<JsonResponse> removeGunFromShipClass(
             @PathVariable long shipClassId,
             @PathVariable long gunId,

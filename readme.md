@@ -27,6 +27,7 @@ LEÍRÁS:
     és JSON formátumban várják-küldik az adatokat. 
     Ilyen módon grafikus és programozható módon is könnyen elérhető minden funkcionalitás.
     A webes űrlapok is JSON-t használnak, Ajax segítségével eljuttatva ezeket a szerverre.
+    A végpontok Swagger dokumentációja elérhető a localhost:8080/swagger-ui.html weboldalon.
 
     Adattárolás PostgreSQL adatbázisban történik.
     Az adatbázis egyed-kapcsolat diagramja megtalálható a projekt könytárában "NavyManagerERDiagram.png" néven.

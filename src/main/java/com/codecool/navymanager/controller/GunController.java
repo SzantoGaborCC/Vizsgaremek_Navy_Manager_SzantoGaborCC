@@ -5,8 +5,10 @@ import com.codecool.navymanager.entity.Gun;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.GunService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,8 +41,10 @@ public class GunController {
         return "gun-list";
     }
 
-    @GetMapping
-    public ResponseEntity<List<GunDto>> findAll() {
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns all guns")
+    public ResponseEntity<List<GunDto>> getAllGuns() {
         return ResponseEntity.ok(gunService.findAll());
     }
 
@@ -51,8 +55,10 @@ public class GunController {
         return "gun-details";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GunDto> findById(@PathVariable long id, Locale locale) {
+    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns an existing gun by id")
+    public ResponseEntity<GunDto> getGunById(@PathVariable long id, Locale locale) {
         return ResponseEntity.ok(gunService.findById(id, locale));
     }
 
@@ -64,8 +70,10 @@ public class GunController {
         return "gun-form";
     }
 
-    @PostMapping
-    public ResponseEntity<JsonResponse> add(
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Adds a gun to the database")
+    public ResponseEntity<JsonResponse> addGun(
             @RequestBody @Valid GunDto gun,
             BindingResult result,
             Model model,
@@ -90,8 +98,10 @@ public class GunController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
+    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Deletes a gun by id")
+    public ResponseEntity<JsonResponse> deleteGunById(@PathVariable Long id, Locale locale) {
         gunService.deleteById(id, locale);
         return ResponseEntity.ok()
                 .body(JsonResponse.builder().message(messageSource.getMessage(
@@ -109,8 +119,10 @@ public class GunController {
             return "gun-form";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<JsonResponse> update(
+    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Updates an existing gun by id")
+    public ResponseEntity<JsonResponse> updateGun(
             @PathVariable long id,
             @RequestBody @Valid GunDto gun,
             BindingResult result,

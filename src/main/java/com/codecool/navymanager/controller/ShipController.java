@@ -8,8 +8,10 @@ import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.service.OfficerService;
 import com.codecool.navymanager.service.ShipClassService;
 import com.codecool.navymanager.service.ShipService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,8 +49,10 @@ public class ShipController {
         return "ship-list";
     }
 
-    @GetMapping
-    public ResponseEntity<List<ShipDto>> findAll() {
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns all ships")
+    public ResponseEntity<List<ShipDto>> getAllShip() {
         return ResponseEntity.ok(shipService.findAll());
     }
 
@@ -59,8 +63,10 @@ public class ShipController {
         return "ship-details";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ShipDto> findById(@PathVariable long id, Locale locale) {
+    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns an existing ship by id")
+    public ResponseEntity<ShipDto> findShipById(@PathVariable long id, Locale locale) {
         return ResponseEntity.ok(shipService.findById(id, locale));
     }
 
@@ -74,8 +80,10 @@ public class ShipController {
         return "ship-form";
     }
 
-    @PostMapping
-    public ResponseEntity<JsonResponse> add(
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Adds a ship to the database")
+    public ResponseEntity<JsonResponse> addShip(
             @RequestBody @Valid ShipDto ship,
             BindingResult result,
             Model model,
@@ -103,7 +111,9 @@ public class ShipController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Deletes a ship by id")
     public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
         shipService.deleteById(id, locale);
         return ResponseEntity.ok()
@@ -124,7 +134,9 @@ public class ShipController {
             return "ship-form";
     }
 
-    @PutMapping("/{id}")
+    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Updates an existing ship by id")
     public ResponseEntity<JsonResponse> update(
             @PathVariable long id,
             @RequestBody @Valid ShipDto ship,

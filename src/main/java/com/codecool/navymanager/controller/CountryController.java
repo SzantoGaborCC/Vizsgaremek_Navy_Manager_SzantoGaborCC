@@ -5,8 +5,10 @@ import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,9 +38,11 @@ public class CountryController {
         return "country-list";
     }
 
-    @GetMapping
-    public ResponseEntity<List<CountryDto>> findAll() {
-        return ResponseEntity.ok(countryService.findAll());
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns all countries")
+    public List<CountryDto> getAllCountries() {
+        return countryService.findAll();
     }
 
     @GetMapping("/{id}/show-details-page")
@@ -48,9 +52,11 @@ public class CountryController {
         return "country-details";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CountryDto> findById(@PathVariable long id, Locale locale) {
-        return ResponseEntity.ok(countryService.findById(id, locale));
+    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns an existing country by id")
+    public CountryDto getCountryById(@PathVariable long id, Locale locale) {
+        return countryService.findById(id, locale);
     }
 
     @GetMapping("/show-add-form")
@@ -60,8 +66,10 @@ public class CountryController {
         return "country-form";
     }
 
-    @PostMapping
-    public ResponseEntity<JsonResponse> add(
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Adds a country to the database")
+    public ResponseEntity<JsonResponse> addCountry(
             @RequestBody @Valid CountryDto country,
             BindingResult result,
             Model model,
@@ -85,8 +93,10 @@ public class CountryController {
         return ResponseEntity.ok().body(jsonResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
+    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Deletes a country by id")
+    public ResponseEntity<JsonResponse> deleteCountryById(@PathVariable Long id, Locale locale) {
         countryService.deleteById(id, locale);
         return ResponseEntity.ok().body(JsonResponse.builder()
                 .message(messageSource.getMessage(
@@ -103,8 +113,10 @@ public class CountryController {
             return "country-form";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<JsonResponse> update(
+    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Updates an existing country by id")
+    public ResponseEntity<JsonResponse> updateCountry(
             @PathVariable long id,
             @RequestBody @Valid CountryDto country,
             BindingResult result,
