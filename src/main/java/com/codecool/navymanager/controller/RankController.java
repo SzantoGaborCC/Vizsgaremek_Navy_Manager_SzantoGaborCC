@@ -73,7 +73,7 @@ public class RankController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
@@ -97,11 +97,13 @@ public class RankController {
     @Operation(summary = "Deletes a rank by id")
     public ResponseEntity<JsonResponse> deleteById(@PathVariable long id, Locale locale) {
         rankService.deleteById(id, locale);
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setMessage(messageSource.getMessage(
+                "removed",
+                new Object[] {Rank.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok()
-                .body(JsonResponse.builder().message(messageSource.getMessage(
-                        "removed",
-                        new Object[] {Rank.class.getSimpleName()},
-                        locale)).build());
+                .body(jsonResponse);
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -121,7 +123,7 @@ public class RankController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()

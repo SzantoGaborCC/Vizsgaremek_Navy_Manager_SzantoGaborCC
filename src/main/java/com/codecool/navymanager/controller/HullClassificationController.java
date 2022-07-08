@@ -78,7 +78,7 @@ public class HullClassificationController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -103,11 +103,13 @@ public class HullClassificationController {
     @Operation(summary = "Deletes a hull classification by id")
     public ResponseEntity<JsonResponse> deleteHullClassificationById(@PathVariable long id, Locale locale) {
         hullClassificationService.deleteById(id, locale);
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setMessage(messageSource.getMessage(
+                "removed",
+                new Object[] {HullClassification.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok()
-                .body(JsonResponse.builder().message(messageSource.getMessage(
-                        "removed",
-                        new Object[] {HullClassification.class.getSimpleName()},
-                        locale)).build());
+                .body(jsonResponse);
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -128,7 +130,7 @@ public class HullClassificationController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());

@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 public class ExceptionToResponseEntity {
     @ExceptionHandler({SQLException.class})
     public ResponseEntity<?> handleSqlException(Exception e) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.setErrorDescription(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
@@ -23,7 +23,7 @@ public class ExceptionToResponseEntity {
 
     @ExceptionHandler({NoSuchElementException.class, IllegalArgumentException.class})
     public ResponseEntity<?> handleInvalidIds(Exception e) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.setErrorDescription(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
@@ -32,7 +32,7 @@ public class ExceptionToResponseEntity {
 
   @ExceptionHandler({HttpMessageNotReadableException.class})
   public ResponseEntity<?> handleJsonSerializationErrors(Exception e) {
-      JsonResponse jsonResponse = JsonResponse.builder().build();
+      JsonResponse jsonResponse = new JsonResponse();
       jsonResponse.setErrorDescription(e.getMessage());
       return ResponseEntity
               .status(HttpStatus.BAD_REQUEST)

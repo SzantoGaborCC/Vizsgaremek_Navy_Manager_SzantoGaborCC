@@ -1,8 +1,8 @@
 package com.codecool.navymanager.integration_tests;
 
-import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.response.JsonResponse;
+import com.codecool.navymanager.utilities.Utils;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
@@ -96,7 +96,7 @@ class RankIntegrationTest {
     @Test
     @Order(2)
     void postRankShouldReturnOkDuplicateShouldReturnWithError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankToBeAddedFirst);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -105,7 +105,7 @@ class RankIntegrationTest {
                 testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
 
-        rankHttpEntity = TestUtilities.createHttpEntity(rankToBeAddedFirstWithIdToTriggerError);
+        rankHttpEntity = Utils.createHttpEntity(rankToBeAddedFirstWithIdToTriggerError);
         responseEntity =
                 testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
@@ -129,7 +129,7 @@ class RankIntegrationTest {
         for (RankDto rankDto : data) {
             if (rankDto.getDesignation().equals("Commander"))
                 continue;
-            rankHttpEntity = TestUtilities.createHttpEntity(rankDto);
+            rankHttpEntity = Utils.createHttpEntity(rankDto);
             testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
         }
         ResponseEntity<RankDto[]> responseEntity =
@@ -144,7 +144,7 @@ class RankIntegrationTest {
     @Test
     @Order(5)
     void updateRankWithNullIdShouldReturnIdError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankForUpdatedNoIdLeadsToError);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankForUpdatedNoIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
@@ -153,7 +153,7 @@ class RankIntegrationTest {
     @Test
     @Order(6)
     void updateRankWithIdDifferentThanPathVariableShouldReturnError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankWithUpdateDataValid);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankWithUpdateDataValid);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
@@ -162,7 +162,7 @@ class RankIntegrationTest {
     @Test
     @Order(7)
     void updateRankIfNotAlreadyExistsShouldReturnError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankToBeUpdatedInvalidIdLeadsToError);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankToBeUpdatedInvalidIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/22", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
@@ -171,11 +171,11 @@ class RankIntegrationTest {
     @Test
     @Order(8)
     void addRankIfDesignationIsNullOrLengthIsZeroShouldReturnError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankNullDesignation);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankNullDesignation);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        rankHttpEntity = TestUtilities.createHttpEntity(rankEmptyDesignation);
+        rankHttpEntity = Utils.createHttpEntity(rankEmptyDesignation);
         responseEntity =
                 testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -184,11 +184,11 @@ class RankIntegrationTest {
     @Test
     @Order(9)
     void updateRankIfDesignationIsNullOrLengthIsZeroShouldReturnError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankNullDesignation);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankNullDesignation);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        rankHttpEntity = TestUtilities.createHttpEntity(rankEmptyDesignation);
+        rankHttpEntity = Utils.createHttpEntity(rankEmptyDesignation);
         responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -197,7 +197,7 @@ class RankIntegrationTest {
     @Test
     @Order(10)
     void addRankIfPrecedenceIsDuplicatedShouldReturnError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankToAddWithDuplicatePrecedenceLeadsToError);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankToAddWithDuplicatePrecedenceLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
         System.out.println(responseEntity.getBody().getErrorDescription());
@@ -207,7 +207,7 @@ class RankIntegrationTest {
     @Test
     @Order(11)
     void updateRankIfPrecedenceIsDuplicatedShouldReturnError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankToUpdateWithDuplicatePrecedenceLeadsToError);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankToUpdateWithDuplicatePrecedenceLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
@@ -216,7 +216,7 @@ class RankIntegrationTest {
     @Test
     @Order(12)
     void addRankIfDesignationIsDuplicatedShouldReturnError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankForAdditionDesignationDuplicated);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankForAdditionDesignationDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, rankHttpEntity, JsonResponse.class);
         System.out.println(responseEntity.getBody().getErrorDescription());
@@ -226,7 +226,7 @@ class RankIntegrationTest {
     @Test
     @Order(13)
     void updateRankIfDesignationIsDuplicatedShouldReturnError() {
-        HttpEntity<RankDto> rankHttpEntity = TestUtilities.createHttpEntity(rankForUpdateDesignationDuplicated);
+        HttpEntity<RankDto> rankHttpEntity = Utils.createHttpEntity(rankForUpdateDesignationDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
@@ -291,7 +291,7 @@ class RankIntegrationTest {
     @Order(19)
     void updateRankWithValidDataShouldReturnOk() {
         HttpEntity<RankDto> rankHttpEntity =
-                TestUtilities.createHttpEntity(rankWithUpdateData);
+                Utils.createHttpEntity(rankWithUpdateData);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

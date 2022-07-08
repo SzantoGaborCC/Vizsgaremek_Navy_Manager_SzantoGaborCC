@@ -94,7 +94,7 @@ public class FleetController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -121,10 +121,12 @@ public class FleetController {
     @Operation(summary = "Deletes a fleet by id")
     public ResponseEntity<JsonResponse> deleteFleetById(@PathVariable Long id, Locale locale) {
         fleetService.deleteById(id, locale);
-        return ResponseEntity.ok().body(JsonResponse.builder().message(messageSource.getMessage(
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setMessage(messageSource.getMessage(
                 "removed",
                 new Object[] {Fleet.class.getSimpleName()},
-                locale)).build());
+                locale));
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -147,7 +149,7 @@ public class FleetController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -190,7 +192,7 @@ public class FleetController {
             @RequestBody @Valid IdentityDto chosenShip,
             Model model, BindingResult result,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             FleetDto fleet = fleetService.findById(id, locale);
             model.addAttribute("add", true);
@@ -251,23 +253,27 @@ public class FleetController {
             @RequestBody @Valid IdentityDto chosenShip,
             Model model, BindingResult result,
             Locale locale) {
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             FleetDto fleet = fleetService.findById(fleetId, locale);
             model.addAttribute("add", false);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
+
+            jsonResponse.setMessage(messageSource.getMessage(
+                    "invalid_data",
+                    new Object[] {Ship.class.getSimpleName()},
+                    locale));
             return ResponseEntity.badRequest()
-                    .body(JsonResponse.builder().errorDescription(messageSource.getMessage(
-                            "invalid_data",
-                            new Object[] {Ship.class.getSimpleName()},
-                            locale)).build());
+                    .body(jsonResponse);
         }
         fleetService.updateShipInFleet(fleetId, shipId, chosenShip.getId(), locale);
+        jsonResponse.setMessage(messageSource.getMessage(
+                "updated",
+                new Object[] {Ship.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok()
-                .body(JsonResponse.builder().message(messageSource.getMessage(
-                        "updated",
-                        new Object[] {Ship.class.getSimpleName()},
-                        locale)).build());
+                .body(jsonResponse);
     }
 
     @RequestMapping(value = "/{fleetId}/ship/{shipId}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -275,11 +281,13 @@ public class FleetController {
     @Operation(summary = "Deletes a ship from a fleet")
     public ResponseEntity<JsonResponse> removeShipFromFleet(@PathVariable long fleetId, @PathVariable long shipId, Locale locale) {
         fleetService.removeShipFromFleet(fleetId, shipId, locale);
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setMessage(messageSource.getMessage(
+                "removed",
+                new Object[] {Ship.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok()
-                .body(JsonResponse.builder().message(messageSource.getMessage(
-                        "removed",
-                        new Object[] {Ship.class.getSimpleName()},
-                        locale)).build());
+                .body(jsonResponse);
     }
 }
 

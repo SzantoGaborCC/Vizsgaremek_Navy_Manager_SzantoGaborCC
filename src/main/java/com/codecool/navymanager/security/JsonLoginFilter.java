@@ -26,28 +26,32 @@ import java.util.Map;
 public class JsonLoginFilter extends AbstractAuthenticationProcessingFilter {
     private PasswordEncoder passwordEncoder;
     private MessageSource messageSource;
+
     protected JsonLoginFilter() {
         super(new AntPathRequestMatcher("/login", "POST"));
         setAuthenticationSuccessHandler((request, response, authentication) -> {
             response.setStatus(HttpServletResponse.SC_OK);
-            JsonResponse jsonResponse = JsonResponse.builder().message(
+
+            JsonResponse jsonResponse = new JsonResponse();
+            jsonResponse.setMessage(
                     messageSource.getMessage(
                             "logged_in",
                             null,
                             request.getLocale())
-            ).build();
+            );
             response.getWriter().write(
                     new ObjectMapper().writeValueAsString(jsonResponse)
             );
         });
         setAuthenticationFailureHandler((request, response, exception) -> {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            JsonResponse jsonResponse = JsonResponse.builder().errorDescription(
+            JsonResponse jsonResponse = new JsonResponse();
+            jsonResponse.setErrorDescription(
                     messageSource.getMessage(
                             "unauthorized",
                             null,
                             request.getLocale())
-            ).build();
+            );
             response.getWriter().write(
                     new ObjectMapper().writeValueAsString(jsonResponse)
             );

@@ -1,19 +1,20 @@
 package com.codecool.navymanager.response;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Map;
 
 @Getter
 @Setter
-@Builder
+//@Builder
 public class JsonResponse {
     private String message;
     private String errorDescription;
     private Map<String, String> errorMessages;
+
+    public JsonResponse() {
+    }
 
     @Override
     public String toString() {

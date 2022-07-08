@@ -23,12 +23,13 @@ public class SecurityExceptionHandler implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        JsonResponse jsonResponse = JsonResponse.builder().errorDescription(
+        JsonResponse jsonResponse = new JsonResponse();
+                jsonResponse.setErrorDescription(
                 messageSource.getMessage(
                         "unauthorized",
                         null,
                         request.getLocale())
-        ).build();
+        );
         response.getWriter().write(
                 new ObjectMapper().writeValueAsString(jsonResponse)
         );
@@ -38,12 +39,13 @@ public class SecurityExceptionHandler implements AuthenticationEntryPoint {
     public void commence2(HttpServletRequest request, HttpServletResponse response,
                          AccessDeniedException accessDeniedException) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        JsonResponse jsonResponse = JsonResponse.builder().errorDescription(
+        JsonResponse jsonResponse = new JsonResponse();
+                jsonResponse.setErrorDescription(
                 messageSource.getMessage(
                         "forbidden",
                         null,
                         request.getLocale())
-        ).build();
+        );
         response.getWriter().write(
                 new ObjectMapper().writeValueAsString(jsonResponse)
         );

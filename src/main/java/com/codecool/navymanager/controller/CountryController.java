@@ -2,47 +2,41 @@ package com.codecool.navymanager.controller;
 
 
 import com.codecool.navymanager.dto.CountryDto;
-import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
+import com.codecool.navymanager.utilities.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
 
-import javax.validation.Valid;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/country")
 public class CountryController {
+    private static final String COUNTRY_API_MAPPING = "/country/api";
+
     @Autowired
     MessageSource messageSource;
     private final CountryService countryService;
+    private final RestTemplate restTemplate;
 
-    public CountryController(CountryService countryService) {
+    public CountryController(CountryService countryService, RestTemplate restTemplate) {
         this.countryService = countryService;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/show-list-page")
     public String showListPage(Model model) {
         model.addAttribute("countries", countryService.findAll());
         return "country-list";
-    }
-
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Returns all countries")
-    public List<CountryDto> getAllCountries() {
-        return countryService.findAll();
     }
 
     @GetMapping("/{id}/show-details-page")
@@ -52,13 +46,6 @@ public class CountryController {
         return "country-details";
     }
 
-    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Returns an existing country by id")
-    public CountryDto getCountryById(@PathVariable long id, Locale locale) {
-        return countryService.findById(id, locale);
-    }
-
     @GetMapping("/show-add-form")
     public String showAddForm(Model model){
         model.addAttribute("add", true);
@@ -66,43 +53,22 @@ public class CountryController {
         return "country-form";
     }
 
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Adds a country to the database")
-    public ResponseEntity<JsonResponse> addCountry(
-            @RequestBody @Valid CountryDto country,
-            BindingResult result,
-            Model model,
-            Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
-        if (result.hasErrors()) {
+    @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addCountry(
+            HttpServletRequest request,
+            @RequestBody CountryDto country,
+            Model model) {
+        HttpEntity<CountryDto> countryHttpEntity =
+                Utils.createHttpEntityWithSessionJSessionId(country, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + COUNTRY_API_MAPPING, HttpMethod.POST, countryHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
             model.addAttribute("add", true);
-            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
-                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setErrorDescription(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Country.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest().body(jsonResponse);
+            model.addAttribute("country", new CountryDto());
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        countryService.add(country, locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "added",
-                new Object[] {Country.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
-    }
-
-    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Deletes a country by id")
-    public ResponseEntity<JsonResponse> deleteCountryById(@PathVariable Long id, Locale locale) {
-        countryService.deleteById(id, locale);
-        return ResponseEntity.ok().body(JsonResponse.builder()
-                .message(messageSource.getMessage(
-                        "removed",
-                        new Object[] {Country.class.getSimpleName()},
-                        locale)).build());
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -113,32 +79,26 @@ public class CountryController {
             return "country-form";
     }
 
-    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}/update-with-form" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @Operation(summary = "Updates an existing country by id")
     public ResponseEntity<JsonResponse> updateCountry(
+            HttpServletRequest request,
             @PathVariable long id,
-            @RequestBody @Valid CountryDto country,
-            BindingResult result,
+            @RequestBody CountryDto country,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
-        if (result.hasErrors()) {
+        HttpEntity<CountryDto> countryHttpEntity =
+                Utils.createHttpEntityWithSessionJSessionId(country, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + COUNTRY_API_MAPPING + "/" + id, HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
             model.addAttribute("add", false);
-            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
-                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setErrorDescription(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Country.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest().body(jsonResponse);
+            model.addAttribute("country", new CountryDto());
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        countryService.update(country, id, locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "updated",
-                new Object[] {Country.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 }
 

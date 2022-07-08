@@ -1,16 +1,14 @@
-package com.codecool.navymanager.controller;
+package com.codecool.navymanager.controller.rest;
 
-import com.codecool.navymanager.dto.GunDto;
-import com.codecool.navymanager.entity.Gun;
+import com.codecool.navymanager.dto.CountryDto;
+import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
-import com.codecool.navymanager.service.GunService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -21,133 +19,96 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-@Controller
-@RequestMapping("/gun")
-public class GunController {
+@RestController
+@RequestMapping("/country/api")
+public class CountryRestController {
     @Autowired
     MessageSource messageSource;
 
-    private final GunService gunService;
     private final CountryService countryService;
 
-    public GunController(GunService gunService, CountryService countryService) {
-        this.gunService = gunService;
+    public CountryRestController(CountryService countryService) {
         this.countryService = countryService;
-    }
-
-    @GetMapping("/show-list-page")
-    public String showListPage(Model model) {
-        model.addAttribute("guns", gunService.findAll());
-        return "gun-list";
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @Operation(summary = "Returns all guns")
-    public ResponseEntity<List<GunDto>> getAllGuns() {
-        return ResponseEntity.ok(gunService.findAll());
-    }
-
-    @GetMapping("/{id}/show-details-page")
-    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
-        GunDto gun = gunService.findById(id, locale);
-        model.addAttribute("gun", gun);
-        return "gun-details";
+    @Operation(summary = "Returns all countries")
+    public List<CountryDto> getAllCountries() {
+        return countryService.findAll();
     }
 
     @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @Operation(summary = "Returns an existing gun by id")
-    public ResponseEntity<GunDto> getGunById(@PathVariable long id, Locale locale) {
-        return ResponseEntity.ok(gunService.findById(id, locale));
-    }
-
-    @GetMapping("/show-add-form")
-    public String showAddForm(Model model){
-        model.addAttribute("add", true);
-        model.addAttribute("gun", new GunDto());
-        model.addAttribute("validCountryValues", countryService.findAll());
-        return "gun-form";
+    @Operation(summary = "Returns an existing country by id")
+    public CountryDto getCountryById(@PathVariable long id, Locale locale) {
+        return countryService.findById(id, locale);
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @Operation(summary = "Adds a gun to the database")
-    public ResponseEntity<JsonResponse> addGun(
-            @RequestBody @Valid GunDto gun,
+    @Operation(summary = "Adds a country to the database")
+    public ResponseEntity<JsonResponse> addCountry(
+            @RequestBody @Valid CountryDto country,
             BindingResult result,
-            Model model,
             Locale locale) {
         JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
-            model.addAttribute("add", true);
-            model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
             jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
-                    new Object[] {Gun.class.getSimpleName()},
+                    new Object[] {Country.class.getSimpleName()},
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        gunService.add(gun, locale);
+        countryService.add(country, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "added",
-                new Object[] {Gun.class.getSimpleName()},
+                new Object[] {Country.class.getSimpleName()},
                 locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
 
     @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @Operation(summary = "Deletes a gun by id")
-    public ResponseEntity<JsonResponse> deleteGunById(@PathVariable Long id, Locale locale) {
-        gunService.deleteById(id, locale);
+    @Operation(summary = "Deletes a country by id")
+    public ResponseEntity<JsonResponse> deleteCountryById(@PathVariable Long id, Locale locale) {
+        countryService.deleteById(id, locale);
         JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.setMessage(messageSource.getMessage(
                 "removed",
-                new Object[] {Gun.class.getSimpleName()},
+                new Object[] {Country.class.getSimpleName()},
                 locale));
-        return ResponseEntity.ok()
-                .body(jsonResponse);
-    }
-
-    @GetMapping("/{id}/show-update-form")
-    public String showUpdateForm(@PathVariable long id, Model model, Locale locale) {
-            GunDto gun = gunService.findById(id, locale);
-            model.addAttribute("add", false);
-            model.addAttribute("gun", gun);
-            model.addAttribute("validCountryValues", countryService.findAll());
-            return "gun-form";
+        return ResponseEntity.ok().body(jsonResponse);
     }
 
     @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @Operation(summary = "Updates an existing gun by id")
-    public ResponseEntity<JsonResponse> updateGun(
+    @Operation(summary = "Updates an existing country by id")
+    public ResponseEntity<JsonResponse> updateCountry(
             @PathVariable long id,
-            @RequestBody @Valid GunDto gun,
+            @RequestBody @Valid CountryDto country,
             BindingResult result,
             Model model,
             Locale locale) {
         JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
-            model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
             jsonResponse.setErrorDescription(messageSource.getMessage(
                     "invalid_data",
-                    new Object[] {Gun.class.getSimpleName()},
+                    new Object[] {Country.class.getSimpleName()},
                     locale));
             return ResponseEntity.badRequest().body(jsonResponse);
         }
-        gunService.update(gun, id, locale);
+        countryService.update(country, id, locale);
         jsonResponse.setMessage(messageSource.getMessage(
                 "updated",
-                new Object[] {Gun.class.getSimpleName()},
+                new Object[] {Country.class.getSimpleName()},
                 locale));
         return ResponseEntity.ok().body(jsonResponse);
     }
-}
 
+}

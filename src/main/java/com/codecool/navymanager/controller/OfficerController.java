@@ -83,7 +83,7 @@ public class OfficerController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
@@ -109,11 +109,13 @@ public class OfficerController {
     @Operation(summary = "Deletes an officer by id")
     public ResponseEntity<JsonResponse> deleteOfficerById(@PathVariable Long id, Locale locale) {
         officerService.deleteById(id, locale);
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setMessage(messageSource.getMessage(
+                "removed",
+                new Object[] {Officer.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok()
-                .body(JsonResponse.builder().message(messageSource.getMessage(
-                        "removed",
-                        new Object[] {Officer.class.getSimpleName()},
-                        locale)).build());
+                .body(jsonResponse);
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -135,7 +137,7 @@ public class OfficerController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());

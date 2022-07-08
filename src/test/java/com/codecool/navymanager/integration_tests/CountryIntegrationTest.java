@@ -1,13 +1,16 @@
 package com.codecool.navymanager.integration_tests;
 
-import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.response.JsonResponse;
+import com.codecool.navymanager.utilities.Utils;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -23,7 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -42,6 +46,7 @@ class CountryIntegrationTest {
         webClient.getOptions().setJavaScriptEnabled(false);
     }
     private final String baseUrl = "/country";
+    private final String baseUrlAPI = "/country/api";
 
     private final CountryDto[] data = {
             CountryDto.builder().name("Mexico").build(),
@@ -65,7 +70,7 @@ class CountryIntegrationTest {
     @Order(1)
     void getAllCountriesShouldReturnOkAndEmptyArray() {
         ResponseEntity<CountryDto[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl, CountryDto[].class);
+                testRestTemplate.getForEntity(baseUrlAPI, CountryDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertTrue(responseEntity.getBody().length == 0);
     }
@@ -73,18 +78,18 @@ class CountryIntegrationTest {
     @Test
     @Order(2)
     void postCountryShouldReturnOkDuplicateShouldReturnWithError() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeAddedFirst);
+        HttpEntity<CountryDto> countryHttpEntity = Utils.createHttpEntity(countryToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
 
-        countryHttpEntity = TestUtilities.createHttpEntity(countryToBeAddedFirstWithIdToTriggerError);
+        countryHttpEntity = Utils.createHttpEntity(countryToBeAddedFirstWithIdToTriggerError);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -92,7 +97,7 @@ class CountryIntegrationTest {
     @Order(3)
     void getTheAddedCountryShouldHaveIdOfOneAndNameUruguay() {
         ResponseEntity<CountryDto> responseEntity =
-                testRestTemplate.getForEntity(baseUrl + "/1", CountryDto.class);
+                testRestTemplate.getForEntity(baseUrlAPI + "/1", CountryDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(1, responseEntity.getBody().getId());
         assertEquals("Uruguay", responseEntity.getBody().getName());
@@ -105,11 +110,11 @@ class CountryIntegrationTest {
         for (CountryDto countryDto : data) {
             if (countryDto.getName().equals("Uruguay"))
                 continue;
-            countryHttpEntity = TestUtilities.createHttpEntity(countryDto);
-            testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+            countryHttpEntity = Utils.createHttpEntity(countryDto);
+            testRestTemplate.postForEntity(baseUrlAPI, countryHttpEntity, JsonResponse.class);
         }
         ResponseEntity<CountryDto[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl, CountryDto[].class);
+                testRestTemplate.getForEntity(baseUrlAPI, CountryDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         List<String> dataAsListJustNames = Arrays.stream(data).map(CountryDto::getName).toList();
         List<String> returnedListJustNames =
@@ -120,53 +125,53 @@ class CountryIntegrationTest {
     @Test
     @Order(5)
     void updateCountryWithNullIdShouldReturnIdError() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryForUpdatedNoIdLeadsToError);
+        HttpEntity<CountryDto> countryHttpEntity = Utils.createHttpEntity(countryForUpdatedNoIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/4", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
     @Test
     @Order(6)
     void updateCountryWithIdDifferentThanPathVariableShouldReturnError() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryWithUpdateDataValid);
+        HttpEntity<CountryDto> countryHttpEntity = Utils.createHttpEntity(countryWithUpdateDataValid);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
     @Test
     @Order(7)
     void updateCountryIfNotAlreadyExistsShouldReturnError() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryToBeUpdatedInvalidIdLeadsToError);
+        HttpEntity<CountryDto> countryHttpEntity = Utils.createHttpEntity(countryToBeUpdatedInvalidIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/22", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/22", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
     @Test
     @Order(8)
     void addCountryIfNameIsNullOrLengthIsZeroShouldReturnError() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryNullName);
+        HttpEntity<CountryDto> countryHttpEntity = Utils.createHttpEntity(countryNullName);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        countryHttpEntity = TestUtilities.createHttpEntity(countryEmptyName);
+        countryHttpEntity = Utils.createHttpEntity(countryEmptyName);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     @Test
     @Order(9)
     void updateCountryIfNameIsNullOrLengthIsZeroShouldReturnError() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(countryNullName);
+        HttpEntity<CountryDto> countryHttpEntity = Utils.createHttpEntity(countryNullName);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/4", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        countryHttpEntity = TestUtilities.createHttpEntity(countryEmptyName);
+        countryHttpEntity = Utils.createHttpEntity(countryEmptyName);
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/4", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -174,10 +179,10 @@ class CountryIntegrationTest {
     @Order(10)
     void deleteCountryIfExistsShouldReturnOkIfItDoesNotExistThenShouldBeBadRequest() {
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/4", HttpMethod.DELETE, null, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/4", HttpMethod.DELETE, null, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -229,9 +234,9 @@ class CountryIntegrationTest {
     @Order(15)
     void updateCountryWithValidDataShouldReturnOk() {
         HttpEntity<CountryDto> countryHttpEntity =
-                TestUtilities.createHttpEntity(countryWithUpdateData);
+                Utils.createHttpEntity(countryWithUpdateData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1", HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }

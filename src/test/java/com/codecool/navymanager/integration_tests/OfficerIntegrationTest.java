@@ -1,10 +1,10 @@
 package com.codecool.navymanager.integration_tests;
 
-import com.codecool.navymanager.TestUtilities;
 import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.response.JsonResponse;
+import com.codecool.navymanager.utilities.Utils;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
@@ -166,23 +166,23 @@ class OfficerIntegrationTest {
     @Test
     @Order(1)
     void postDependencies() {
-        HttpEntity<CountryDto> countryHttpEntity = TestUtilities.createHttpEntity(country1);
+        HttpEntity<CountryDto> countryHttpEntity = Utils.createHttpEntity(country1);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(countryUrl, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        countryHttpEntity = TestUtilities.createHttpEntity(country2);
+        countryHttpEntity = Utils.createHttpEntity(country2);
         responseEntity =
                 testRestTemplate.postForEntity(countryUrl, countryHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         HttpEntity<RankDto> rankHttpEntity =
-                TestUtilities.createHttpEntity(rank1);
+                Utils.createHttpEntity(rank1);
         responseEntity =
                 testRestTemplate.postForEntity(rankUrl, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         rankHttpEntity =
-                TestUtilities.createHttpEntity(rank2);
+                Utils.createHttpEntity(rank2);
         responseEntity =
                 testRestTemplate.postForEntity(rankUrl, rankHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -201,12 +201,12 @@ class OfficerIntegrationTest {
     @Order(3)
     void postOfficerShouldReturnOkDuplicateShouldReturnWithError() {
         HttpEntity<OfficerDto> officerHttpEntity =
-                TestUtilities.createHttpEntity(officerToBeAddedFirst);
+                Utils.createHttpEntity(officerToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        officerHttpEntity = TestUtilities.createHttpEntity(officerToBeAddedFirstWithIdToTriggerError);
+        officerHttpEntity = Utils.createHttpEntity(officerToBeAddedFirstWithIdToTriggerError);
         responseEntity =
                 testRestTemplate.postForEntity(baseUrl, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
@@ -232,7 +232,7 @@ class OfficerIntegrationTest {
         for (OfficerDto officerDto : data) {
             if (officerDto.getName().equals("Tfsdfsdff"))
                 continue;
-            officerHttpEntity = TestUtilities.createHttpEntity(officerDto);
+            officerHttpEntity = Utils.createHttpEntity(officerDto);
             testRestTemplate.postForEntity(baseUrl, officerHttpEntity, JsonResponse.class);
         }
         ResponseEntity<OfficerDto[]> responseEntity =
@@ -248,7 +248,7 @@ class OfficerIntegrationTest {
     @Order(6)
     void updateOfficerWithNullIdShouldReturnIdError() {
         HttpEntity<OfficerDto> officerHttpEntity =
-                TestUtilities.createHttpEntity(officerForUpdatedNoIdLeadsToError);
+                Utils.createHttpEntity(officerForUpdatedNoIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
@@ -258,7 +258,7 @@ class OfficerIntegrationTest {
     @Order(7)
     void updateOfficerWithIdDifferentThanPathVariableShouldReturnError() {
         HttpEntity<OfficerDto> officerHttpEntity =
-                TestUtilities.createHttpEntity(officerWithUpdateDataValid);
+                Utils.createHttpEntity(officerWithUpdateDataValid);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
@@ -268,7 +268,7 @@ class OfficerIntegrationTest {
     @Order(8)
     void updateOfficerIfNotAlreadyExistsShouldReturnError() {
         HttpEntity<OfficerDto> officerHttpEntity =
-                TestUtilities.createHttpEntity(officerToBeUpdatedInvalidIdLeadsToError);
+                Utils.createHttpEntity(officerToBeUpdatedInvalidIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/22", HttpMethod.PUT, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
@@ -278,11 +278,11 @@ class OfficerIntegrationTest {
     @Order(9)
     void addOfficerIfDesignationIsNullOrLengthIsZeroShouldReturnError() {
         HttpEntity<OfficerDto> officerHttpEntity =
-                TestUtilities.createHttpEntity(officerNullName);
+                Utils.createHttpEntity(officerNullName);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        officerHttpEntity = TestUtilities.createHttpEntity(officerEmptyDesignation);
+        officerHttpEntity = Utils.createHttpEntity(officerEmptyDesignation);
         responseEntity =
                 testRestTemplate.postForEntity(baseUrl, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -292,11 +292,11 @@ class OfficerIntegrationTest {
     @Order(10)
     void updateOfficerIfDesignationIsNullOrLengthIsZeroShouldReturnError() {
         HttpEntity<OfficerDto> officerHttpEntity =
-                TestUtilities.createHttpEntity(officerNullName);
+                Utils.createHttpEntity(officerNullName);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        officerHttpEntity = TestUtilities.createHttpEntity(officerEmptyDesignation);
+        officerHttpEntity = Utils.createHttpEntity(officerEmptyDesignation);
         responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -317,7 +317,7 @@ class OfficerIntegrationTest {
     @Order(14)
     void addOfficerIfNumericalDataIsMissingShouldReturnError() {
         HttpEntity<OfficerDto> officerHttpEntity =
-                TestUtilities.createHttpEntity(officerForAdditionMissingData);
+                Utils.createHttpEntity(officerForAdditionMissingData);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.postForEntity(baseUrl, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -327,7 +327,7 @@ class OfficerIntegrationTest {
     @Order(15)
     void updateOfficerIfNumericalDataIsMissingShouldReturnError() {
         HttpEntity<OfficerDto> officerHttpEntity =
-                TestUtilities.createHttpEntity(officerForUpdateMissingData);
+                Utils.createHttpEntity(officerForUpdateMissingData);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -381,7 +381,7 @@ class OfficerIntegrationTest {
     @Order(22)
     void updateHullClassificationWithValidDataShouldReturnOk() {
         HttpEntity<OfficerDto> officerHttpEntity =
-                TestUtilities.createHttpEntity(officerWithUpdateData);
+                Utils.createHttpEntity(officerWithUpdateData);
         ResponseEntity<JsonResponse> responseEntity =
                 testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, officerHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

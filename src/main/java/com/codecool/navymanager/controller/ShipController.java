@@ -88,7 +88,7 @@ public class ShipController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", true);
             model.addAttribute("validCaptainValues", officerService.findAvailableOfficers());
@@ -116,11 +116,13 @@ public class ShipController {
     @Operation(summary = "Deletes a ship by id")
     public ResponseEntity<JsonResponse> deleteById(@PathVariable Long id, Locale locale) {
         shipService.deleteById(id, locale);
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setMessage(messageSource.getMessage(
+                "removed",
+                new Object[] {Ship.class.getSimpleName()},
+                locale));
         return ResponseEntity.ok()
-                .body(JsonResponse.builder().message(messageSource.getMessage(
-                        "removed",
-                        new Object[] {Ship.class.getSimpleName()},
-                        locale)).build());
+                .body(jsonResponse);
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -143,7 +145,7 @@ public class ShipController {
             BindingResult result,
             Model model,
             Locale locale) {
-        JsonResponse jsonResponse = JsonResponse.builder().build();
+        JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
             model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
