@@ -52,8 +52,15 @@ public class ShipController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @Operation(summary = "Returns all ships")
-    public ResponseEntity<List<ShipDto>> getAllShip() {
+    public ResponseEntity<List<ShipDto>> getAllShips() {
         return ResponseEntity.ok(shipService.findAll());
+    }
+
+    @RequestMapping(value="/available/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @Operation(summary = "Returns all available ships by country")
+    public ResponseEntity<List<ShipDto>> getAllAvailableShipsByCountry(@PathVariable long id) {
+        return ResponseEntity.ok(shipService.findAvailableShipsByCountryId(id));
     }
 
     @GetMapping("/{id}/show-details-page")

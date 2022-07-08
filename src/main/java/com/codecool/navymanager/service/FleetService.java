@@ -165,7 +165,7 @@ public class FleetService {
                             new Object[] {Fleet.class.getSimpleName(), Ship.class.getSimpleName()},
                             locale)));
             if (!fleet.getShips().contains(shipToAdd)) {
-                List<Ship> availableShips = shipRepository.findAvailableShipsByCountry(fleet.getCountry());
+                List<Ship> availableShips = shipRepository.findAvailableShipsByCountryId(fleet.getCountry().getId());
                 if (!availableShips.contains(shipToAdd)) {
                     throw new IllegalArgumentException(messageSource.getMessage(
                                     "add_error_unavailable",

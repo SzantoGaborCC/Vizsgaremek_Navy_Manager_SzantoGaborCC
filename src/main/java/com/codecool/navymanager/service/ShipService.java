@@ -1,7 +1,6 @@
 package com.codecool.navymanager.service;
 
 
-import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.dto.ShipDto;
 import com.codecool.navymanager.entity.Country;
@@ -48,8 +47,9 @@ public class ShipService {
                                 locale))));
     }
 
-    public List<ShipDto> findAvailableShipsByCountry(CountryDto countryDto) {
-        return shipRepository.findAvailableShipsByCountry(countryDto.toEntity()).stream()
+    public List<ShipDto> findAvailableShipsByCountryId(long id) {
+
+        return shipRepository.findAvailableShipsByCountryId(id).stream()
                 .map(ShipDto::new).toList();
     }
 
