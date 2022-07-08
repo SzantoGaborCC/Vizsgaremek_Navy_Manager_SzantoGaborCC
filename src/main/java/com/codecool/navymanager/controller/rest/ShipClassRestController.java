@@ -1,5 +1,6 @@
 package com.codecool.navymanager.controller.rest;
 
+import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.dto.GunInstallationDto;
 import com.codecool.navymanager.dto.ShipClassDto;
 import com.codecool.navymanager.entity.Fleet;
@@ -51,6 +52,12 @@ public class ShipClassRestController {
     @Operation(summary = "Returns all ship classes")
     public ResponseEntity<List<ShipClassDto>> getAllShipClasses() {
         return ResponseEntity.ok(shipClassService.findAll());
+    }
+
+    @RequestMapping(value = "/{id}/valid-guns" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Returns valid guns for ship class")
+    public ResponseEntity<List<GunDto>> findValidGuns(@PathVariable long id, Locale locale) {
+        return ResponseEntity.ok(shipClassService.findValidGuns(id, locale));
     }
 
     @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

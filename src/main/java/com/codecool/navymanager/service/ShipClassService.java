@@ -163,15 +163,15 @@ public class ShipClassService {
         shipClassRepository.save(shipClass);
     }
 
-    public List<GunDto> findValidGuns(ShipClassDto shipClassDto, Locale locale) {
-        var gunIdsOfShipClass = shipClassRepository.findById(shipClassDto.getId())
+    public List<GunDto> findValidGuns(long id, Locale locale) {
+        ShipClass shipClass = shipClassRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
                         "no_such",
                         new Object[]{ShipClass.class.getSimpleName()},
-                        locale)))
-                .getGuns().stream()
+                        locale)));
+        List<Long> gunIdsOfShipClass = shipClass.getGuns().stream()
                 .map(gunAndQuantity -> gunAndQuantity.getGun().getId()).toList();
-        return gunService.findByCountry(shipClassDto.getCountry().getId()).stream()
+        return gunService.findByCountry(shipClass.getCountry().getId()).stream()
                 .filter(gunDto -> !gunIdsOfShipClass.contains(gunDto.getId()))
                 .toList();
     }

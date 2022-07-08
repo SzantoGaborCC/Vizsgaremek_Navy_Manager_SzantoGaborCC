@@ -1,17 +1,11 @@
 package com.codecool.navymanager.controller;
 
 
-import com.codecool.navymanager.dto.GunDto;
-import com.codecool.navymanager.dto.GunInstallationDto;
-import com.codecool.navymanager.dto.ShipClassDto;
+import com.codecool.navymanager.dto.*;
 import com.codecool.navymanager.response.JsonResponse;
-import com.codecool.navymanager.service.CountryService;
-import com.codecool.navymanager.service.GunService;
-import com.codecool.navymanager.service.HullClassificationService;
-import com.codecool.navymanager.service.ShipClassService;
 import com.codecool.navymanager.utilities.Utils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +15,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Locale;
+import java.util.List;
 
 @Controller
 @RequestMapping("/ship-class")
@@ -29,51 +23,54 @@ public class ShipClassController {
 
     @Value( "${ship-class.api.mapping}" )
     private String apiMapping;
-    private final MessageSource messageSource;
 
-    private final ShipClassService shipClassService;
+    @Value( "${hull-classification.api.mapping}" )
+    private String hullClassificationApiMapping;
 
-    private final GunService gunService;
+    @Value( "${gun.api.mapping}" )
+    private String gunApiMapping;
 
-    private final HullClassificationService hullClassificationService;
-    private final CountryService countryService;
+    @Value( "${country.api.mapping}" )
+    private String countryApiMapping;
+
     private final RestTemplate restTemplate;
 
-    public ShipClassController(
-            MessageSource messageSource,
-            ShipClassService shipClassService,
-            GunService gunService,
-            HullClassificationService hullClassificationService,
-            CountryService countryService,
-            RestTemplate restTemplate) {
-        this.messageSource = messageSource;
-        this.shipClassService = shipClassService;
-        this.gunService = gunService;
-        this.hullClassificationService = hullClassificationService;
-        this.countryService = countryService;
+    public ShipClassController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @GetMapping("/show-list-page")
-    public String showListPage(Model model) {
-        model.addAttribute("shipClasses", shipClassService.findAll());
+    public String showListPage(Model model, HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        List<ShipClassDto> shipClasses = restTemplate.exchange(baseUrl + apiMapping, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<ShipClassDto>>() {}).getBody();
+        model.addAttribute("shipClasses", shipClasses);
         return "ship-class-list";
     }
 
     @GetMapping("/{id}/show-details-page")
-    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
-        ShipClassDto shipClass = shipClassService.findById(id, locale);
+    public String showDetailsPage(@PathVariable Long id, Model model, HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ShipClassDto shipClass = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, ShipClassDto.class).getBody();
+        List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/valid-guns",
+                HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
         model.addAttribute("shipClass", shipClass);
-        model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
+        model.addAttribute("validGunValues", validGunValues);
         return "ship-class-details";
     }
 
     @GetMapping("/show-add-form")
-    public String showAddForm(Model model) {
+    public String showAddForm(Model model, HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        List<CountryDto> validCountryValues = restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
+        List<HullClassificationDto> validHullClassificationValues =
+                restTemplate.exchange(baseUrl + hullClassificationApiMapping, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<HullClassificationDto>>() {}).getBody();
         model.addAttribute("add", true);
         model.addAttribute("shipClass", new ShipClassDto());
-        model.addAttribute("validCountryValues", countryService.findAll());
-        model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
+        model.addAttribute("validCountryValues", validCountryValues);
+        model.addAttribute("validHullClassificationValues", validHullClassificationValues);
         return "ship-class-form";
     }
 
@@ -88,21 +85,32 @@ public class ShipClassController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping, HttpMethod.POST, shipClassHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            List<CountryDto> validCountryValues = restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
+            List<HullClassificationDto> validHullClassificationValues =
+                    restTemplate.exchange(baseUrl + hullClassificationApiMapping, HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<HullClassificationDto>>() {}).getBody();
             model.addAttribute("add", true);
-            model.addAttribute("validCountryValues", countryService.findAll());
-            model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
+            model.addAttribute("validCountryValues", validCountryValues);
+            model.addAttribute("validHullClassificationValues", validHullClassificationValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
     }
 
     @GetMapping("/{id}/show-update-form")
-    public String showUpdateForm(@PathVariable Long id, Model model, Locale locale) {
-            ShipClassDto shipClass = shipClassService.findById(id, locale);
+    public String showUpdateForm(@PathVariable Long id, Model model, HttpServletRequest request) {
+            String baseUrl = Utils.getBaseUrlFromRequest(request);
+            ShipClassDto shipClass = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, ShipClassDto.class).getBody();
+            List<CountryDto> validCountryValues = restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
+            List<HullClassificationDto> validHullClassificationValues =
+                    restTemplate.exchange(baseUrl + hullClassificationApiMapping, HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<HullClassificationDto>>() {}).getBody();
             model.addAttribute("add", false);
             model.addAttribute("shipClass", shipClass);
-            model.addAttribute("validCountryValues", countryService.findAll());
-            model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
+            model.addAttribute("validCountryValues", validCountryValues);
+            model.addAttribute("validHullClassificationValues", validHullClassificationValues);
             return "ship-class-form";
     }
 
@@ -118,9 +126,14 @@ public class ShipClassController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping + "/" + id, HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            List<CountryDto> validCountryValues = restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
+            List<HullClassificationDto> validHullClassificationValues =
+                    restTemplate.exchange(baseUrl + hullClassificationApiMapping, HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<HullClassificationDto>>() {}).getBody();
             model.addAttribute("add", true);
-            model.addAttribute("validCountryValues", countryService.findAll());
-            model.addAttribute("validHullClassificationValues", hullClassificationService.findAll());
+            model.addAttribute("validCountryValues", validCountryValues);
+            model.addAttribute("validHullClassificationValues", validHullClassificationValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -130,12 +143,15 @@ public class ShipClassController {
     public String showAddGunForm(
             @PathVariable Long id,
             Model model,
-            Locale locale) {
-        ShipClassDto shipClass = shipClassService.findById(id, locale);
+            HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ShipClassDto shipClass = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, ShipClassDto.class).getBody();
+        List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/valid-guns",
+                HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
         model.addAttribute("add", true);
         model.addAttribute("shipClass", shipClass);
         model.addAttribute("gunInstallation", new GunInstallationDto());
-        model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
+        model.addAttribute("validGunValues", validGunValues);
         return "ship-class-gun-form";
     }
 
@@ -144,8 +160,7 @@ public class ShipClassController {
             HttpServletRequest request,
             @PathVariable Long id,
             @RequestBody GunInstallationDto gunInstallation,
-            Model model,
-            Locale locale) {
+            Model model) {
         HttpEntity<GunInstallationDto> gunHttpEntity =
                 Utils.createHttpEntityWithJSessionId(
                         gunInstallation,
@@ -154,10 +169,12 @@ public class ShipClassController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/gun", HttpMethod.POST, gunHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            ShipClassDto shipClass = shipClassService.findById(id, locale);
+            ShipClassDto shipClass = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, ShipClassDto.class).getBody();
+            List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/valid-guns",
+                    HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
             model.addAttribute("add", true);
             model.addAttribute("shipClass", shipClass);
-            model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
+            model.addAttribute("validGunValues", validGunValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -168,24 +185,28 @@ public class ShipClassController {
             @PathVariable long shipClassId,
             @PathVariable long gunId,
             Model model,
-            Locale locale) {
-        ShipClassDto shipClass = shipClassService.findById(shipClassId, locale);
+            HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ShipClassDto shipClass =
+                restTemplate.getForEntity(baseUrl + apiMapping + "/" + shipClassId, ShipClassDto.class).getBody();
         GunInstallationDto gunInstallationDto =
-                shipClassService.findGunInstallationByShipClassIdAndGunId(shipClassId, gunId);
+                restTemplate.getForEntity(baseUrl + apiMapping + "/" + shipClassId + "/gun/" + gunId,
+                        GunInstallationDto.class).getBody();
+        List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + shipClassId + "/valid-guns",
+                HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
         model.addAttribute("add", false);
         model.addAttribute("shipClass", shipClass);
         model.addAttribute("gunInstallation", gunInstallationDto);
-        model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
+        model.addAttribute("validGunValues", validGunValues);
         return "ship-class-gun-form";
     }
 
-    @RequestMapping(value = "/{id}/gun" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}/gun/{gunId}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResponse> updateGun(
             HttpServletRequest request,
-            @PathVariable long shipClassId, @PathVariable long gunId,
+            @PathVariable long id, @PathVariable long gunId,
             @RequestBody @Valid GunInstallationDto gunInstallation,
-            Model model,
-            Locale locale) {
+            Model model) {
         HttpEntity<GunInstallationDto> gunHttpEntity =
                 Utils.createHttpEntityWithJSessionId(
                         gunInstallation,
@@ -193,15 +214,19 @@ public class ShipClassController {
         String baseUrl = Utils.getBaseUrlFromRequest(request);
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(
-                        baseUrl + apiMapping + "/" + shipClassId + "/gun/" + gunId,
+                        baseUrl + apiMapping + "/" + id + "/gun/" + gunId,
                         HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            ShipClassDto shipClass = shipClassService.findById(shipClassId, locale);
-            GunDto gun = gunService.findById(gunId, locale);
+            ShipClassDto shipClass =
+                    restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, ShipClassDto.class).getBody();
+            GunDto gun =
+                    restTemplate.getForEntity(baseUrl + gunApiMapping + "/" + gunId, GunDto.class).getBody();
+            List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/valid-guns",
+                    HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
             model.addAttribute("add", false);
             model.addAttribute("shipClass", shipClass);
             model.addAttribute("gun", gun);
-            model.addAttribute("validGunValues", shipClassService.findValidGuns(shipClass, locale));
+            model.addAttribute("validGunValues", validGunValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
