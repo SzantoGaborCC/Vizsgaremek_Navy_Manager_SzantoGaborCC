@@ -38,7 +38,7 @@
                     <td><a th:href="@{/country/{id}/show-details-page(id=${shipClass.country.id})}"
                            th:text="${shipClass.country.name}"></a></td>
                     <td sec:authorize="hasRole('ADMIN')" class="text-center">
-                        <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete ship class?\',\'/ship-class/'+${shipClass.id}+'\',\'DELETE\');event.stopPropagation();'"
+                        <button th:onclick="'showDialog(\'#dialog-delete\',\'Delete ship class?\',\'/ship-class/api/'+${shipClass.id}+'\',\'DELETE\');event.stopPropagation();'"
                                 class="btn btn-link"><i class="fa fa-trash"></i></button>
                         <a th:href="@{/ship-class/{id}/show-update-form(id=${shipClass.id})}" class="btn btn-link"><i
                                 class="fa-solid fa-pen-to-square"></i></a></td>

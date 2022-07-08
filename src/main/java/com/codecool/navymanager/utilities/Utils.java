@@ -14,7 +14,7 @@ public class Utils {
         return new HttpEntity<>(data, httpHeaders);
     }
 
-    public static <T> HttpEntity<T> createHttpEntityWithSessionJSessionId(T data, String sessionId) {
+    public static <T> HttpEntity<T> createHttpEntityWithJSessionId(T data, String sessionId) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.add("Cookie", "JSESSIONID=" + sessionId);

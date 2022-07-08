@@ -12,7 +12,7 @@
                 gun.</h4>
             <form th:unless="${#lists.isEmpty(validGunValues)}" id="gunInstallationForm" action="#" th:object="${gunInstallation}" novalidate>
                 <input name="url" type="hidden"
-                       th:value="${add} == true ? '/ship-class/'+${shipClass.id}+'/gun' : '/ship-class/'+${shipClass.id}+'/gun/'+${gunInstallation.gun.id}">
+                       th:value="${add} == true ? '/ship-class/api/'+${shipClass.id}+'/gun' : '/ship-class/api/'+${shipClass.id}+'/gun/'+${gunInstallation.gun.id}">
                 <input name="add" type="hidden" th:value="${add}">
                 <input name="redirectTo" type="hidden" th:value="'/ship-class/'+${shipClass.id} + '/show-details-page'">
                 <div class="form-group">

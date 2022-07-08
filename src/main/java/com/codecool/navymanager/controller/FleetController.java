@@ -2,50 +2,50 @@ package com.codecool.navymanager.controller;
 
 import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.dto.IdentityDto;
-import com.codecool.navymanager.dto.ShipDto;
-import com.codecool.navymanager.entity.Fleet;
-import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.*;
-import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.codecool.navymanager.utilities.Utils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
 
-import javax.validation.Valid;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 
 @Controller
 @RequestMapping("/fleet")
 public class FleetController {
-    @Autowired
-    MessageSource messageSource;
+    @Value( "${fleet.api.mapping}" )
+    private String apiMapping;
+    private final MessageSource messageSource;
     private final FleetService fleetService;
     private final OfficerService officerService;
     private final RankService rankService;
     private final CountryService countryService;
-
     private final ShipService shipService;
+    private final RestTemplate restTemplate;
 
-    public FleetController(FleetService fleetService,
-                           OfficerService officerService,
-                           RankService rankService,
-                           CountryService countryService,
-                           ShipService shipService) {
+    public FleetController(
+            MessageSource messageSource,
+            FleetService fleetService,
+            OfficerService officerService,
+            RankService rankService,
+            CountryService countryService,
+            ShipService shipService,
+            RestTemplate restTemplate) {
+        this.messageSource = messageSource;
         this.fleetService = fleetService;
         this.officerService = officerService;
         this.rankService = rankService;
         this.countryService = countryService;
         this.shipService = shipService;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/show-list-page")
@@ -54,26 +54,12 @@ public class FleetController {
         return "fleet-list";
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Returns all fleets")
-    public ResponseEntity<List<FleetDto>> getAllFleets() {
-        return ResponseEntity.ok(fleetService.findAll());
-    }
-
     @GetMapping("/{id}/show-details-page")
     public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
         FleetDto fleet = fleetService.findById(id, locale);
         model.addAttribute("fleet", fleet);
         model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
         return "fleet-details";
-    }
-
-    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Returns an existing fleet by id")
-    public ResponseEntity<FleetDto> getFleetById(@PathVariable long id, Locale locale) {
-        return ResponseEntity.ok(fleetService.findById(id, locale));
     }
 
     @GetMapping("/show-add-form")
@@ -86,47 +72,24 @@ public class FleetController {
         return "fleet-form";
     }
 
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Adds a fleet to the database")
-    public ResponseEntity<JsonResponse> addFleet(
-            @RequestBody @Valid FleetDto fleet,
-            BindingResult result,
-            Model model,
-            Locale locale) {
-        JsonResponse jsonResponse = new JsonResponse();
-        if (result.hasErrors()) {
+    @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addFleetWithForm(
+            HttpServletRequest request,
+            @RequestBody FleetDto fleet,
+            Model model) {
+        HttpEntity<FleetDto> countryHttpEntity =
+                Utils.createHttpEntityWithJSessionId(fleet, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + apiMapping, HttpMethod.POST, countryHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
             model.addAttribute("add", true);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCommanderValues", officerService.findAvailableOfficers());
             model.addAttribute("validCountryValues", countryService.findAll());
-            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
-                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setErrorDescription(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Fleet.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest().body(jsonResponse);
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        fleetService.add(fleet, locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "added",
-                new Object[] {Fleet.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
-    }
-
-    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Deletes a fleet by id")
-    public ResponseEntity<JsonResponse> deleteFleetById(@PathVariable Long id, Locale locale) {
-        fleetService.deleteById(id, locale);
-        JsonResponse jsonResponse = new JsonResponse();
-        jsonResponse.setMessage(messageSource.getMessage(
-                "removed",
-                new Object[] {Fleet.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 
     @GetMapping("/{id}/show-update-form")
@@ -140,35 +103,25 @@ public class FleetController {
             return "fleet-form";
     }
 
-    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Updates an existing fleet by id")
-    public ResponseEntity<JsonResponse> updateFleet(
+    @RequestMapping(value = "/{id}/update-with-form" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JsonResponse> updateFleetWithForm(
+            HttpServletRequest request,
             @PathVariable long id,
-            @RequestBody @Valid FleetDto fleet,
-            BindingResult result,
-            Model model,
-            Locale locale) {
-        JsonResponse jsonResponse = new JsonResponse();
-        if (result.hasErrors()) {
+            @RequestBody FleetDto fleet,
+            Model model) {
+        HttpEntity<FleetDto> fleetHttpEntity =
+                Utils.createHttpEntityWithJSessionId(fleet, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + apiMapping + "/" + id, HttpMethod.PUT, fleetHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
             model.addAttribute("add", false);
             model.addAttribute("validRankValues", rankService.findAll());
             model.addAttribute("validCommanderValues", officerService.findAvailableOfficersForFleet(fleet));
             model.addAttribute("validCountryValues", countryService.findAll());
-            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
-                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setErrorDescription(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Fleet.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest().body(jsonResponse);
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        fleetService.update(fleet, id, locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "updated",
-                new Object[] {Fleet.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 
     @GetMapping("/{id}/ship/show-add-ship-form")
@@ -184,41 +137,26 @@ public class FleetController {
         return "fleet-ship-form";
     }
 
-    @RequestMapping(value = "/{id}/ship" , method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Adds a ship to a fleet")
-    public ResponseEntity<JsonResponse> addShipToFleet(
+    @RequestMapping(value = "/{id}/ship/add-with-form" , method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JsonResponse> addShipToFleetWithForm(
+            HttpServletRequest request,
             @PathVariable Long id,
-            @RequestBody @Valid IdentityDto chosenShip,
-            Model model, BindingResult result,
+            @RequestBody IdentityDto chosenShip,
+            Model model,
             Locale locale) {
-        JsonResponse jsonResponse = new JsonResponse();
-        if (result.hasErrors()) {
+        HttpEntity<IdentityDto> chosenShipHttpEntity =
+                Utils.createHttpEntityWithJSessionId(chosenShip, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/ship", HttpMethod.POST, chosenShipHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
             FleetDto fleet = fleetService.findById(id, locale);
             model.addAttribute("add", true);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
-            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
-                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setErrorDescription(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Ship.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest().body(jsonResponse);
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        fleetService.addShipToFleet(id, chosenShip.getId(), locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "param0_added_to_param1",
-                new Object[] {Ship.class.getSimpleName(), Fleet.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
-    }
-
-    @RequestMapping(value = "/{id}/ship" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Returns the ships of the fleet")
-    public ResponseEntity<List<ShipDto>> findShipsInFleet(@PathVariable long id, Locale locale) {
-        return ResponseEntity.ok(fleetService.findShipsInFleet(id, locale));
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 
     @GetMapping("/{fleetId}/ship/{shipId}/show-update-ship-form")
@@ -235,59 +173,26 @@ public class FleetController {
         return "fleet-ship-form";
     }
 
-    @RequestMapping(value = "/{fleetId}/ship/{shipId}" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Finds a ship in a fleet by id")
-    public ResponseEntity<ShipDto> findShipInFleetById(
-            @PathVariable long fleetId,
-            @PathVariable  long shipId,
+    @RequestMapping(value = "/{id}/ship/update-with-form" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JsonResponse> updateShipInFleetWithForm(
+            HttpServletRequest request,
+            @PathVariable Long id,
+            @RequestBody IdentityDto chosenShip,
+            Model model,
             Locale locale) {
-        return ResponseEntity.ok(fleetService.findShipInFleet(fleetId, shipId, locale));
-    }
-
-    @RequestMapping(value = "/{fleetId}/ship/{shipId}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Updates a ship in a fleet")
-    public ResponseEntity<JsonResponse> updateShipInFleet(
-            @PathVariable long fleetId, @PathVariable long shipId,
-            @RequestBody @Valid IdentityDto chosenShip,
-            Model model, BindingResult result,
-            Locale locale) {
-        JsonResponse jsonResponse = new JsonResponse();
-        if (result.hasErrors()) {
-            FleetDto fleet = fleetService.findById(fleetId, locale);
-            model.addAttribute("add", false);
+        HttpEntity<IdentityDto> chosenShipHttpEntity =
+                Utils.createHttpEntityWithJSessionId(chosenShip, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/ship/" + chosenShip.getId(), HttpMethod.PUT, chosenShipHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            FleetDto fleet = fleetService.findById(id, locale);
+            model.addAttribute("add", true);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validShipValues", shipService.findAvailableShipsByCountry(fleet.getCountry()));
-
-            jsonResponse.setMessage(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Ship.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest()
-                    .body(jsonResponse);
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        fleetService.updateShipInFleet(fleetId, shipId, chosenShip.getId(), locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "updated",
-                new Object[] {Ship.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok()
-                .body(jsonResponse);
-    }
-
-    @RequestMapping(value = "/{fleetId}/ship/{shipId}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Deletes a ship from a fleet")
-    public ResponseEntity<JsonResponse> removeShipFromFleet(@PathVariable long fleetId, @PathVariable long shipId, Locale locale) {
-        fleetService.removeShipFromFleet(fleetId, shipId, locale);
-        JsonResponse jsonResponse = new JsonResponse();
-        jsonResponse.setMessage(messageSource.getMessage(
-                "removed",
-                new Object[] {Ship.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok()
-                .body(jsonResponse);
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 }
 

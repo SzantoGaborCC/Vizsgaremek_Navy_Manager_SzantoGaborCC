@@ -5,8 +5,8 @@ import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.service.CountryService;
 import com.codecool.navymanager.utilities.Utils;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,8 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/country")
 public class CountryController {
-    private static final String COUNTRY_API_MAPPING = "/country/api";
+    @Value( "${country.api.mapping}" )
+    private String apiMapping;
 
     @Autowired
     MessageSource messageSource;
@@ -54,18 +55,17 @@ public class CountryController {
     }
 
     @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addCountry(
+    public ResponseEntity<?> addCountryWithForm(
             HttpServletRequest request,
             @RequestBody CountryDto country,
             Model model) {
         HttpEntity<CountryDto> countryHttpEntity =
-                Utils.createHttpEntityWithSessionJSessionId(country, RequestContextHolder.currentRequestAttributes().getSessionId());
+                Utils.createHttpEntityWithJSessionId(country, RequestContextHolder.currentRequestAttributes().getSessionId());
         String baseUrl = Utils.getBaseUrlFromRequest(request);
         ResponseEntity<JsonResponse> responseEntity =
-                restTemplate.exchange(baseUrl + COUNTRY_API_MAPPING, HttpMethod.POST, countryHttpEntity, JsonResponse.class);
+                restTemplate.exchange(baseUrl + apiMapping, HttpMethod.POST, countryHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
             model.addAttribute("add", true);
-            model.addAttribute("country", new CountryDto());
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -80,22 +80,18 @@ public class CountryController {
     }
 
     @RequestMapping(value = "/{id}/update-with-form" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Updates an existing country by id")
-    public ResponseEntity<JsonResponse> updateCountry(
+    public ResponseEntity<JsonResponse> updateCountryWithForm(
             HttpServletRequest request,
             @PathVariable long id,
             @RequestBody CountryDto country,
-            Model model,
-            Locale locale) {
+            Model model) {
         HttpEntity<CountryDto> countryHttpEntity =
-                Utils.createHttpEntityWithSessionJSessionId(country, RequestContextHolder.currentRequestAttributes().getSessionId());
+                Utils.createHttpEntityWithJSessionId(country, RequestContextHolder.currentRequestAttributes().getSessionId());
         String baseUrl = Utils.getBaseUrlFromRequest(request);
         ResponseEntity<JsonResponse> responseEntity =
-                restTemplate.exchange(baseUrl + COUNTRY_API_MAPPING + "/" + id, HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
+                restTemplate.exchange(baseUrl + apiMapping + "/" + id, HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
             model.addAttribute("add", false);
-            model.addAttribute("country", new CountryDto());
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());

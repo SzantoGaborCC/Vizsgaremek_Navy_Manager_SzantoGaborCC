@@ -45,9 +45,12 @@ class ShipClassIntegrationTest {
         webClient.getOptions().setCssEnabled(false);
         webClient.getOptions().setJavaScriptEnabled(false);
     }
+
     private final String baseUrl = "/ship-class";
+    private final String baseUrlAPI = "/ship-class/api";
+
     private final String gunUrl = "/gun";
-    private final String countryUrl = "/country";
+    private final String countryUrl = "/country/api";
 
     private final String hullClassificationUrl = "/hull-classification";
 
@@ -357,7 +360,7 @@ class ShipClassIntegrationTest {
     @Order(2)
     void getAllShipClassesShouldReturnOkAndEmptyArray() {
         ResponseEntity<ShipClassDto[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl, ShipClassDto[].class);
+                testRestTemplate.getForEntity(baseUrlAPI, ShipClassDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertTrue(responseEntity.getBody().length == 0);
     }
@@ -368,16 +371,16 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
 
         shipClassHttpEntity = Utils.createHttpEntity(shipClassToBeAddedFirstWithIdToTriggerError);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -385,7 +388,7 @@ class ShipClassIntegrationTest {
     @Order(4)
     void getTheAddedShipClassShouldHaveExpectedData() {
         ResponseEntity<ShipClassDto> responseEntity =
-                testRestTemplate.getForEntity(baseUrl + "/1", ShipClassDto.class);
+                testRestTemplate.getForEntity(baseUrlAPI + "/1", ShipClassDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(1L, responseEntity.getBody().getId());
         assertEquals("Certef", responseEntity.getBody().getName());
@@ -405,10 +408,10 @@ class ShipClassIntegrationTest {
             if (shipClassDto.getName().equals("Certef"))
                 continue;
             shipClassHttpEntity = Utils.createHttpEntity(shipClassDto);
-            testRestTemplate.postForEntity(baseUrl, shipClassHttpEntity, JsonResponse.class);
+            testRestTemplate.postForEntity(baseUrlAPI, shipClassHttpEntity, JsonResponse.class);
         }
         ResponseEntity<ShipClassDto[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl, ShipClassDto[].class);
+                testRestTemplate.getForEntity(baseUrlAPI, ShipClassDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         List<String> dataAsListJustNames = Arrays.stream(data).map(ShipClassDto::getName).toList();
         List<String> returnedListJustNames =
@@ -422,7 +425,7 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassForUpdatedNoIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/2", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/2", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -432,7 +435,7 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassWithUpdateDataValid);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -442,7 +445,7 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassToBeUpdatedInvalidIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/22", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/22", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -452,12 +455,12 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassNullName);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
         shipClassHttpEntity = Utils.createHttpEntity(shipClassEmptyName);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -467,12 +470,12 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassNullName);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/2", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/2", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
         shipClassHttpEntity = Utils.createHttpEntity(shipClassEmptyName);
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/2", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/2", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -482,7 +485,7 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassForAdditionNameAndCountryDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
@@ -492,9 +495,9 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassForUpdateNameAndCountryDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/3", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/3", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         ResponseEntity<ShipClassDto[]> responseEntityForList =
-                testRestTemplate.getForEntity(baseUrl, ShipClassDto[].class);
+                testRestTemplate.getForEntity(baseUrlAPI, ShipClassDto[].class);
         assertEquals(HttpStatus.OK, responseEntityForList.getStatusCode());
         System.out.println(Arrays.toString(responseEntityForList.getBody()));
         System.out.println(responseEntity.getBody().getErrorDescription());
@@ -505,10 +508,10 @@ class ShipClassIntegrationTest {
     @Order(13)
     void deleteShipClassIfExistsShouldReturnOkIfItDoesNotExistThenShouldBeBadRequest() {
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/4", HttpMethod.DELETE, null, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/4", HttpMethod.DELETE, null, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -518,7 +521,7 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassForAdditionMissingNumericalData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -528,7 +531,7 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassForUpdateMissingNumericalData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/4", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -538,7 +541,7 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassForAdditionMissingCountry);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -548,7 +551,7 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassForUpdateMissingCountry);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/4", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -602,7 +605,7 @@ class ShipClassIntegrationTest {
         HttpEntity<ShipClassDto> shipClassHttpEntity =
                 Utils.createHttpEntity(shipClassWithUpdateData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/3", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/3", HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
@@ -623,13 +626,13 @@ class ShipClassIntegrationTest {
         HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
                 Utils.createHttpEntity(gunInstallation1);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         gunInstallationHttpEntity =
                 Utils.createHttpEntity(gunInstallation1);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -648,7 +651,7 @@ class ShipClassIntegrationTest {
     @Order(25)
     void findGunsShouldReturnThePreviouslyAddedGunInstallation() {
         ResponseEntity<GunInstallationDto[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl + "/1/gun", GunInstallationDto[].class);
+                testRestTemplate.getForEntity(baseUrlAPI + "/1/gun", GunInstallationDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertTrue(responseEntity.getBody().length == 1);
         GunInstallationDto gunInstallationDto = responseEntity.getBody()[0];
@@ -662,7 +665,7 @@ class ShipClassIntegrationTest {
         HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
                 Utils.createHttpEntity(gunInstallation1WithCountry2);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1/gun/3", HttpMethod.PUT,gunInstallationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1/gun/3", HttpMethod.PUT,gunInstallationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
@@ -670,7 +673,7 @@ class ShipClassIntegrationTest {
     @Order(27)
     public void findGunInShipClassByIdShouldReturnTheUpdatedGunInstallation() {
         ResponseEntity<GunInstallationDto> responseEntity =
-                testRestTemplate.getForEntity(baseUrl + "/1/gun/2", GunInstallationDto.class);
+                testRestTemplate.getForEntity(baseUrlAPI + "/1/gun/2", GunInstallationDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         GunInstallationDto gunInstallationDto = responseEntity.getBody();
         assertEquals(2, gunInstallationDto.getGun().getId());
@@ -683,7 +686,7 @@ class ShipClassIntegrationTest {
         HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
                 Utils.createHttpEntity(gunInstallation1ForUpdateWithCountry2NoData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1/gun/3", HttpMethod.PUT,gunInstallationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1/gun/3", HttpMethod.PUT,gunInstallationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -693,7 +696,7 @@ class ShipClassIntegrationTest {
         HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
                 Utils.createHttpEntity(gunInstallation1b);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1/gun/2", HttpMethod.PUT,gunInstallationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1/gun/2", HttpMethod.PUT,gunInstallationHttpEntity, JsonResponse.class);
         System.out.println(responseEntity.getBody().getErrorDescription());
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
@@ -704,7 +707,7 @@ class ShipClassIntegrationTest {
         HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
                 Utils.createHttpEntity(gunInstallation1ForUpdateWithCountry2NoData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -714,7 +717,7 @@ class ShipClassIntegrationTest {
         HttpEntity<GunInstallationDto> gunInstallationHttpEntity =
                 Utils.createHttpEntity(gunInstallation2);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlAPI + "/1/gun", gunInstallationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -722,10 +725,10 @@ class ShipClassIntegrationTest {
     @Order(31)
     public void deleteGunFromShipClassShouldReturnOkDeletingTheSameAgainShouldReturnError() {
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1/gun/2", HttpMethod.DELETE,null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1/gun/2", HttpMethod.DELETE,null, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1/gun/2", HttpMethod.DELETE,null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1/gun/2", HttpMethod.DELETE,null, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -733,10 +736,10 @@ class ShipClassIntegrationTest {
     @Order(32)
     public void deleteShipClassShouldReturnOkDeletingTheSameAgainShouldReturnError() {
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.DELETE,null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1", HttpMethod.DELETE,null, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.DELETE,null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlAPI + "/1", HttpMethod.DELETE,null, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 }

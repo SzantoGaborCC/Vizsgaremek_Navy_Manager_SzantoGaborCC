@@ -32,21 +32,18 @@ public class CountryRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     @Operation(summary = "Returns all countries")
     public List<CountryDto> getAllCountries() {
         return countryService.findAll();
     }
 
     @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     @Operation(summary = "Returns an existing country by id")
     public CountryDto getCountryById(@PathVariable long id, Locale locale) {
         return countryService.findById(id, locale);
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     @Operation(summary = "Adds a country to the database")
     public ResponseEntity<JsonResponse> addCountry(
             @RequestBody @Valid CountryDto country,
@@ -71,7 +68,6 @@ public class CountryRestController {
     }
 
     @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     @Operation(summary = "Deletes a country by id")
     public ResponseEntity<JsonResponse> deleteCountryById(@PathVariable Long id, Locale locale) {
         countryService.deleteById(id, locale);
@@ -84,7 +80,6 @@ public class CountryRestController {
     }
 
     @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     @Operation(summary = "Updates an existing country by id")
     public ResponseEntity<JsonResponse> updateCountry(
             @PathVariable long id,
