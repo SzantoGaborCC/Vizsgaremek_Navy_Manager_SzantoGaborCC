@@ -48,12 +48,12 @@ class FleetIntegrationTest {
     }
     private final String baseUrl = "/fleet";
     private final String baseUrlAPI = "/fleet/api";
-    private final String shipUrl = "/ship";
-    private final String rankUrl = "/rank";
+    private final String shipUrl = "/ship/api";
+    private final String rankUrl = "/rank/api";
     private final String shipClassUrl = "/ship-class/api";
     private final String countryUrl = "/country/api";
-    private final String officerUrl = "/officer";
-    private final String hullClassificationUrl = "/hull-classification";
+    private final String officerUrl = "/officer/api";
+    private final String hullClassificationUrl = "/hull-classification/api";
 
     private final CountryDto country1 = CountryDto.builder().id(1L).name("Berdola").build();
     private final CountryDto country2 = CountryDto.builder().id(2L).name("Tekkele").build();

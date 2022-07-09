@@ -47,6 +47,8 @@ class HullClassificationIntegrationTest {
     }
     private final String baseUrl = "/hull-classification";
 
+    private final String baseUrlApi = "/hull-classification/api";
+
     private final HullClassificationDto[] data = {
             HullClassificationDto.builder().abbreviation("DD").designation("Destroyer").build(),
             HullClassificationDto.builder().abbreviation("CL").designation("Light Cruiser").build(),
@@ -92,7 +94,7 @@ class HullClassificationIntegrationTest {
     @Order(1)
     void getAllHullClassificationsShouldReturnOkAndEmptyArray() {
         ResponseEntity<HullClassificationDto[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl, HullClassificationDto[].class);
+                testRestTemplate.getForEntity(baseUrlApi, HullClassificationDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertTrue(responseEntity.getBody().length == 0);
     }
@@ -103,16 +105,16 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
 
         hullClassificationHttpEntity = Utils.createHttpEntity(hullClassificationToBeAddedFirstWithIdToTriggerError);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -120,7 +122,7 @@ class HullClassificationIntegrationTest {
     @Order(3)
     void getTheAddedHullClassificationShouldHaveIdOfOneAndDesignationBattleshipAndAbbreviationBB() {
         ResponseEntity<HullClassificationDto> responseEntity =
-                testRestTemplate.getForEntity(baseUrl + "/1", HullClassificationDto.class);
+                testRestTemplate.getForEntity(baseUrlApi + "/1", HullClassificationDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(1, responseEntity.getBody().getId());
         assertEquals("Battleship", responseEntity.getBody().getDesignation());
@@ -135,10 +137,10 @@ class HullClassificationIntegrationTest {
             if (hullClassificationDto.getDesignation().equals("Battleship"))
                 continue;
             hullClassificationHttpEntity = Utils.createHttpEntity(hullClassificationDto);
-            testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+            testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         }
         ResponseEntity<HullClassificationDto[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl, HullClassificationDto[].class);
+                testRestTemplate.getForEntity(baseUrlApi, HullClassificationDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         List<String> dataAsListJustDesignations = Arrays.stream(data).map(HullClassificationDto::getDesignation).toList();
         List<String> returnedListJustDesignations =
@@ -152,7 +154,7 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationForUpdatedNoIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -162,7 +164,7 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationWithUpdateDataValid);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/1", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -172,7 +174,7 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationToBeUpdatedInvalidIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/22", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/22", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -182,11 +184,11 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationNullAbbreviation);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         hullClassificationHttpEntity = Utils.createHttpEntity(hullClassificationEmptyAbbreviation);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -196,11 +198,11 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationNullAbbreviation);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         hullClassificationHttpEntity = Utils.createHttpEntity(hullClassificationEmptyAbbreviation);
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -210,11 +212,11 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationNullDesignation);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         hullClassificationHttpEntity = Utils.createHttpEntity(hullClassificationEmptyDesignation);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -224,11 +226,11 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationNullDesignation);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         hullClassificationHttpEntity = Utils.createHttpEntity(hullClassificationEmptyDesignation);
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -238,7 +240,7 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationForAdditionAbbreviationDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
@@ -248,7 +250,7 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationForUpdateAbbreviationDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
@@ -258,7 +260,7 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationForAdditionDesignationDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
@@ -268,7 +270,7 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationForUpdateDesignationDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
@@ -276,10 +278,10 @@ class HullClassificationIntegrationTest {
     @Order(16)
     void deleteHullClassificationIfExistsShouldReturnOkIfItDoesNotExistThenShouldBeBadRequest() {
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.DELETE, null, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.DELETE, null, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -333,7 +335,7 @@ class HullClassificationIntegrationTest {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =
                 Utils.createHttpEntity(hullClassificationWithUpdateData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/1", HttpMethod.PUT, hullClassificationHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }

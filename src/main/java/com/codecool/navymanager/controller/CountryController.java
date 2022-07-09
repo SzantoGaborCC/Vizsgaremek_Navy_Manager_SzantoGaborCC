@@ -80,8 +80,7 @@ public class CountryController {
     public ResponseEntity<JsonResponse> updateCountryWithForm(
             HttpServletRequest request,
             @PathVariable long id,
-            @RequestBody CountryDto country,
-            Model model) {
+            @RequestBody CountryDto country) {
         HttpEntity<CountryDto> countryHttpEntity =
                 Utils.createHttpEntityWithJSessionId(country, RequestContextHolder.currentRequestAttributes().getSessionId());
         String baseUrl = Utils.getBaseUrlFromRequest(request);

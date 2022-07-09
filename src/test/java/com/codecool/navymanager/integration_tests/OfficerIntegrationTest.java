@@ -53,7 +53,7 @@ class OfficerIntegrationTest {
     private final String baseUrlApi = "/officer/api";
     private final String countryUrl = "/country/api";
 
-    private final String rankUrl = "/rank";
+    private final String rankUrl = "/rank/api";
 
     private final CountryDto country1 = CountryDto.builder().id(1L).name("Berdola").build();
     private final CountryDto country2 = CountryDto.builder().id(2L).name("Tekkele").build();

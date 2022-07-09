@@ -52,7 +52,7 @@ class ShipClassIntegrationTest {
     private final String gunUrl = "/gun/api";
     private final String countryUrl = "/country/api";
 
-    private final String hullClassificationUrl = "/hull-classification";
+    private final String hullClassificationUrl = "/hull-classification/api";
 
     private final CountryDto country1 = CountryDto.builder().id(1L).name("Berdola").build();
     private final CountryDto country2 = CountryDto.builder().id(2L).name("Tekkele").build();

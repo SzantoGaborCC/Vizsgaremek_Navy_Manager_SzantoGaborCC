@@ -10,7 +10,7 @@
             <h2 th:text="${add == false ? 'Update Hull Classification' : 'Add New Hull Classification'}"></h2>
             <form id="hullClassificationForm" th:object="${hullClassification}" novalidate>
                 <input name="url" type="hidden"
-                       th:value="${add} == true ? '/hull-classification' : '/hull-classification/' + ${hullClassification.id}">
+                       th:value="${add} == true ? '/hull-classification/api' : '/hull-classification/api/' + ${hullClassification.id}">
                 <input name="add" type="hidden"  th:value="${add}">
                 <input id="id" type="hidden" th:field="*{id}">
                 <div class="form-group">
