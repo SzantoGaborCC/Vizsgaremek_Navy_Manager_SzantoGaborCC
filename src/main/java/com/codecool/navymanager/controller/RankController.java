@@ -1,61 +1,48 @@
 package com.codecool.navymanager.controller;
 
 import com.codecool.navymanager.dto.RankDto;
-import com.codecool.navymanager.entity.Rank;
 import com.codecool.navymanager.response.JsonResponse;
-import com.codecool.navymanager.service.RankService;
-import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import com.codecool.navymanager.utilities.Utils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/rank")
 public class RankController {
-    @Autowired
-    MessageSource messageSource;
-    private final RankService rankService;
+    @Value( "${rank.api.mapping}" )
+    private String apiMapping;
 
-    public RankController(RankService rankService) {
-        this.rankService = rankService;
+    private final RestTemplate restTemplate;
+
+    public RankController(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/show-list-page")
-    public String showListPage(Model model) {
-        model.addAttribute("ranks", rankService.findAll());
+    public String showListPage(Model model, HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        List<RankDto> ranks = restTemplate.exchange(baseUrl + apiMapping, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<RankDto>>() {}).getBody();
+        model.addAttribute("ranks", ranks);
         return "rank-list";
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Returns all ranks")
-    public ResponseEntity<List<RankDto>> getAllRanks() {
-        return ResponseEntity.ok(rankService.findAll());
-    }
-
     @GetMapping("/{id}/show-details-page")
-    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
-        RankDto rank = rankService.findById(id, locale);
+    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale, HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        RankDto rank = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, RankDto.class).getBody();
         model.addAttribute("rank", rank);
         return "rank-details";
-    }
-
-    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Returns an existing rank by id")
-    public ResponseEntity<RankDto> getRankById(@PathVariable long id, Locale locale) {
-        return ResponseEntity.ok(rankService.findById(id, locale));
     }
 
     @GetMapping("/show-add-form")
@@ -65,81 +52,45 @@ public class RankController {
         return "rank-form";
     }
 
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Adds a rank to the database")
-    public ResponseEntity<JsonResponse> addRank(
-            @RequestBody @Valid RankDto rank,
-            BindingResult result,
-            Model model,
-            Locale locale) {
-        JsonResponse jsonResponse = new JsonResponse();
-        if (result.hasErrors()) {
-            model.addAttribute("add", true);
-            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
-                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setErrorDescription(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Rank.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest().body(jsonResponse);
+    @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addRankWithForm(
+            HttpServletRequest request,
+            @RequestBody RankDto rank) {
+        HttpEntity<RankDto> rankHttpEntity =
+                Utils.createHttpEntityWithJSessionId(rank, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + apiMapping, HttpMethod.POST, rankHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        rankService.add(rank, locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "added",
-                new Object[] {Rank.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
-    }
-
-    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Deletes a rank by id")
-    public ResponseEntity<JsonResponse> deleteById(@PathVariable long id, Locale locale) {
-        rankService.deleteById(id, locale);
-        JsonResponse jsonResponse = new JsonResponse();
-        jsonResponse.setMessage(messageSource.getMessage(
-                "removed",
-                new Object[] {Rank.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok()
-                .body(jsonResponse);
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 
     @GetMapping("/{id}/show-update-form")
-    public String showUpdateForm(@PathVariable long id, Model model, Locale locale) {
-        RankDto rank = rankService.findById(id, locale);
+    public String showUpdateForm(@PathVariable long id, Model model, Locale locale, HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        RankDto rank = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, RankDto.class).getBody();
         model.addAttribute("add", false);
         model.addAttribute("rank", rank);
         return "rank-form";
     }
 
-    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Updates an existing rank by id")
-    public ResponseEntity<JsonResponse> update(
+    @RequestMapping(value = "/{id}/update-with-form" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JsonResponse> updateRankWithForm(
+            HttpServletRequest request,
             @PathVariable long id,
-            @RequestBody @Valid RankDto rank,
-            BindingResult result,
-            Model model,
-            Locale locale) {
-        JsonResponse jsonResponse = new JsonResponse();
-        if (result.hasErrors()) {
-            model.addAttribute("add", false);
-            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
-                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setErrorDescription(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Rank.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest().body(jsonResponse);
+            @RequestBody RankDto rank,
+            Model model) {
+        HttpEntity<RankDto> rankHttpEntity =
+                Utils.createHttpEntityWithJSessionId(rank, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + apiMapping + "/" + id, HttpMethod.PUT, rankHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        rankService.update(rank, id, locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "updated",
-                new Object[] {Rank.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 }
 

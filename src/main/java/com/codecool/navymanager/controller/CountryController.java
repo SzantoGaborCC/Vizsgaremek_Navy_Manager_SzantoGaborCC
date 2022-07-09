@@ -55,8 +55,7 @@ public class CountryController {
     @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addCountryWithForm(
             HttpServletRequest request,
-            @RequestBody CountryDto country,
-            Model model) {
+            @RequestBody CountryDto country) {
         HttpEntity<CountryDto> countryHttpEntity =
                 Utils.createHttpEntityWithJSessionId(country, RequestContextHolder.currentRequestAttributes().getSessionId());
         String baseUrl = Utils.getBaseUrlFromRequest(request);
