@@ -137,7 +137,7 @@ public class ShipController {
             ShipDto ship = shipService.findById(id, locale);
             model.addAttribute("add", false);
             model.addAttribute("ship", ship);
-            model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
+            model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship.getId(), locale));
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             return "ship-form";
@@ -155,7 +155,7 @@ public class ShipController {
         JsonResponse jsonResponse = new JsonResponse();
         if (result.hasErrors()) {
             model.addAttribute("add", false);
-            model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship));
+            model.addAttribute("validCaptainValues", officerService.findAvailableOfficersForShip(ship.getId(), locale));
             model.addAttribute("validShipClassValues", shipClassService.findAll());
             model.addAttribute("validCountryValues", countryService.findAll());
             jsonResponse.setErrorMessages(result.getFieldErrors().stream()

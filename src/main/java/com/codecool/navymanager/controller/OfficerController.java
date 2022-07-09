@@ -1,161 +1,121 @@
 package com.codecool.navymanager.controller;
 
 
+import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.dto.OfficerDto;
-import com.codecool.navymanager.entity.Officer;
+import com.codecool.navymanager.dto.RankDto;
 import com.codecool.navymanager.response.JsonResponse;
-import com.codecool.navymanager.service.CountryService;
-import com.codecool.navymanager.service.OfficerService;
-import com.codecool.navymanager.service.RankService;
-import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import com.codecool.navymanager.utilities.Utils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/officer")
 public class OfficerController {
-    @Autowired
-    MessageSource messageSource;
 
-    private final OfficerService officerService;
-    private final RankService rankService;
-    private final CountryService countryService;
+    private final RestTemplate restTemplate;
 
-    public OfficerController(OfficerService officerService, RankService rankService, CountryService countryService) {
-        this.officerService = officerService;
-        this.rankService = rankService;
-        this.countryService = countryService;
+    @Value("${country.api.mapping}")
+    private String countryApiMapping;
+
+    @Value( "${rank.api.mapping}" )
+    private String rankApiMapping;
+
+    @Value("${officer.api.mapping}")
+    private String apiMapping;
+
+    public OfficerController(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/show-list-page")
-    public String showListPage(Model model) {
-        model.addAttribute("officers", officerService.findAll());
+    public String showListPage(Model model, HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        List<OfficerDto> officers = restTemplate.exchange(baseUrl + apiMapping, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<OfficerDto>>() {}).getBody();
+        model.addAttribute("officers", officers);
         return "officer-list";
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Returns all officers")
-    public ResponseEntity<List<OfficerDto>> getAllOfficers() {
-        return ResponseEntity.ok(officerService.findAll());
-    }
-
     @GetMapping("/{id}/show-details-page")
-    public String showDetailsPage(@PathVariable Long id, Model model, Locale locale) {
-        OfficerDto officer = officerService.findById(id, locale);
+    public String showDetailsPage(@PathVariable Long id, Model model, HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        OfficerDto officer = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, OfficerDto.class).getBody();
         model.addAttribute("officer", officer);
         return "officer-details";
     }
 
-    @RequestMapping(value =  "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Returns an existing officer by id")
-    public ResponseEntity<OfficerDto> getOfficerById(@PathVariable long id, Locale locale) {
-        return ResponseEntity.ok(officerService.findById(id, locale));
-    }
 
     @GetMapping("/show-add-form")
-    public String showAddForm(Model model){
+    public String showAddForm(Model model, HttpServletRequest request){
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        List<CountryDto> validCountryValues = restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
+        List<RankDto> validRankValues = restTemplate.exchange(baseUrl + rankApiMapping, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<RankDto>>() {}).getBody();
         model.addAttribute("officer", new OfficerDto());
         model.addAttribute("add", true);
-        model.addAttribute("validRankValues", rankService.findAll());
-        model.addAttribute("validCountryValues", countryService.findAll());
+        model.addAttribute("validRankValues", validRankValues);
+        model.addAttribute("validCountryValues", validCountryValues);
         return "officer-form";
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Adds an officer to the database")
-    public ResponseEntity<JsonResponse> addOfficer(
-            @RequestBody @Valid OfficerDto officer,
-            BindingResult result,
-            Model model,
-            Locale locale) {
-        JsonResponse jsonResponse = new JsonResponse();
-        if (result.hasErrors()) {
-            model.addAttribute("add", true);
-            model.addAttribute("validRankValues", rankService.findAll());
-            model.addAttribute("validCountryValues", countryService.findAll());
-            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
-                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setErrorDescription(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Officer.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest().body(jsonResponse);
+    public ResponseEntity<JsonResponse> addOfficerWithForm(
+            @RequestBody OfficerDto officer,
+            HttpServletRequest request) {
+        HttpEntity<OfficerDto> officerHttpEntity =
+                Utils.createHttpEntityWithJSessionId(officer, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + apiMapping, HttpMethod.POST, officerHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        officerService.add(officer, locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "added",
-                new Object[] {Officer.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 
-    @RequestMapping(value = "/{id}" , method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Deletes an officer by id")
-    public ResponseEntity<JsonResponse> deleteOfficerById(@PathVariable Long id, Locale locale) {
-        officerService.deleteById(id, locale);
-        JsonResponse jsonResponse = new JsonResponse();
-        jsonResponse.setMessage(messageSource.getMessage(
-                "removed",
-                new Object[] {Officer.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok()
-                .body(jsonResponse);
-    }
 
     @GetMapping("/{id}/show-update-form")
-    public String showUpdateForm(@PathVariable Long id,Model model, Locale locale) {
-            OfficerDto officer = officerService.findById(id, locale);
-            model.addAttribute("add", false);
-            model.addAttribute("officer", officer);
-            model.addAttribute("validRankValues", rankService.findAll());
-            model.addAttribute("validCountryValues", countryService.findAll());
-            return "officer-form";
+    public String showUpdateForm(@PathVariable Long id,Model model, HttpServletRequest request) {
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        OfficerDto officer = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, OfficerDto.class).getBody();
+        List<CountryDto> validCountryValues =
+                restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
+        List<RankDto> validRankValues =
+                restTemplate.exchange(baseUrl + rankApiMapping, HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<RankDto>>() {}).getBody();
+        model.addAttribute("add", false);
+        model.addAttribute("officer", officer);
+        model.addAttribute("validRankValues", validRankValues);
+        model.addAttribute("validCountryValues", validCountryValues);
+        return "officer-form";
     }
 
-    @RequestMapping(value = "/{id}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @Operation(summary = "Updates an existing officer by id")
-    public ResponseEntity<JsonResponse> updateOfficer(
+    @RequestMapping(value = "/{id}/update-with-form" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JsonResponse> updateGunWithForm(
+            HttpServletRequest request,
             @PathVariable long id,
-            @RequestBody @Valid OfficerDto officer,
-            BindingResult result,
-            Model model,
-            Locale locale) {
-        JsonResponse jsonResponse = new JsonResponse();
-        if (result.hasErrors()) {
-            model.addAttribute("add", false);
-            model.addAttribute("validRankValues", rankService.findAll());
-            model.addAttribute("validCountryValues", countryService.findAll());
-            jsonResponse.setErrorMessages(result.getFieldErrors().stream()
-                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
-            jsonResponse.setErrorDescription(messageSource.getMessage(
-                    "invalid_data",
-                    new Object[] {Officer.class.getSimpleName()},
-                    locale));
-            return ResponseEntity.badRequest().body(jsonResponse);
+            @RequestBody OfficerDto officer) {
+        HttpEntity<OfficerDto> officerHttpEntity =
+                Utils.createHttpEntityWithJSessionId(officer, RequestContextHolder.currentRequestAttributes().getSessionId());
+        String baseUrl = Utils.getBaseUrlFromRequest(request);
+        ResponseEntity<JsonResponse> responseEntity =
+                restTemplate.exchange(baseUrl + apiMapping + "/" + id, HttpMethod.PUT, officerHttpEntity, JsonResponse.class);
+        if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
-        officerService.update(officer, id, locale);
-        jsonResponse.setMessage(messageSource.getMessage(
-                "updated",
-                new Object[] {Officer.class.getSimpleName()},
-                locale));
-        return ResponseEntity.ok().body(jsonResponse);
+        return ResponseEntity.ok().body(responseEntity.getBody());
     }
 }
 

@@ -1,6 +1,5 @@
 package com.codecool.navymanager.repository;
 
-import com.codecool.navymanager.entity.Country;
 import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Officer;
 import com.codecool.navymanager.entity.Ship;
@@ -17,8 +16,8 @@ public interface OfficerRepository extends JpaRepository<Officer, Long> {
             " NOT EXISTS (" +
             "   SELECT f.commander FROM Fleet f WHERE f.commander = o)" +
             " AND" +
-            " o.country = ?1")
-    List<Officer> findAvailableOfficersByCountry(Country country);
+            " o.country.id = ?1")
+    List<Officer> findAvailableOfficersByCountry(long countryId);
 
     @Query("SELECT o FROM Officer o WHERE" +
             " NOT EXISTS (" +

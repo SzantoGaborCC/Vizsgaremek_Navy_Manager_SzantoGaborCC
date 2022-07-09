@@ -66,7 +66,6 @@ public class GunController {
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResponse> addGunWithForm(
             @RequestBody GunDto gun,
-            Model model,
             HttpServletRequest request) {
         HttpEntity<GunDto> gunHttpEntity =
             Utils.createHttpEntityWithJSessionId(gun, RequestContextHolder.currentRequestAttributes().getSessionId());
@@ -74,11 +73,6 @@ public class GunController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping, HttpMethod.POST, gunHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            List<CountryDto> validCountryValues =
-                    restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
-            model.addAttribute("add", true);
-            model.addAttribute("validCountryValues", validCountryValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -98,18 +92,16 @@ public class GunController {
     }
 
     @RequestMapping(value = "/{id}/update-with-form" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonResponse> updateCountryWithForm(
+    public ResponseEntity<JsonResponse> updateGunWithForm(
             HttpServletRequest request,
             @PathVariable long id,
-            @RequestBody GunDto gun,
-            Model model) {
+            @RequestBody GunDto gun) {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntityWithJSessionId(gun, RequestContextHolder.currentRequestAttributes().getSessionId());
         String baseUrl = Utils.getBaseUrlFromRequest(request);
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping + "/" + id, HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            model.addAttribute("add", false);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());

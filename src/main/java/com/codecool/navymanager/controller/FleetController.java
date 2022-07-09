@@ -68,8 +68,9 @@ public class FleetController {
                 new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
         List<RankDto> validRankValues = restTemplate.exchange(baseUrl + rankApiMapping, HttpMethod.GET, null,
                 new ParameterizedTypeReference<List<RankDto>>() {}).getBody();
-        List<OfficerDto> validCommanderValues = restTemplate.exchange(baseUrl + officerApiMapping, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<OfficerDto>>() {}).getBody();
+        List<OfficerDto> validCommanderValues =
+                restTemplate.exchange(baseUrl + officerApiMapping + "/available", HttpMethod.GET, null,
+                    new ParameterizedTypeReference<List<OfficerDto>>() {}).getBody();
         model.addAttribute("add", true);
         model.addAttribute("fleet", new FleetDto());
         model.addAttribute("validRankValues", validRankValues);
@@ -89,16 +90,6 @@ public class FleetController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping, HttpMethod.POST, countryHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            List<CountryDto> validCountryValues = restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
-            List<RankDto> validRankValues = restTemplate.exchange(baseUrl + rankApiMapping, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<RankDto>>() {}).getBody();
-            List<OfficerDto> validCommanderValues = restTemplate.exchange(baseUrl + officerApiMapping, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<OfficerDto>>() {}).getBody();
-            model.addAttribute("add", true);
-            model.addAttribute("validRankValues", validRankValues);
-            model.addAttribute("validCommanderValues", validCommanderValues);
-            model.addAttribute("validCountryValues", validCountryValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -112,8 +103,9 @@ public class FleetController {
                 new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
             List<RankDto> validRankValues = restTemplate.exchange(baseUrl + rankApiMapping, HttpMethod.GET, null,
                 new ParameterizedTypeReference<List<RankDto>>() {}).getBody();
-            List<OfficerDto> validCommanderValues = restTemplate.exchange(baseUrl + officerApiMapping, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<OfficerDto>>() {}).getBody();
+            List<OfficerDto> validCommanderValues =
+                    restTemplate.exchange(baseUrl + officerApiMapping + "/available/fleet/" + id, HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<OfficerDto>>() {}).getBody();
             model.addAttribute("add", false);
             model.addAttribute("fleet", fleet);
             model.addAttribute("validRankValues", validRankValues);
@@ -134,16 +126,6 @@ public class FleetController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping + "/" + id, HttpMethod.PUT, fleetHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            List<CountryDto> validCountryValues = restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
-            List<RankDto> validRankValues = restTemplate.exchange(baseUrl + rankApiMapping, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<RankDto>>() {}).getBody();
-            List<OfficerDto> validCommanderValues = restTemplate.exchange(baseUrl + officerApiMapping, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<OfficerDto>>() {}).getBody();
-            model.addAttribute("add", false);
-            model.addAttribute("validRankValues", validRankValues);
-            model.addAttribute("validCommanderValues", validCommanderValues);
-            model.addAttribute("validCountryValues", validCountryValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -180,15 +162,6 @@ public class FleetController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/ship", HttpMethod.POST, chosenShipHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            FleetDto fleet = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, FleetDto.class).getBody();
-            List<ShipDto> validShipValues =
-                    restTemplate.exchange(
-                            baseUrl + shipApiMapping + "/available/" + fleet.getCountry().getId(),
-                            HttpMethod.GET, null,
-                            new ParameterizedTypeReference<List<ShipDto>>() {}).getBody();
-            model.addAttribute("add", true);
-            model.addAttribute("fleet", fleet);
-            model.addAttribute("validShipValues", validShipValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -226,15 +199,6 @@ public class FleetController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/ship/" + chosenShip.getId(), HttpMethod.PUT, chosenShipHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            FleetDto fleet = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, FleetDto.class).getBody();
-            List<ShipDto> validShipValues =
-                    restTemplate.exchange(
-                            baseUrl + shipApiMapping + "/available/" + fleet.getCountry().getId(),
-                            HttpMethod.GET, null,
-                            new ParameterizedTypeReference<List<ShipDto>>() {}).getBody();
-            model.addAttribute("add", true);
-            model.addAttribute("fleet", fleet);
-            model.addAttribute("validShipValues", validShipValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());

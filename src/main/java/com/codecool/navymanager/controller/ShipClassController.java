@@ -85,14 +85,6 @@ public class ShipClassController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping, HttpMethod.POST, shipClassHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            List<CountryDto> validCountryValues = restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
-            List<HullClassificationDto> validHullClassificationValues =
-                    restTemplate.exchange(baseUrl + hullClassificationApiMapping, HttpMethod.GET, null,
-                        new ParameterizedTypeReference<List<HullClassificationDto>>() {}).getBody();
-            model.addAttribute("add", true);
-            model.addAttribute("validCountryValues", validCountryValues);
-            model.addAttribute("validHullClassificationValues", validHullClassificationValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -126,14 +118,6 @@ public class ShipClassController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping + "/" + id, HttpMethod.PUT, shipClassHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            List<CountryDto> validCountryValues = restTemplate.exchange(baseUrl + countryApiMapping, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<CountryDto>>() {}).getBody();
-            List<HullClassificationDto> validHullClassificationValues =
-                    restTemplate.exchange(baseUrl + hullClassificationApiMapping, HttpMethod.GET, null,
-                        new ParameterizedTypeReference<List<HullClassificationDto>>() {}).getBody();
-            model.addAttribute("add", true);
-            model.addAttribute("validCountryValues", validCountryValues);
-            model.addAttribute("validHullClassificationValues", validHullClassificationValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -156,11 +140,10 @@ public class ShipClassController {
     }
 
     @RequestMapping(value = "/{id}/gun" , method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonResponse> addGun(
+    public ResponseEntity<JsonResponse> addGunWithForm(
             HttpServletRequest request,
             @PathVariable Long id,
-            @RequestBody GunInstallationDto gunInstallation,
-            Model model) {
+            @RequestBody GunInstallationDto gunInstallation) {
         HttpEntity<GunInstallationDto> gunHttpEntity =
                 Utils.createHttpEntityWithJSessionId(
                         gunInstallation,
@@ -169,12 +152,6 @@ public class ShipClassController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/gun", HttpMethod.POST, gunHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            ShipClassDto shipClass = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, ShipClassDto.class).getBody();
-            List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/valid-guns",
-                    HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
-            model.addAttribute("add", true);
-            model.addAttribute("shipClass", shipClass);
-            model.addAttribute("validGunValues", validGunValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -202,7 +179,7 @@ public class ShipClassController {
     }
 
     @RequestMapping(value = "/{id}/gun/{gunId}" , method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonResponse> updateGun(
+    public ResponseEntity<JsonResponse> updateGunWithForm(
             HttpServletRequest request,
             @PathVariable long id, @PathVariable long gunId,
             @RequestBody @Valid GunInstallationDto gunInstallation,
@@ -217,16 +194,6 @@ public class ShipClassController {
                         baseUrl + apiMapping + "/" + id + "/gun/" + gunId,
                         HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            ShipClassDto shipClass =
-                    restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, ShipClassDto.class).getBody();
-            GunDto gun =
-                    restTemplate.getForEntity(baseUrl + gunApiMapping + "/" + gunId, GunDto.class).getBody();
-            List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/valid-guns",
-                    HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
-            model.addAttribute("add", false);
-            model.addAttribute("shipClass", shipClass);
-            model.addAttribute("gun", gun);
-            model.addAttribute("validGunValues", validGunValues);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());

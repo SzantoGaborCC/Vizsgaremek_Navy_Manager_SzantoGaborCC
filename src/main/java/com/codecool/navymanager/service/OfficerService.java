@@ -1,12 +1,12 @@
 package com.codecool.navymanager.service;
 
-import com.codecool.navymanager.dto.CountryDto;
-import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.dto.OfficerDto;
-import com.codecool.navymanager.dto.ShipDto;
+import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Officer;
+import com.codecool.navymanager.entity.Ship;
+import com.codecool.navymanager.repository.FleetRepository;
 import com.codecool.navymanager.repository.OfficerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.codecool.navymanager.repository.ShipRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +18,18 @@ import java.util.NoSuchElementException;
 @Service
 
 public class OfficerService {
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
     private final OfficerRepository officerRepository;
 
-    public OfficerService(OfficerRepository officerRepository) {
+    private final ShipRepository shipRepository;
+
+    private final FleetRepository fleetRepository;
+
+    public OfficerService(MessageSource messageSource, OfficerRepository officerRepository, ShipRepository shipRepository, FleetRepository fleetRepository) {
+        this.messageSource = messageSource;
         this.officerRepository = officerRepository;
+        this.shipRepository = shipRepository;
+        this.fleetRepository = fleetRepository;
     }
 
     public List<OfficerDto> findAll() {
@@ -43,25 +49,35 @@ public class OfficerService {
                 .map(OfficerDto::new).toList();
     }
 
-    public List<OfficerDto> findAvailableOfficersByCountry(CountryDto country) {
-        return officerRepository.findAvailableOfficersByCountry(country.toEntity()).stream()
+    public List<OfficerDto> findAvailableOfficersByCountry(long countryId) {
+        return officerRepository.findAvailableOfficersByCountry(countryId).stream()
                 .map(OfficerDto::new).toList();
     }
 
-    public List<OfficerDto> findAvailableOfficersForShip(ShipDto shipDto) {
+    public List<OfficerDto> findAvailableOfficersForShip(long shipId, Locale locale) {
         List<OfficerDto> foundOfficers = new ArrayList<>();
-        if (shipDto.getCaptain() != null) {
-            foundOfficers.add(shipDto.getCaptain());
+        Ship ship = shipRepository.findById(shipId)
+                .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
+                        "no_such",
+                        new Object[] {Fleet.class.getSimpleName()},
+                        locale)));
+        if (ship.getCaptain() != null) {
+            foundOfficers.add(new OfficerDto(ship.getCaptain()));
         }
         foundOfficers.addAll(officerRepository.findAvailableOfficers().stream()
                 .map(OfficerDto::new).toList());
         return foundOfficers;
     }
 
-    public List<OfficerDto> findAvailableOfficersForFleet(FleetDto fleetDto) {
+    public List<OfficerDto> findAvailableOfficersForFleet(long fleetId, Locale locale) {
         List<OfficerDto> foundOfficers = new ArrayList<>();
-        if (fleetDto.getCommander() != null) {
-            foundOfficers.add(fleetDto.getCommander());
+        Fleet fleet = fleetRepository.findById(fleetId)
+                .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage(
+                        "no_such",
+                        new Object[] {Fleet.class.getSimpleName()},
+                        locale)));
+        if (fleet.getCommander() != null) {
+            foundOfficers.add(new OfficerDto(fleet.getCommander()));
         }
         foundOfficers.addAll(officerRepository.findAvailableOfficers().stream()
                 .map(OfficerDto::new)
@@ -71,7 +87,7 @@ public class OfficerService {
 
     public boolean isOfficerPostedToShipOrFleet(OfficerDto officer) {
         return officer != null &&
-                findAvailableOfficersByCountry(officer.getCountry()).stream()
+                findAvailableOfficersByCountry(officer.getCountry().getId()).stream()
                         .noneMatch(officerDto -> officerDto.getId().equals(officer.getId()));
     }
 

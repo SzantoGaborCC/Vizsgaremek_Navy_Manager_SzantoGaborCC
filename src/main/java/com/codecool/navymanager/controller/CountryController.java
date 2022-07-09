@@ -5,7 +5,6 @@ import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.response.JsonResponse;
 import com.codecool.navymanager.utilities.Utils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -23,12 +22,9 @@ import java.util.Locale;
 public class CountryController {
     @Value( "${country.api.mapping}" )
     private String apiMapping;
-
-    private final MessageSource messageSource;
     private final RestTemplate restTemplate;
 
-    public CountryController(MessageSource messageSource, RestTemplate restTemplate) {
-        this.messageSource = messageSource;
+    public CountryController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -67,7 +63,6 @@ public class CountryController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping, HttpMethod.POST, countryHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            model.addAttribute("add", true);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
@@ -94,7 +89,6 @@ public class CountryController {
         ResponseEntity<JsonResponse> responseEntity =
                 restTemplate.exchange(baseUrl + apiMapping + "/" + id, HttpMethod.PUT, countryHttpEntity, JsonResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            model.addAttribute("add", false);
             return ResponseEntity.badRequest().body(responseEntity.getBody());
         }
         return ResponseEntity.ok().body(responseEntity.getBody());
