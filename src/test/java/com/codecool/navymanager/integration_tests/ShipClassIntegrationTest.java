@@ -49,7 +49,7 @@ class ShipClassIntegrationTest {
     private final String baseUrl = "/ship-class";
     private final String baseUrlAPI = "/ship-class/api";
 
-    private final String gunUrl = "/gun";
+    private final String gunUrl = "/gun/api";
     private final String countryUrl = "/country/api";
 
     private final String hullClassificationUrl = "/hull-classification";

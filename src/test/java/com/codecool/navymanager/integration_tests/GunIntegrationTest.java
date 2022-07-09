@@ -47,7 +47,9 @@ class GunIntegrationTest {
         webClient.getOptions().setJavaScriptEnabled(false);
     }
     private final String baseUrl = "/gun";
-    private final String countryUrl = "/country";
+
+    private final String baseUrlApi = "/gun/api";
+    private final String countryUrl = "/country/api";
 
     private final CountryDto country1 = CountryDto.builder().id(1L).name("Berdola").build();
     private final CountryDto country2 = CountryDto.builder().id(2L).name("Tekkele").build();
@@ -207,7 +209,7 @@ class GunIntegrationTest {
     @Order(2)
     void getAllGunsShouldReturnOkAndEmptyArray() {
         ResponseEntity<GunDto[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl, GunDto[].class);
+                testRestTemplate.getForEntity(baseUrlApi, GunDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertTrue(responseEntity.getBody().length == 0);
     }
@@ -218,16 +220,16 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunToBeAddedFirst);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
 
         gunHttpEntity = Utils.createHttpEntity(gunToBeAddedFirstWithIdToTriggerError);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -235,7 +237,7 @@ class GunIntegrationTest {
     @Order(4)
     void getTheAddedGunShouldHaveExpectedData() {
         ResponseEntity<GunDto> responseEntity =
-                testRestTemplate.getForEntity(baseUrl + "/1", GunDto.class);
+                testRestTemplate.getForEntity(baseUrlApi + "/1", GunDto.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(1L, responseEntity.getBody().getId());
         assertEquals("Minuscule gun", responseEntity.getBody().getDesignation());
@@ -253,10 +255,10 @@ class GunIntegrationTest {
             if (gunDto.getDesignation().equals("Minuscule Gun"))
                 continue;
             gunHttpEntity = Utils.createHttpEntity(gunDto);
-            testRestTemplate.postForEntity(baseUrl, gunHttpEntity, JsonResponse.class);
+            testRestTemplate.postForEntity(baseUrlApi, gunHttpEntity, JsonResponse.class);
         }
         ResponseEntity<GunDto[]> responseEntity =
-                testRestTemplate.getForEntity(baseUrl, GunDto[].class);
+                testRestTemplate.getForEntity(baseUrlApi, GunDto[].class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         List<String> dataAsListJustDesignations = Arrays.stream(data).map(GunDto::getDesignation).toList();
         List<String> returnedListJustDesignations =
@@ -270,7 +272,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunForUpdatedNoIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -280,7 +282,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunWithUpdateDataValid);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/1", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -290,7 +292,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunToBeUpdatedInvalidIdLeadsToError);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/22", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/22", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -300,11 +302,11 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunNullDesignation);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         gunHttpEntity = Utils.createHttpEntity(gunEmptyDesignation);
         responseEntity =
-                testRestTemplate.postForEntity(baseUrl, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -314,11 +316,11 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunNullDesignation);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         gunHttpEntity = Utils.createHttpEntity(gunEmptyDesignation);
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -328,7 +330,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunForAdditionDesignationAndCountryDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
@@ -338,7 +340,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunForUpdateDesignationAndCountryDuplicated);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
@@ -346,10 +348,10 @@ class GunIntegrationTest {
     @Order(13)
     void deleteGunIfExistsShouldReturnOkIfItDoesNotExistThenShouldBeBadRequest() {
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.DELETE, null, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.DELETE, null, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.DELETE, null, JsonResponse.class);
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
     }
 
@@ -359,7 +361,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunForAdditionMissingNumericalData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -369,7 +371,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunForUpdateMissingNumericalData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -379,7 +381,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunForAdditionMissingCountry);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.postForEntity(baseUrl, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.postForEntity(baseUrlApi, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -389,7 +391,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunForUpdateMissingCountry);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/4", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
@@ -443,7 +445,7 @@ class GunIntegrationTest {
         HttpEntity<GunDto> gunHttpEntity =
                 Utils.createHttpEntity(gunWithUpdateData);
         ResponseEntity<JsonResponse> responseEntity =
-                testRestTemplate.exchange(baseUrl + "/1", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
+                testRestTemplate.exchange(baseUrlApi + "/1", HttpMethod.PUT, gunHttpEntity, JsonResponse.class);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }

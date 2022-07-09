@@ -7,9 +7,6 @@ import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Gun;
 import com.codecool.navymanager.entity.ShipClass;
 import com.codecool.navymanager.response.JsonResponse;
-import com.codecool.navymanager.service.CountryService;
-import com.codecool.navymanager.service.GunService;
-import com.codecool.navymanager.service.HullClassificationService;
 import com.codecool.navymanager.service.ShipClassService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.context.MessageSource;
@@ -30,22 +27,9 @@ public class ShipClassRestController {
     private final MessageSource messageSource;
     private final ShipClassService shipClassService;
 
-    private final GunService gunService;
-
-    private final HullClassificationService hullClassificationService;
-    private final CountryService countryService;
-
-    public ShipClassRestController(
-            MessageSource messageSource,
-            ShipClassService shipClassService,
-            GunService gunService,
-            HullClassificationService hullClassificationService,
-            CountryService countryService) {
+    public ShipClassRestController(MessageSource messageSource, ShipClassService shipClassService) {
         this.messageSource = messageSource;
         this.shipClassService = shipClassService;
-        this.gunService = gunService;
-        this.hullClassificationService = hullClassificationService;
-        this.countryService = countryService;
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -6,9 +6,8 @@ import com.codecool.navymanager.dto.ShipDto;
 import com.codecool.navymanager.entity.Fleet;
 import com.codecool.navymanager.entity.Ship;
 import com.codecool.navymanager.response.JsonResponse;
-import com.codecool.navymanager.service.*;
+import com.codecool.navymanager.service.FleetService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,26 +23,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/fleet/api")
 public class FleetRestController {
-    @Autowired
-    MessageSource messageSource;
+    private final MessageSource messageSource;
     private final FleetService fleetService;
-    private final OfficerService officerService;
-    private final RankService rankService;
-    private final CountryService countryService;
 
-    private final ShipService shipService;
-
-    public FleetRestController(
-            FleetService fleetService,
-            OfficerService officerService,
-            RankService rankService,
-            CountryService countryService,
-            ShipService shipService) {
+    public FleetRestController(MessageSource messageSource, FleetService fleetService) {
+        this.messageSource = messageSource;
         this.fleetService = fleetService;
-        this.officerService = officerService;
-        this.rankService = rankService;
-        this.countryService = countryService;
-        this.shipService = shipService;
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

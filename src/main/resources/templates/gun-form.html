@@ -9,7 +9,7 @@
         <div class="col">
             <h2 th:text="${add == false ? 'Update Gun' : 'Add New Gun'}"></h2>
             <form id="gunForm" th:object="${gun}" novalidate>
-                <input name="url" type="hidden" th:value="${add} == true ? '/gun' : '/gun/' + ${gun.id}">
+                <input name="url" type="hidden" th:value="${add} == true ? '/gun/api' : '/gun/api/' + ${gun.id}">
                 <input name="add" type="hidden"  th:value="${add}">
                 <input id="id" type="hidden" th:field="*{id}">
                 <div class="form-group">
