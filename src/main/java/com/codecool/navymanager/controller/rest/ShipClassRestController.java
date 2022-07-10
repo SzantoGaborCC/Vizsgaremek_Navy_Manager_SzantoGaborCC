@@ -38,8 +38,8 @@ public class ShipClassRestController {
         return ResponseEntity.ok(shipClassService.findAll());
     }
 
-    @RequestMapping(value = "/{id}/valid-guns" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Returns valid guns for ship class")
+    @RequestMapping(value = "/{id}/gun/available" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Returns available guns for ship the class")
     public ResponseEntity<List<GunDto>> findValidGuns(@PathVariable long id, Locale locale) {
         return ResponseEntity.ok(shipClassService.findValidGuns(id, locale));
     }

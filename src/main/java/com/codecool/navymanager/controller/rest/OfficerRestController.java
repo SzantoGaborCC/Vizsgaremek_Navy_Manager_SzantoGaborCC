@@ -111,7 +111,7 @@ public class OfficerRestController {
     }
 
     @RequestMapping(value = "/available/country/{countryId}" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Finds all available officers by country")
+    @Operation(summary = "Finds all available officers for a country")
     public List<OfficerDto> findAvailableOfficersByCountry(@PathVariable long countryId) {
         return officerService.findAvailableOfficersByCountry(countryId);
     }

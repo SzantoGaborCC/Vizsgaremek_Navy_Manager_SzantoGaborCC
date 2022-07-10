@@ -52,7 +52,7 @@ public class ShipClassController {
     public String showDetailsPage(@PathVariable Long id, Model model, HttpServletRequest request) {
         String baseUrl = Utils.getBaseUrlFromRequest(request);
         ShipClassDto shipClass = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, ShipClassDto.class).getBody();
-        List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/valid-guns",
+        List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/gun/available",
                 HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
         model.addAttribute("shipClass", shipClass);
         model.addAttribute("validGunValues", validGunValues);
@@ -130,7 +130,7 @@ public class ShipClassController {
             HttpServletRequest request) {
         String baseUrl = Utils.getBaseUrlFromRequest(request);
         ShipClassDto shipClass = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, ShipClassDto.class).getBody();
-        List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/valid-guns",
+        List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + id + "/gun/available",
                 HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
         model.addAttribute("add", true);
         model.addAttribute("shipClass", shipClass);
@@ -169,7 +169,7 @@ public class ShipClassController {
         GunInstallationDto gunInstallationDto =
                 restTemplate.getForEntity(baseUrl + apiMapping + "/" + shipClassId + "/gun/" + gunId,
                         GunInstallationDto.class).getBody();
-        List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + shipClassId + "/valid-guns",
+        List<GunDto> validGunValues = restTemplate.exchange(baseUrl + apiMapping + "/" + shipClassId + "/gun/available",
                 HttpMethod.GET, null, new ParameterizedTypeReference<List<GunDto>>() {}).getBody();
         model.addAttribute("add", false);
         model.addAttribute("shipClass", shipClass);
