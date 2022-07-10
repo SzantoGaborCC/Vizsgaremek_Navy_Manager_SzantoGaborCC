@@ -3,4 +3,4 @@ CREATE TABLE public."rank" (
     precedence INTEGER CONSTRAINT precedence_must_be_unique UNIQUE NOT NULL,
 	designation VARCHAR(255) CONSTRAINT rank_designation_must_be_unique UNIQUE NOT NULL CHECK (LENGTH(designation) > 0)
 );
-ALTER TABLE public.officer ADD CONSTRAINT officer_rank_fk FOREIGN KEY (rank_id) REFERENCES public."rank"(id) ;
+ALTER TABLE public.officer ADD CONSTRAINT officer_rank_fk FOREIGN KEY (rank_id) REFERENCES public."rank"(id) ON DELETE CASCADE;
