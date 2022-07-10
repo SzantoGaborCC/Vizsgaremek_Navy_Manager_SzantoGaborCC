@@ -17,7 +17,7 @@
                 <input name="redirectTo" type="hidden" th:value="'/ship-class/'+${shipClass.id} + '/show-details-page'">
                 <div class="form-group">
                     <label for="gun">Gun</label>
-                    <select id="gun" th:field="*{gun}">
+                    <select class="form-select form-select-lg" id="gun" th:field="*{gun}">
                         <option th:if="${gunInstallation.gun} != null" th:each="gunOpt : ${validGunValues}"
                                 th:value="${gunOpt.id}" th:text="${gunOpt.designation}"
                                 th:selected="${gunInstallation.gun.id == gunOpt.id}"></option>
@@ -29,7 +29,7 @@
                     <label for="quantity">Gun Quantity</label>
                     <input type="text" class="form-control" id="quantity" th:field="*{quantity}">
                 </div>
-                <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
+                <button type="submit" class="btn btn-primary btn-lg" th:text="${add == false ? 'Update' : 'Submit'}">Submit
                 </button>
             </form>
         </div>

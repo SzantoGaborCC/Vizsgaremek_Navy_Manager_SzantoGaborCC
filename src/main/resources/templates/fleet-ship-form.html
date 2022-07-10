@@ -18,7 +18,7 @@
                 <input name="redirectTo" type="hidden" th:value="'/fleet/'+${fleet.id} + '/show-details-page'">
                 <div class="form-group">
                     <label for="ship">Choose ship: </label>
-                    <select id="ship" th:field="*{id}">
+                    <select class="form-select form-select-lg" id="ship" th:field="*{id}">
                         <option th:if="${chosenShip.id} != null" th:each="shipOpt : ${validShipValues}"
                                 th:value="${shipOpt.id}"
                                 th:text="${shipOpt.country.name} + ': '+ ${shipOpt.shipClass.hullClassification.abbreviation} + ' '+ ${shipOpt.name}"
@@ -28,7 +28,7 @@
                                 th:text="${shipOpt.country.name} + ': '+ ${shipOpt.shipClass.hullClassification.abbreviation} + ' '+ ${shipOpt.name}"></option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary" th:text="${add == false ? 'Update' : 'Submit'}">Submit
+                <button type="submit" class="btn btn-primary btn-lg" th:text="${add == false ? 'Update' : 'Submit'}">Submit
                 </button>
             </form>
         </div>

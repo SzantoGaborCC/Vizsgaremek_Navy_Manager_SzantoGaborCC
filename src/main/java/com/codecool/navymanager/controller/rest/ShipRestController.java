@@ -34,7 +34,7 @@ public class ShipRestController {
         return ResponseEntity.ok(shipService.findAll());
     }
 
-    @RequestMapping(value="/available/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/available/country/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Returns all available ships by country")
     public ResponseEntity<List<ShipDto>> getAllAvailableShipsByCountry(@PathVariable long id) {
         return ResponseEntity.ok(shipService.findAvailableShipsByCountryId(id));

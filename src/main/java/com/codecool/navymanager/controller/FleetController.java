@@ -54,8 +54,10 @@ public class FleetController {
         String baseUrl = Utils.getBaseUrlFromRequest(request);
         FleetDto fleet = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, FleetDto.class).getBody();
         List<ShipDto> validShipValues =
-                restTemplate.exchange(baseUrl + shipApiMapping + "/available/" + id, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<List<ShipDto>>() {}).getBody();
+                restTemplate.exchange(
+                        baseUrl + shipApiMapping + "/available/country/" + fleet.getCountry().getId(),
+                        HttpMethod.GET, null,
+                        new ParameterizedTypeReference<List<ShipDto>>() {}).getBody();
         model.addAttribute("fleet", fleet);
         model.addAttribute("validShipValues", validShipValues);
         return "fleet-details";
@@ -140,7 +142,7 @@ public class FleetController {
         FleetDto fleet = restTemplate.getForEntity(baseUrl + apiMapping + "/" + id, FleetDto.class).getBody();
         List<ShipDto> validShipValues =
                 restTemplate.exchange(
-                        baseUrl + shipApiMapping + "/available/" + fleet.getCountry().getId(),
+                        baseUrl + shipApiMapping + "/available/country/" + fleet.getCountry().getId(),
                             HttpMethod.GET, null,
                             new ParameterizedTypeReference<List<ShipDto>>() {}).getBody();
         model.addAttribute("add", true);
@@ -177,7 +179,7 @@ public class FleetController {
         FleetDto fleet = restTemplate.getForEntity(baseUrl + apiMapping + "/" + fleetId, FleetDto.class).getBody();
         List<ShipDto> validShipValues =
                 restTemplate.exchange(
-                        baseUrl + shipApiMapping + "/available/" + fleet.getCountry().getId(),
+                        baseUrl + shipApiMapping + "/available/country/" + fleet.getCountry().getId(),
                         HttpMethod.GET, null,
                         new ParameterizedTypeReference<List<ShipDto>>() {}).getBody();
         model.addAttribute("add", false);

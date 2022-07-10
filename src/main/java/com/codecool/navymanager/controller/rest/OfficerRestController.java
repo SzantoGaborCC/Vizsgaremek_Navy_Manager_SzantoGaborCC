@@ -107,7 +107,6 @@ public class OfficerRestController {
     @RequestMapping(value = "/available" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Finds all available officers")
     public List<OfficerDto> findAvailableOfficers() {
-        System.out.println("Available officers called!");
         return officerService.findAvailableOfficers();
     }
 
