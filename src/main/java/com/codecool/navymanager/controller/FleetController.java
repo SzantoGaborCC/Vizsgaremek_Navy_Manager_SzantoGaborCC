@@ -156,8 +156,7 @@ public class FleetController {
     public ResponseEntity<JsonResponse> addShipToFleetWithForm(
             HttpServletRequest request,
             @PathVariable Long id,
-            @RequestBody IdentityDto chosenShip,
-            Model model) {
+            @RequestBody IdentityDto chosenShip) {
         HttpEntity<IdentityDto> chosenShipHttpEntity =
                 Utils.createHttpEntityWithJSessionId(chosenShip, RequestContextHolder.currentRequestAttributes().getSessionId());
         String baseUrl = Utils.getBaseUrlFromRequest(request);
@@ -193,8 +192,7 @@ public class FleetController {
     public ResponseEntity<JsonResponse> updateShipInFleetWithForm(
             HttpServletRequest request,
             @PathVariable Long id,
-            @RequestBody IdentityDto chosenShip,
-            Model model) {
+            @RequestBody IdentityDto chosenShip) {
         HttpEntity<IdentityDto> chosenShipHttpEntity =
                 Utils.createHttpEntityWithJSessionId(chosenShip, RequestContextHolder.currentRequestAttributes().getSessionId());
         String baseUrl = Utils.getBaseUrlFromRequest(request);

@@ -1,248 +1,278 @@
-NAVY MANAGER - A PROJEKT
+NAVY MANAGER - THE PROJECT
 
-Hadiflotta menedzsment
+TO RUN THE PROJECT:
 
-FUTTATÁS:
-
-    Legegyszerűbb mód a "docker compose up" parancs kiadása a program gyökérkönytárában, 
-    így saját PostgreSQL adatbázissal dolgozhat a applikáció. Ekkor a főoldal elérhető a "localhost:8080" címen.
-    Spring Security felhasználónév: "Admin", jelszó: "security".
+    The easiest way is to issue the "docker compose up" command in the root directory of the program,
+    so the application can work with its own PostgreSQL database. Then the main page is available at "localhost:8080".
+    Spring Security username: "Admin", password: "security".
     
-    Ha a Maven Flyway Plugin parancsokat akarod futtatni: "mvn flyway:clean" és "mvn flyway:migrate" akkor 
-    előtte futtasd a "flyway_maven_plugin_envs" .bat avagy .sh állományt, 
-    ezekben az adatbázis beállítások át is írhatóak.
+    If you want to run the Maven Flyway Plugin commands: "mvn flyway:clean" and "mvn flyway:migrate" then
+    before that you have to run the "flyway_maven_plugin_envs" .bat or .sh file,
+    the database settings can also be overwritten in these files.
 
-    Ha a Maven Spring Boot Plugint akarod használni az alkalmazás futtatására: "mvn spring-boot:run" akkor 
-    előtte futtasd a "maven_spring_boot_plugin_envs" .bat avagy .sh állományt, 
-    ezekben az adatbázis beállítások át is írhatóak.
+    If you want to use the Maven Spring Boot Plugin to run the application: "mvn spring-boot:run" then
+    before that, run the "maven_spring_boot_plugin_envs" .bat or .sh file,
+    the database settings can also be overwritten in these files.
 
-TESZTELÉS:
+TO TEST THE PROJECT:
 
-    Add ki a "mvn test" parancsot, a teszt H2 memória adatbázist használ, valamint a Flyway ki van kapcsolva, 
-    így nem szükséges környezeti változók megadása.
+    Issue the "mvn test" command, the test uses the H2 memory database, and Flyway is turned off,
+    so it is not necessary to specify environment variables.
 
-LEÍRÁS:
+PROJECT DESCRIPTION:
 
-    A program teljes webes felülettel rendelkezik, valamint az adatcserét végrehajtó végpontok REST architektúrát használnak, 
-    és JSON formátumban várják-küldik az adatokat. 
-    Ilyen módon grafikus és programozható módon is könnyen elérhető minden funkcionalitás.
-    A webes űrlapok is JSON-t használnak, Ajax segítségével eljuttatva ezeket a szerverre.
-    A végpontok Swagger dokumentációja elérhető a localhost:8080/swagger-ui.html weboldalon.
+    The program has a full web interface, and the endpoints performing data exchange use a REST architecture,
+    and they expect and send the data in JSON format.
+    In this way, all functionality is easily accessible in a graphical and programmable way.
+    Web forms also use JSON, sending them to the server using Ajax.
+    Swagger documentation for endpoints is available at localhost:8080/swagger-ui.html.
 
-    Adattárolás PostgreSQL adatbázisban történik.
-    Az adatbázis egyed-kapcsolat diagramja megtalálható a projekt könytárában "NavyManagerERDiagram.png" néven.
+    Data is stored in a PostgreSQL database.
+    The entity-relationship diagram of the database can be found in the project directory under the name "NavyManagerERDiagram.png".
     
-    Spring Security védi módosítás ellen végpontokat, csak a "/login" végponton lehet kizárólag "POST"-olt 
-    belépési információt küldeni a belépéshez. 
-    Egyetlen felhasználó van: "Admin", jelszava: "security", csak ő tud adatokat módosítani, 
-    a webes felület figyeli is a felhasználói szerepet, csak az "ADMIN" szerep látja a módosító gombokat és az id-ket.
-    A védelem szerveroldali, így a gombok "meghekkelése" nem segít, "Bad credentials!" üzenettel jutalmaz.
-    "GET" minden végpontra engedélyezett, mivel így bizalmas információ nem elérhető.
-    A nem belépett felhasználó "Guest" néven van emlegetve, ő csak adatokat nézegetni, keresni tud.
+    Spring Security protects endpoints against modification, "POST" can can be done on the "/login" endpoint
+    to send login information, in order to log out just an empty "POST" must be sent to the "/logout" endpoint.
+    There is only one user: "Admin", the password is: "security", only this user can modify data.
+    Security also monitors the user role, only the "ADMIN" role sees the modifying buttons and ids.
+    The protection is server-side, so "hacking" the buttons doesn't help, the "Bad credentials!" message is reward for that.
+    "GET" is allowed for all endpoints, as this way confidential information is not available.
+    The user who has not logged in is referred to as "Guest", he can only view and search data.
     
-    Ha entitásnak van "Country" mezője, ez kötelezően beállítandó, és le is korlátoz minden egyéb 
-    kapcsolatot az azonos országból származó entitásokra.
-    (Pl.: azonos országból jöhet csak a kapitány és a hajó, stb.)
+    If an entity has a "Country" field, it must be set, and it also limits everything else
+     to entities from the same country.
+    (E.g.: the captain and the ship have to come from the same country, etc.)
 
-    Egy tiszt csak egy hajó avagy flotta parancsnoka lehet.
-    Egy hajót csak akkor lehet hozzáadni egy flottához, ha van parancsnoka.
-    Egy hajótípushoz tartozó ágyúk típusaik alapján képeznke ehhez a hajótípushoz tartozó ágyútípus-mennyiség entitásokat,
-    tehát egy bizonyos ágyútípus csak egyszer szerepelhet egy bizonyos mennyiséggel egy hajótípus esetében.
+    An officer can only be in command of one ship or fleet.
+    A ship can only be added to a fleet if it has a commander.
+    Cannons belonging to a ship type, form the "cannon type-quantity" entities belonging to this ship type,
+    so a certain cannon type can only appear once with a certain quantity for a ship type.
 
-VÉGPONTOK:
-    Ha a végpont NEM adatot kérdez le, akkor "JsonResponse" formájában válaszol, ennek mezői:
-        String message :            nyugtázó üzenet, hiba esetén null az értéke
-        String errorDescription :   hibaüzenet, ha nincsen hiba akkor null az értéke. 
-                                    A kivételekben van beállítva az üzenet, a "ControllerAdvice"-al
-                                    annotált osztályok küldik vissza ResponseEntity formájában.
-        Map<String, String> errorMessages;
-                                    hibaüzenet, ha nincsen hiba, akkor null az értéke.
-                                    Itt vannak összegyűjte a validációs hibák a "BindingResult"-ból,
-                                    mezők nevei és hibaüzenetei formájában.
+ENDPOINTS:
 
-    Country REST: mapping -> "/country"
-        GET:                    Listázza az összes országot
-            visszaad: List<CountryDto> 
-        GET: /{id}              Lekérdez egy már létező országot
-            visszaad: CountryDto
-        POST:                   CountryDto request body formájában hozzáadd az adatbázishoz egy országot
-            visszaad: JsonResponse
-        PUT: /{id}              CountryDto request body formájában frissíti egy már létező ország adatait.
-            visszaad: JsonResponse
-        DELETE: /{id}           töröl egy már létező országot
-            visszaad: JsonResponse
+    If the endpoint does NOT request data, it responds in the form of a "JsonResponse", its fields are:
+        String message: confirmation message, null in case of error
+        String errorDescription: error message, if there is no error, its value is null.
+            In exceptions, the message is set with "ControllerAdvice" annotated classes 
+            returned in the form of a ResponseEntity.
+        Map<String, String> errorMessages: error message, if there is no error, the value is null.
+        The validation errors from "BindingResult" are collected here,
+        in the form of field names and error messages.
 
-    Country Frontend:
-        GET : /show-add-form            Megmutatja az webes űrlapot ország hozzáadására    
-        GET : /{id}/show-update-form     Megmutatja az webes űrlapot ország frissítésére
-        GET : /{id}/show-details-page    Megmutatja az országot részletező weblapot
-        GET : /show-list-page           Megmutatja az összes országot listázó weblapot
+    Country REST: mapping -> "/country/api"
+        GET: List all countries
+            returns List<CountryDto>
+        GET: /{id} Queries an already existing country
+            returns CountryDto
+        POST: Add a country to the database in the form of CountryDto request body
+            returns JsonResponse
+        PUT: /{id} CountryDto updates the data of an already existing country in the form of a request body.
+            returns JsonResponse
+        DELETE: /{id} deletes an existing country
+            returns JsonResponse
 
-------------------------------------------------------------------------------------------------------------------------
-
-    Rank REST: mapping -> "/rank"
-        GET:                    Listázza az összes rangot
-            visszaad: List<RankDto>
-        GET: /{id}              Lekérdez egy már létező rangot
-            visszaad: RankDto
-        POST:                   RankDto request body formájában hozzáadd az adatbázishoz egy rangot
-            visszaad: JsonResponse
-        PUT: /{id}              RankDto request body formájában frissíti egy már létező rang adatait
-            visszaad: JsonResponse
-        DELETE: /{id}           töröl egy már létező rangot
-            visszaad: JsonResponse
-
-    Rank Frontend:
-        GET : /show-add-form            Megmutatja az webes űrlapot rang hozzáadására    
-        GET : /{id}/show-update-form     Megmutatja az webes űrlapot rang frissítésére
-        GET : /{id}/show-details-page    Megmutatja az rangot részletező weblapot
-        GET : /show-list-page           Megmutatja az összes rangot listázó weblapot
+    Country Frontend: mapping -> "/country"
+        GET : /show-add-form Shows the web form to add a country
+        POST : /add-with-form Sends the CountryDto request body to the API for addition
+            returns JsonResponse
+        GET : /{id}/show-update-form Shows the web form for country update
+        PUT : /update-with-form Forwards the CountryDto request body to the API for updating
+            returns JsonResponse
+        GET : /{id}/show-details-page Shows the webpage detailing the country
+        GET : /show-list-page Shows the web page listing all countries
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    Officer REST: mapping -> "/officer"
-        GET:                    Listázza az összes tisztet
-            visszaad: List<OfficerDto>
-        GET: /{id}              Lekérdez egy már létező tisztet
-            visszaad: OfficerDto
-        POST:                   OfficerDto request body formájában hozzáadd az adatbázishoz egy tisztet
-            visszaad: JsonResponse
-        PUT: /{id}              OfficerDto request body formájában frissíti egy már létező tiszt adatait
-            visszaad: JsonResponse
-        DELETE: /{id}           töröl egy már létező tisztet
-            visszaad: JsonResponse
+    Rank REST: mapping -> "/rank/api"
+        GET: List all ranks
+            returns List<RankDto>
+        GET: /{id} Queries an existing rank
+            returns: RankDto
+        POST: Add a rank to the database in the form of RankDto request body
+            returns JsonResponse
+        PUT: /{id} RankDto updates the data of an already existing rank in the form of a request body
+            returns JsonResponse
+        DELETE: /{id} deletes an existing rank
+            returns JsonResponse
 
-    Officer Frontend:
-        GET : /show-add-form            Megmutatja az webes űrlapot tiszt hozzáadására    
-        GET : /{id}/show-update-form     Megmutatja az webes űrlapot tiszt adatainak frissítésére
-        GET : /{id}/show-details-page    Megmutatja az tiszt adatait részletező weblapot
-        GET : /show-list-page           Megmutatja az összes tisztet listázó weblapot
-
-------------------------------------------------------------------------------------------------------------------------
-
-    Gun REST: mapping -> "/gun"
-        GET:                    Listázza az összes ágyút
-            visszaad: List<GunDto>
-        GET: /{id}              Lekérdez egy már létező ágyút
-            visszaad: GunDto
-        POST:                   GunDto request body formájában hozzáadd az adatbázishoz egy ágyút
-            visszaad: JsonResponse
-        PUT: /{id}              GunDto request body formájában frissíti egy már létező ágyú adatait
-            visszaad: JsonResponse
-        DELETE: /{id}           töröl egy már létező ágyút
-            visszaad: JsonResponse
-
-    Gun Frontend:
-        GET : /show-add-form            Megmutatja az webes űrlapot ágyú hozzáadására    
-        GET : /{id}/show-update-form     Megmutatja az webes űrlapot ágyú adatainak frissítésére
-        GET : /{id}/show-details-page    Megmutatja az ágyút részletező weblapot
-        GET : /show-list-page           Megmutatja az összes ágyút listázó weblapot
+    Rank Frontend: mapping -> "/rank"
+        GET : /show-add-form Shows the web form to add rank
+        POST : /add-with-form Sends the RankDto request body to the API for addition
+            returns JsonResponse
+        GET : /{id}/show-update-form Shows the web form for rank update
+        PUT : /update-with-form Forwards the RankDto request body to the API for updating
+            returns JsonResponse
+        GET : /{id}/show-details-page Shows the web page detailing the rank
+        GET : /show-list-page Shows the web page listing all ranks
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    Hull Classification REST: mapping -> "/hull-classification"
-        GET:                    Listázza az hajótest-besorolást
-            visszaad: List<HullClassificationDto>
-        GET: /{id}              Lekérdez egy már létező hajótest-besorolást
-            visszaad: HullClassificationDto
-        POST:                   HullClassificationDto request body formájában hozzáadd az adatbázishoz egy hajótest-besorolást
-            visszaad: JsonResponse
-        PUT: /{id}              HullClassificationDto request body formájában frissíti egy már létező hajótest-besorolás adatait
-            visszaad: JsonResponse
-        DELETE: /{id}           töröl egy már létező hajótest-besorolást
-            visszaad: JsonResponse
+    Officer REST: mapping -> "/officer/api"
+        GET: List all officers
+            returns List<OfficerDto>
+        GET: /{id} Queries an existing officer
+            returns OfficerDto
+        POST: Add an officer to the database in the form of OfficerDto request body
+            returns JsonResponse
+        PUT: /{id} Updates the data of an already existing officer in the form of OfficerDto request body
+            returns JsonResponse
+        DELETE: /{id} deletes an existing officer
+            returns JsonResponse
 
-    Hull Classification Frontend:
-        GET : /show-add-form            Megmutatja az webes űrlapot hajótest-besorolás hozzáadására    
-        GET : /{id}/show-update-form     Megmutatja az webes űrlapot hajótest-besorolás adatainak frissítésére
-        GET : /{id}/show-details-page    Megmutatja az hajótest-besorolást részletező weblapot
-        GET : /show-list-page           Megmutatja az összes hajótest-besorolást listázó weblapot
-
-------------------------------------------------------------------------------------------------------------------------
-
-    Ship Class REST: mapping -> "/ship-class"
-        GET:                    Listázza az összes hajóosztályt
-            visszaad: List<ShipClassDto>
-        GET: /{id}              Lekérdez egy már létező hajóosztályt
-            visszaad: ShipClassDto
-        POST:                   ShipClassDto request body formájában hozzáad az adatbázishoz egy hajóosztályt
-            visszaad: JsonResponse
-        PUT: /{id}              ShipClassDto request body formájában frissíti egy már létező hajóosztály adatait
-            visszaad: JsonResponse
-        DELETE: /{id}           töröl egy már létező hajóosztályt
-            visszaad: JsonResponse
-        POST: /{id}/gun         GunInstallationDto request body formájában egy ágyútípus-mennyiség entitást
-                                ad hozzá a hajótípushoz
-            visszaad: JsonResponse
-        GET: /{id}/gun          Listázza a hajóosztályhoz tartozó ágyútípus-mennyiség entitásokat
-            visszaad: List<GunInstallationDto>
-        GET: /{shipClassId}/gun/{gunId}     Lekérdezi a hajótípus egy már létező ágyútípus-mennyiség entitását
-            visszaad: GunInstallationDto
-        PUT: /{shipClassId}/gun/{gunId}     GunInstallationDto request body formájában egy ágyútípus-mennyiség entitást
-                                            frissít
-            visszaad: JsonResponse
-        DELETE: /{shipClassId}/gun/{gunId}   Törli a hajótípus egy ágyútípus-mennyiség entitását, az entitás
-                                             nem létezhet hajótípus nélkül, így végleges törlésre kerül.
-
-    Ship Class Frontend:
-        GET : /show-add-form                 Megmutatja az webes űrlapot hajóosztály hozzáadására    
-        GET : /{id}/show-update-form         Megmutatja az webes űrlapot hajóosztály adatainak frissítésére
-        GET : /{id}/show-details-page        Megmutatja az hajóosztályt részletező weblapot
-        GET : /show-list-page                Megmutatja az összes hajóosztályt listázó weblapot
-        GET : /{id}/gun/show-add-gun-form    Megmutatja az webes űrlapot ágyútípus-mennyiség entitás hajóosztályhoz 
-                                             való hozzáadására
-        GET : /{shipClassId}/gun/{gunId}/show-update-gun-form    Megmutatja az webes űrlapot hajóosztály 
-                                                                 ágyútípus-mennyiség entitásának frissítésére
+    Officer Frontend: mapping -> "/officer"
+        GET : /show-add-form Shows the web form to add an officer
+        POST : /add-with-form Passes the OfficerDto request body to the API for addition
+            returns JsonResponse
+        GET : /{id}/show-update-form Shows the web form for updating officer details
+        PUT : /update-with-form Forwards the OfficerDto request body to the API for updating
+            returns JsonResponse
+        GET : /{id}/show-details-page Shows the officer's details page
+        GET : /show-list-page Shows the web page listing all officers
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    Ship REST: mapping -> "/ship"
-        GET:                    Listázza az összes hajót
-            visszaad: List<ShipDto>
-        GET: /{id}              Lekérdez egy már létező hajót
-            visszaad: ShipDto
-        POST:                   ShipDto request body formájában hozzáad az adatbázishoz egy hajót
-            visszaad: JsonResponse
-        PUT: /{id}              ShipDto request body formájában frissíti egy már létező hajó adatait
-            visszaad: JsonResponse
-        DELETE: /{id}           töröl egy már létező hajót
-            visszaad: JsonResponse
+    Gun REST: mapping -> "/gun/api"
+        GET: List all cannons
+            returns List<GunDto>
+        GET: /{id} Queries an existing cannon
+            returns: GunDto
+        POST: Add a cannon to the database in the form of a GunDto request body
+            returns JsonResponse
+        PUT: /{id} GunDto updates the data of an existing gun in the form of a request body
+            returns JsonResponse
+        DELETE: /{id} deletes an existing cannon
+            returns JsonResponse
 
-    Ship Frontend:
-        GET : /show-add-form            Megmutatja az webes űrlapot hajó hozzáadására    
-        GET : /{id}/show-update-form     Megmutatja az webes űrlapot hajó adatainak frissítésére
-        GET : /{id}/show-details-page    Megmutatja az hajót részletező weblapot
-        GET : /show-list-page           Megmutatja az összes hajót listázó weblapot
+    Gun Frontend: mapping -> "/gun"
+        GET : /show-add-form Shows the web form to add a cannon
+        POST : /add-with-form Sends the GunDto request body to the API for addition
+            returns JsonResponse
+        GET : /{id}/show-update-form Shows the web form for updating cannon data
+        PUT : /update-with-form Forwards the GunDto request body to the API for updating
+            returns JsonResponse
+        GET : /{id}/show-details-page Shows the cannon details page
+        GET : /show-list-page Shows the web page listing all cannons
 
 ------------------------------------------------------------------------------------------------------------------------
 
-    Fleet REST: mapping -> "/fleet"
-        GET:                     Listázza az összes flottát
-            visszaad: List<FleetDto>
-        GET: /{id}               Lekérdez egy már létező flottát
-            visszaad: FleetDto
-        POST:                    FleetDto request body formájában hozzáad az adatbázishoz egy flottát
-            visszaad: JsonResponse
-        PUT: /{id}               FleetDto request body formájában frissíti egy már létező flotta adatait
-            visszaad: JsonResponse
-        DELETE: /{id}            Töröl egy már létező flottát
-            visszaad: JsonResponse
-        POST: /{id}/ship         IdentityDto request body formájában egy létező hajót ad hozzá a flottához.
-            visszaad: JsonResponse
-        GET: /{id}/ship          Listázza a flottához tartozó hajókat
-            visszaad: List<ShipDto>
-        GET: /{fleetId}/ship/{shipId}     Lekérdez egy a flottához tartozó hajót
-            visszaad: ShipDto
-        PUT: /{fleetId}/ship/{shipId}     IdentityDto request body formájában új hajó kerül egy régi helyére a flottában 
-            visszaad: JsonResponse
-        DELETE: /{fleetId}/ship/{shipId}  Eltávolít egy hajót a flottából
-            visszaad: JsonResponse
+    Hull Classification REST: mapping -> "/hull-classification/api"
+        GET: List the hull classification
+            returns List<HullClassificationDto>
+        GET: /{id} Queries an existing hull classification
+            returns: HullClassificationDto
+        POST: Add a hull classification to the database in the form of HullClassificationDto request body
+            returns JsonResponse
+        PUT: /{id} HullClassificationDto updates the data of an existing hull classification in the form of a request body
+            returns JsonResponse
+        DELETE: /{id} deletes an existing hull classification
+            returns JsonResponse
 
-    Fleet Frontend:
-        GET : /show-add-form             Megmutatja az webes űrlapot flotta hozzáadására    
-        GET : /{id}/show-update-form     Megmutatja az webes űrlapot flotta adatainak frissítésére
-        GET : /{id}/show-details-page    Megmutatja az flottát részletező weblapot
-        GET : /show-list-page            Megmutatja az összes flottát listázó weblapot
-        GET : /{id}/ship/show-add-ship-form    Megmutatja az webes űrlapot egy létező hajó flottához való adásához
-        GET : /{shipClassId}/ship/{shipId}/show-update-ship-form     Megmutatja az webes űrlapot a flotta 
-                                                                    egy hajójának frissítésére
+    Hull Classification Frontend: mapping -> "/hull-classification"
+        GET : /show-add-form Shows the web form to add hull classification
+        POST : /add-with-form Passes the HullClassificationDto request body to the API for addition
+            returns JsonResponse
+        GET : /{id}/show-update-form Shows the web form for updating hull classification data
+        PUT : /update-with-form Passes the HullClassificationDto request body to the API for updating
+            returns JsonResponse
+        GET : /{id}/show-details-page Shows the hull classification detail page
+        GET : /show-list-page Shows the web page listing all hull classifications
+
+------------------------------------------------------------------------------------------------------------------------
+
+    Ship Class REST: mapping -> "/ship-class/api"
+        GET: List all ship classes
+            returns List<ShipClassDto>
+        GET: /{id} Queries an existing ship class
+            returns: ShipClassDto
+        POST: ShipClassDto adds a ship class to the database in the form of a request body
+            returns JsonResponse
+        PUT: /{id} ShipClassDto updates the data of an existing ship class in the form of a request body
+            returns JsonResponse
+        DELETE: /{id} deletes an existing ship class
+            returns JsonResponse
+        POST: /{id}/gun GunInstallationDto request body as a gun type quantity entity
+                                adds to the ship type
+            returns JsonResponse
+        GET: /{id}/gun List the gun type quantity entities for the ship class
+            returns List<GunInstallationDto>
+        GET: /{shipClassId}/gun/{gunId} Queries the ship type for an existing gun type quantity entity
+            returns GunInstallationDto
+        PUT: /{shipClassId}/gun/{gunId} GunInstallationDto request body as a gun type quantity entity
+                                            refresh
+            returns JsonResponse
+        DELETE: /{shipClassId}/gun/{gunId} Deletes a gun type quantity entity of the ship type, the entity
+                                             it cannot exist without a ship type, so it will be permanently deleted.
+
+    Ship Class Frontend: mapping -> "/ship-class"
+        GET : /show-add-form Shows the web form for adding a ship class
+        GET : /{id}/show-update-form Shows the web form for updating ship class data
+        GET : /{id}/show-details-page Shows the web page detailing the ship class
+        GET : /show-list-page Shows the web page listing all ship classes
+        GET : /{id}/gun/show-add-gun-form Shows the web form for gun type quantity entity ship class
+                                             to add
+        POST : /{id}/gun Passes the GunInstallationDto request body to the API for addition
+            returns JsonResponse
+        GET : /{shipClassId}/gun/{gunId}/show-update-gun-form Shows the web form ship class
+                                                                 to update the cannon type quantity entity
+        POST : /{id}/gun/{gunId} Passes GunInstallationDto request body to API for update
+            returns JsonResponse
+
+------------------------------------------------------------------------------------------------------------------------
+
+    Ship REST: mapping -> "/ship/api"
+        GET: List all ships
+            returns List<ShipDto>
+        GET: /{id} Queries an existing ship
+            returns: ShipDto
+        POST: ShipDto adds a ship to the database in the form of a request body
+            returns JsonResponse
+        PUT: /{id} ShipDto updates the data of an existing ship in the form of a request body
+            returns JsonResponse
+        DELETE: /{id} deletes an existing ship
+            returns JsonResponse
+
+    Ship Frontend: mapping -> "/ship"
+        GET : /show-add-form Shows the web form to add a ship
+        POST : /add-with-form Sends the ShipDto request body to the API for addition
+            returns JsonResponse
+        GET : /{id}/show-update-form Shows the web form for updating ship information
+        PUT : /update-with-form Forwards the ShipDto request body to the API for updating
+            returns JsonResponse
+        GET : /{id}/show-details-page Shows the web page detailing the ship
+        GET : /show-list-page Shows the web page listing all ships
+
+------------------------------------------------------------------------------------------------------------------------
+
+    Fleet REST: mapping -> "/fleet/api"
+        GET: List all fleets
+            returns List<FleetDto>
+        GET: /{id} Queries an existing fleet
+            returns: FleetDto
+        POST: FleetDto adds a fleet to the database in the form of a request body
+            returns JsonResponse
+        PUT: /{id} Updates the data of an already existing fleet in the form of a FleetDto request body
+            returns JsonResponse
+        DELETE: /{id} Deletes an existing fleet
+            returns JsonResponse
+        POST: /{id}/ship Adds an existing ship to the fleet as an IdentityDto request body.
+            returns JsonResponse
+        GET: /{id}/ship List the ships belonging to the fleet
+            returns List<ShipDto>
+        GET: /{fleetId}/ship/{shipId} Queries a ship belonging to the fleet
+            returns: ShipDto
+        PUT: /{fleetId}/ship/{shipId} In the form of IdentityDto request body, a new ship replaces an old one in the fleet
+            returns JsonResponse
+        DELETE: /{fleetId}/ship/{shipId} Removes a ship from the fleet
+            returns JsonResponse
+
+    Fleet Frontend: mapping -> "/fleet"
+        GET : /show-add-form Shows the web form for adding a fleet
+        GET : /{id}/show-update-form Shows the web form for updating fleet information
+        GET : /{id}/show-details-page Shows the web page detailing the fleet
+        GET : /show-list-page Shows the web page listing all fleets
+        GET : /{id}/ship/show-add-ship-form Shows the web form to add an existing ship to the fleet
+        POST : /{id}/ship/add-with-form Sends the id of the selected ship to the API for addition
+            returns JsonResponse
+        GET : /{shipClassId}/ship/{shipId}/show-update-ship-form Shows the web form for the fleet
+                                                                     to upgrade a ship
+        PUT : /{fleetId}/ship/{shipId}/show-update-ship-form Sends the id of the selected ship to the API for updating
+            returns JsonResponse
