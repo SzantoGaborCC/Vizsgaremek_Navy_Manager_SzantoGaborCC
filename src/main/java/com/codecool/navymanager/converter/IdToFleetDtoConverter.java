@@ -2,6 +2,7 @@ package com.codecool.navymanager.converter;
 
 import com.codecool.navymanager.dto.FleetDto;
 import com.codecool.navymanager.service.FleetService;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,6 @@ public class IdToFleetDtoConverter implements Converter<String, FleetDto> {
 
     @Override
     public FleetDto convert(String source) {
-        return fleetService.findAll().stream()
-                .filter(fleetDTO -> fleetDTO.getId().equals(Long.valueOf(source)))
-                .findAny().orElseThrow();
+        return fleetService.findById(Long.parseLong(source),  LocaleContextHolder.getLocale());
     }
 }

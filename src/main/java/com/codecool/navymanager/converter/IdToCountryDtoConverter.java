@@ -2,6 +2,7 @@ package com.codecool.navymanager.converter;
 
 import com.codecool.navymanager.dto.CountryDto;
 import com.codecool.navymanager.service.CountryService;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,6 @@ public class IdToCountryDtoConverter implements Converter<String, CountryDto> {
 
     @Override
     public CountryDto convert(String source) {
-        return countryService.findAll().stream()
-                .filter(rankDTO -> rankDTO.getId().equals(Long.valueOf(source)))
-                .findAny().orElse(null);
+        return countryService.findById(Long.parseLong(source), LocaleContextHolder.getLocale());
     }
 }

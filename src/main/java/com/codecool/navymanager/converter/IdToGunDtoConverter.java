@@ -2,6 +2,7 @@ package com.codecool.navymanager.converter;
 
 import com.codecool.navymanager.dto.GunDto;
 import com.codecool.navymanager.service.GunService;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,6 @@ public class IdToGunDtoConverter implements Converter<String, GunDto> {
 
     @Override
     public GunDto convert(String source) {
-        return gunService.findAll().stream()
-                .filter(shipClassDTO -> shipClassDTO.getId().equals(Long.valueOf(source)))
-                .findAny().orElseThrow();
+        return gunService.findById(Long.parseLong(source), LocaleContextHolder.getLocale());
     }
 }

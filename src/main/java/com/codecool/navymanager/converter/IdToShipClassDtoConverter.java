@@ -3,7 +3,7 @@ package com.codecool.navymanager.converter;
 
 import com.codecool.navymanager.dto.ShipClassDto;
 import com.codecool.navymanager.service.ShipClassService;
-
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,6 @@ public class IdToShipClassDtoConverter implements Converter<String, ShipClassDto
 
     @Override
     public ShipClassDto convert(String source) {
-        return shipClassService.findAll().stream()
-                .filter(shipClassDTO -> shipClassDTO.getId().equals(Long.valueOf(source)))
-                .findAny().orElseThrow();
+        return shipClassService.findById(Long.parseLong(source), LocaleContextHolder.getLocale());
     }
 }
