@@ -2,8 +2,11 @@ package com.codecool.navymanager.converter;
 
 import com.codecool.navymanager.dto.OfficerDto;
 import com.codecool.navymanager.service.OfficerService;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import java.util.Locale;
 
 @Component
 public class IdToOfficerDtoConverter implements Converter<String, OfficerDto> {
@@ -15,8 +18,7 @@ public class IdToOfficerDtoConverter implements Converter<String, OfficerDto> {
 
     @Override
     public OfficerDto convert(String source) {
-        return officerService.findAll().stream()
-                .filter(rankDTO -> rankDTO.getId().equals(Long.valueOf(source)))
-                .findAny().orElse(null);
+        Locale locale = LocaleContextHolder.getLocale();
+        return officerService.findById(Long.parseLong(source), locale);
     }
 }
