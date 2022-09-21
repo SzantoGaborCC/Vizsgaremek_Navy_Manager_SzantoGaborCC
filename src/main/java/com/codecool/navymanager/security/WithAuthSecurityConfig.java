@@ -1,6 +1,5 @@
 package com.codecool.navymanager.security;
 
-import com.codecool.navymanager.exception_handling.SecurityExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.MessageSource;
@@ -20,15 +19,14 @@ import javax.servlet.http.HttpServletResponse;
 @Profile("WITH_AUTH")
 @EnableWebSecurity
 public class WithAuthSecurityConfig {
+    @Autowired
+    AuthenticationEntryPointImp authenticationEntryPoint;
 
     @Autowired
     MessageSource messageSource;
 
     @Autowired
     AuthenticationConfiguration authenticationConfiguration;
-
-    @Autowired
-    SecurityExceptionHandler securityExceptionHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -52,7 +50,7 @@ public class WithAuthSecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(securityExceptionHandler)
+                .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .logout(logout -> logout
                         .permitAll()
