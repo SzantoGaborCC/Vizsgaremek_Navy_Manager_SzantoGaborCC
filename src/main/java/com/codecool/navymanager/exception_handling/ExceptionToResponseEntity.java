@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 public class ExceptionToResponseEntity {
     @ExceptionHandler({SQLException.class})
-    public ResponseEntity<?> handleSqlException(Exception e) {
+    public ResponseEntity<JsonResponse> handleSqlException(Exception e) {
         JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.setErrorDescription(e.getMessage());
         return ResponseEntity
@@ -22,7 +22,7 @@ public class ExceptionToResponseEntity {
     }
 
     @ExceptionHandler({NoSuchElementException.class, IllegalArgumentException.class})
-    public ResponseEntity<?> handleInvalidIds(Exception e) {
+    public ResponseEntity<JsonResponse> handleInvalidIds(Exception e) {
         JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.setErrorDescription(e.getMessage());
         return ResponseEntity
@@ -31,7 +31,7 @@ public class ExceptionToResponseEntity {
     }
 
   @ExceptionHandler({HttpMessageNotReadableException.class})
-  public ResponseEntity<?> handleJsonSerializationErrors(Exception e) {
+  public ResponseEntity<JsonResponse> handleJsonSerializationErrors(Exception e) {
       JsonResponse jsonResponse = new JsonResponse();
       jsonResponse.setErrorDescription(e.getMessage());
       return ResponseEntity

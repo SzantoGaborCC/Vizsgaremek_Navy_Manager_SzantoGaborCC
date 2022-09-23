@@ -82,7 +82,7 @@ public class FleetController {
     }
 
     @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addFleetWithForm(
+    public ResponseEntity<JsonResponse> addFleetWithForm(
             HttpServletRequest request,
             @RequestBody FleetDto fleet,
             Model model) {

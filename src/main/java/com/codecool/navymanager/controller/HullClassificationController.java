@@ -53,7 +53,7 @@ public class HullClassificationController {
     }
 
     @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addHullClassificationWithForm(
+    public ResponseEntity<JsonResponse> addHullClassificationWithForm(
             HttpServletRequest request,
             @RequestBody HullClassificationDto hullClassification) {
         HttpEntity<HullClassificationDto> hullClassificationHttpEntity =

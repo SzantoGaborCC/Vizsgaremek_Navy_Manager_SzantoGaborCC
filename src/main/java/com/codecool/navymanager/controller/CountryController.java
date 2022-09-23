@@ -53,7 +53,7 @@ public class CountryController {
     }
 
     @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addCountryWithForm(
+    public ResponseEntity<JsonResponse> addCountryWithForm(
             HttpServletRequest request,
             @RequestBody CountryDto country) {
         HttpEntity<CountryDto> countryHttpEntity =

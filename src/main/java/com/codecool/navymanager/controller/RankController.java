@@ -53,7 +53,7 @@ public class RankController {
     }
 
     @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addRankWithForm(
+    public ResponseEntity<JsonResponse> addRankWithForm(
             HttpServletRequest request,
             @RequestBody RankDto rank) {
         HttpEntity<RankDto> rankHttpEntity =

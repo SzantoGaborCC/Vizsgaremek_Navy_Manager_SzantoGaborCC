@@ -80,7 +80,7 @@ public class ShipController {
     }
 
     @RequestMapping(value="/add-with-form", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addShipWithForm(
+    public ResponseEntity<JsonResponse> addShipWithForm(
             HttpServletRequest request,
             @RequestBody ShipDto ship) {
         HttpEntity<ShipDto> shipHttpEntity =
